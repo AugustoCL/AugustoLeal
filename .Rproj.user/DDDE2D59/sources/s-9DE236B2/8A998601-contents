@@ -11,7 +11,7 @@ publishDir = "docs/"
 ignoreErrors = ["error-remote-getjson"]
 
 [params]
-  title = "Soho Theme"
+  title = "Augusto Leal"
   description = ""
   # gravatar = "soho@example.com"
   images = ["images/profile1.png"]

@@ -5,16 +5,16 @@
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "0",
+    "hash" : "3328461991",
     "id" : "8A998601",
-    "lastKnownWriteTime" : 1619819047,
-    "last_content_update" : 1619819047383,
+    "lastKnownWriteTime" : 1619819356,
+    "last_content_update" : 1619819356517,
     "path" : "~/dev_R/AugustoLeal/config.toml",
     "project_path" : "config.toml",
     "properties" : {
-        "cursorPosition" : "38,21",
+        "cursorPosition" : "21,18",
         "marks" : "<:38,14\n>:38,14",
-        "scrollLine" : "26"
+        "scrollLine" : "4"
     },
     "read_only" : false,
     "read_only_alternatives" : [
