@@ -1,0 +1,26 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1619818458763.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "8A998601",
+    "lastKnownWriteTime" : 1619819047,
+    "last_content_update" : 1619819047383,
+    "path" : "~/dev_R/AugustoLeal/config.toml",
+    "project_path" : "config.toml",
+    "properties" : {
+        "cursorPosition" : "38,21",
+        "marks" : "<:38,14\n>:38,14",
+        "scrollLine" : "26"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "toml"
+}
