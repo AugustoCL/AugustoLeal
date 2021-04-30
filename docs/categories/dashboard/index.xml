@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Dashboard on Augusto Leal</title>
+    <link>https://augustocl.github.io/AugustoLeal/categories/dashboard/</link>
+    <description>Recent content in Dashboard on Augusto Leal</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Thu, 29 Apr 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://augustocl.github.io/AugustoLeal/categories/dashboard/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Analisando um Portfólio de Ações [R] [Shiny]</title>
+      <link>https://augustocl.github.io/AugustoLeal/post/2021-04-29-portf-acoes/</link>
+      <pubDate>Thu, 29 Apr 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://augustocl.github.io/AugustoLeal/post/2021-04-29-portf-acoes/</guid>
+      <description>Esse projeto é um dashboard interativo onde é possível analisar um portfólio de até 5 ativos, a partir de 4 visões (retorno, desvio padrão, assimetria e curtose).</description>
+    </item>
+    
+  </channel>
+</rss>

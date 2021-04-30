@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>webscraping on Augusto Leal</title>
+    <link>https://augustocl.github.io/AugustoLeal/tags/webscraping/</link>
+    <description>Recent content in webscraping on Augusto Leal</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Tue, 27 Apr 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://augustocl.github.io/AugustoLeal/tags/webscraping/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Webscraping e visualização Interativa da ETTJ [Python] e [R]</title>
+      <link>https://augustocl.github.io/AugustoLeal/post/2021-04-29-curva-juros/</link>
+      <pubDate>Tue, 27 Apr 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://augustocl.github.io/AugustoLeal/post/2021-04-29-curva-juros/</guid>
+      <description>Gosto muito deste pequeno trabalho porque ele conecta diferentes ferramentas e assuntos técnicos que eu julgo interessante para todos que trabalham com dados.</description>
+    </item>
+    
+  </channel>
+</rss>

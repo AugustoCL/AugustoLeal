@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>julia on Soho Theme</title>
+    <link>https://example.com/tags/julia/</link>
+    <description>Recent content in julia on Soho Theme</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Tue, 01 Dec 2020 21:13:14 -0500</lastBuildDate><atom:link href="https://example.com/tags/julia/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>ALM Solution with SIMPLEX</title>
+      <link>https://example.com/post/2021-04-21-alm/</link>
+      <pubDate>Tue, 01 Dec 2020 21:13:14 -0500</pubDate>
+      
+      <guid>https://example.com/post/2021-04-21-alm/</guid>
+      <description>Julia Chunkusing JuMP, CbcInputscash_flow = Float64[100; 200; 800; 100; 800; 1200]6-element Vector{Float64}:100.</description>
+    </item>
+    
+  </channel>
+</rss>

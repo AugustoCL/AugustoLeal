@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="generator" content="Hugo 0.81.0" />
+
+  <title>Analisando Dados do Tesouro Direto com R &middot; Augusto Leal</title>
+
+  <meta name="description" content="Extraí os dados da API do Tesouro Direto e gera uma visualização completa do cenário de stress provocado pela saída do Ministro da Justica Sergio Moro do governo" />
+
+  
+
+<meta itemprop="name" content="Analisando Dados do Tesouro Direto com R">
+<meta itemprop="description" content="Extraí os dados da API do Tesouro Direto e gera uma visualização completa do cenário de stress provocado pela saída do Ministro da Justica Sergio Moro do governo"><meta itemprop="datePublished" content="2021-04-25T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2021-04-25T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="1649"><meta itemprop="image" content="https://augustocl.github.io/AugustoLeal/images/profile1.png"/>
+<meta itemprop="keywords" content="" />
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://augustocl.github.io/AugustoLeal/images/profile1.png"/>
+
+<meta name="twitter:title" content="Analisando Dados do Tesouro Direto com R"/>
+<meta name="twitter:description" content="Extraí os dados da API do Tesouro Direto e gera uma visualização completa do cenário de stress provocado pela saída do Ministro da Justica Sergio Moro do governo"/>
+
+
+<meta property="og:title" content="Analisando Dados do Tesouro Direto com R" />
+<meta property="og:description" content="Extraí os dados da API do Tesouro Direto e gera uma visualização completa do cenário de stress provocado pela saída do Ministro da Justica Sergio Moro do governo" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://augustocl.github.io/AugustoLeal/post/2021-04-29-tesouro-direto-com-r/" /><meta property="og:image" content="https://augustocl.github.io/AugustoLeal/images/profile1.png"/><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2021-04-25T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2021-04-25T00:00:00&#43;00:00" /><meta property="og:site_name" content="Soho Theme" />
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type":"Person",
+      "@id": "https://augustocl.github.io/AugustoLeal/#author",
+      "name":  null ,
+      "image": {
+        "@type":"ImageObject",
+        
+        "url": "https://augustocl.github.io/AugustoLeal/images/profile1.png"
+        
+      },
+      "description": ""
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://augustocl.github.io/AugustoLeal/#website",
+      "url": "https://augustocl.github.io/AugustoLeal/",
+      "name": "Augusto Leal",
+      "description": "",
+      "publisher": {
+        "@id": "https://augustocl.github.io/AugustoLeal/#author"
+      },
+      "inLanguage": "en"
+    },
+    {
+      "@type": "ImageObject",
+      "url": "https://augustocl.github.io/AugustoLeal/images/profile1.png",
+      "caption": "Augusto Leal"
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://augustocl.github.io/AugustoLeal/post/2021-04-29-tesouro-direto-com-r/#webpage",
+      "url": "https://augustocl.github.io/AugustoLeal/post/2021-04-29-tesouro-direto-com-r/",
+      "name": "Analisando Dados do Tesouro Direto com R",
+      "isPartOf": {
+        "@id": "https://augustocl.github.io/AugustoLeal/#website"
+      },
+      "about": {
+         "@id": "https://augustocl.github.io/AugustoLeal/#author"
+      },
+      "datePublished": "2021-04-25T00:00:00+00:00",
+      "dateModified": "2021-04-25T00:00:00+00:00",
+      "description": "Extraí os dados da API do Tesouro Direto e gera uma visualização completa do cenário de stress provocado pela saída do Ministro da Justica Sergio Moro do governo",
+      "inLanguage": "en",
+      "potentialAction": [
+        {
+          "@type": "ReadAction",
+          "target": [
+            "https://augustocl.github.io/AugustoLeal/post/2021-04-29-tesouro-direto-com-r/"
+          ]
+        }
+      ]
+    },
+    {
+      "@type": "Article",
+      "isPartOf": {
+        "@id": "https://augustocl.github.io/AugustoLeal/post/2021-04-29-tesouro-direto-com-r/#webpage"
+      },
+      "mainEntityOfPage": {
+        "@id": "https://augustocl.github.io/AugustoLeal/post/2021-04-29-tesouro-direto-com-r/#webpage"
+      },
+      "headline": "Analisando Dados do Tesouro Direto com R",
+      "datePublished": "2021-04-25T00:00:00+00:00",
+      "dateModified": "2021-04-25T00:00:00+00:00",
+      "publisher": {
+        "@id": "https://augustocl.github.io/AugustoLeal/#author"
+      },
+      "keywords": [
+      ],
+      "articleSection": [
+      ],
+      "inLanguage": "en",
+      "author": {
+        "@type": "Person",
+        "name": "AugustoCL"
+      },
+      "potentialAction": [
+        {
+          "@type": "CommentAction",
+          "name": "Comment",
+          "target": [
+            "https://augustocl.github.io/AugustoLeal/post/2021-04-29-tesouro-direto-com-r/#comments"
+          ]
+        }
+      ]
+    }
+  ]
+}
+</script>
+
+
+
+  <link type="text/css"
+        rel="stylesheet"
+        href="/AugustoLeal/css/print.css"
+        media="print">
+
+  <link type="text/css"
+        rel="stylesheet"
+        href="/AugustoLeal/css/poole.css">
+
+  <link type="text/css"
+        rel="stylesheet"
+        href="/AugustoLeal/css/hyde.css">
+
+  
+<style type="text/css">
+  .sidebar {
+    background-color: #000162;
+  }
+
+  .read-more-link a {
+    border-color: #000162;
+  }
+
+  .read-more-link a:hover {
+    background-color: #000162;
+  }
+
+  .pagination li a {
+    color: #000162;
+    border: 1px solid #000162;
+  }
+
+  .pagination li.active a {
+    background-color: #000162;
+  }
+
+  .pagination li a:hover {
+    background-color: #000162;
+    opacity: 0.75;
+  }
+
+  footer a,
+  .content a,
+  .related-posts li a:hover {
+    color: #000162;
+  }
+</style>
+
+
+
+  
+
+  <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700&display=swap">
+
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css"
+        integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk="
+        crossorigin="anonymous" />
+
+  <link rel="apple-touch-icon-precomposed"
+        sizes="144x144"
+        href="/apple-touch-icon-144-precomposed.png">
+
+  <link rel="shortcut icon" href="/favicon.png">
+
+  
+  </head>
+<body>
+  <aside class="sidebar">
+  <div class="container">
+    <div class="sidebar-about">
+      
+        
+        <div class="author-image">
+          <a href="https://augustocl.github.io/AugustoLeal/">
+            <img src="/AugustoLeal/images/profile1.png" class="img-circle img-headshot center" alt="Profile Picture">
+          </a>
+        </div>
+        
+      
+
+      <h1>Augusto Leal</h1>
+
+      
+    </div>
+
+    <nav>
+      <ul class="sidebar-nav">
+        <li>
+          <a href="https://augustocl.github.io/AugustoLeal/">Home</a>
+        </li>
+        <li>
+          <a href="/AugustoLeal/about/">Sobre</a>
+        </li><li>
+          <a href="/AugustoLeal/contact/">Contato</a>
+        </li><li>
+          <a href="/AugustoLeal/posts/">Posts</a>
+        </li><li>
+          <a href="/AugustoLeal/categories/">Categorias</a>
+        </li><li>
+          <a href="/AugustoLeal/tags/">Tags</a>
+        </li>
+      </ul>
+    </nav>
+
+    <section class="social-icons">
+      
+      <a href="#" rel="me" title="Linkedin" target="_blank">
+        <i class="fab fa-linkedin" aria-hidden="true"></i>
+      </a>
+      
+      <a href="https://github.com/alexandrevicenzi/soho" rel="me" title="GitHub" target="_blank">
+        <i class="fab fa-github" aria-hidden="true"></i>
+      </a>
+      
+      <a href="#" rel="me" title="Twitter" target="_blank">
+        <i class="fab fa-twitter" aria-hidden="true"></i>
+      </a>
+      
+    </section>
+  </div>
+</aside>
+
+
+  <main class="content container">
+  <div class="post">
+  <h1 class="title">Analisando Dados do Tesouro Direto com R</h1>
+  
+
+  <div class="post-date">
+    <time datetime="2021-04-25T00:00:00Z">Apr 25, 2021</time> <span class="readtime">&middot; 8 min read</span>
+  </div>
+
+  <div>
+  
+  <link rel="stylesheet" href="style.css" type="text/css" />
+
+
+<p>O caso de hoje é uma análise de impacto do cenário pandêmico e político no mercado de renda fixa brasileiro utilizando os dados do sistema oficial do <a href="https://www.tesourodireto.com.br/">Tesouro Direto</a> (TD).<br />
+Para isso, utilizaremos a linguagem R tanto para a extração e tratamento dos dados, quanto para a geração da visualização final. No decorrer do artigo, irei detalhar todo o <a href="https://github.com/AugustoCL/NTN-B_ggplot2/blob/master/ntnbs.R">código</a> utilizado, para que no futuro você possa gerar suas próprias análises de títulos públicos com os dados do Tesouro Direto e a linguagem R.<br />
+Aqui cabe um adendo importante, para a extração dos dados do TD eu utilizei o pacote <a href="https://cran.r-project.org/web/packages/GetTDData/vignettes/gtdd-vignette_GetTDData.html">GetTDData</a> produzido pelo Professor da UFRGS <a href="https://www.msperlin.com/blog/">Marcelo S. Perlin</a>. Ele também produziu outros pacotes relevantes para a análise de finanças quantitativas e, caso tenha interesse no assunto, eu recomendo muito que depois vasculhe os demais pacotes e conteúdos produzidos pelo professor.</p>
+<div id="objetivo-final" class="section level3">
+<h3>Objetivo Final</h3>
+<p>Esta é a visualização final que iremos recriar no decorrer do artigo, nela temos as taxas de compra de títulos públicos indexadas à inflação (IPCA), as famosas NTN-B, de diferentes vencimentos entre o período de 08/2019 e 05/2020. Através dela, observamos o impacto do atual cenário pandêmico nas NTN-Bs, onde destaco o início do stress ocasionado pelo COVID19 em março e, também, o stress político e institucional gerado pela saída de Sérgio Moro do Ministério da Justiça em abril de 2020.</p>
+<p><img src="ntnb_plot.png" /></p>
+<p>Para aqueles que não possuem familiaridade com títulos públicos, uma rápida intuição para a interpretação das taxas seria a seguinte: quanto maior o risco de default (calote) de um país, maior a taxa de juro exigida pelo mercado para que justifique o investimento naquele título.</p>
+<p>Um exemplo claro deste fundamento são as notas de investimento (rating de crédito) que agências de crédito como Fitch Ratings, Moody’s e Standard &amp; Poor’s fornecem para cada país, após analisarem o cenário macroeconômico, político e da dívida pública, por exemplo. A título de curiosidade, segue uma visualização do G1 que explicita as diferentes classificações de ratings e seus significados. A visualização é de 2018, quando o Brasil perdeu o grau de investimento, mas mesmo defasada é extremamente útil para fortalecer o entendimento do risco-país.</p>
+<p><img src="ratings.jpg" /></p>
+<p>Enfim, vamos ao código!</p>
+</div>
+<div id="instalando-pacotes-e-dependências" class="section level3">
+<h3>1. Instalando pacotes e dependências</h3>
+<p>Utilizaremos os seguintes pacotes:<br />
+- <strong><code>Tidyverse</code></strong>: carrega um conjunto de pacotes utilizados em todo o workflow de datascience no R. Para o nosso caso, utilizaremos os pacotes de manipulação dos dados e geração de gráficos.<br />
+- <strong><code>ggthemes</code></strong>: carrega diferentes temas de gráficos para customizarmos nossa visualização.<br />
+- <strong><code>GetTDData</code></strong>: pacote responsável pela extração dos dados do Tesouro Direto (TD).<br />
+- <strong><code>extrafont</code></strong>: carrega um conjunto de fontes disponíveis para a customização da visualização.<br />
+- <strong><code>ggrepel</code></strong>: pacote que ajusta os rótulos dos dados automaticamente para que nenhum rótulo sobreponha outro rótulo<br />
+</p>
+<p>Caso você não possua algum deles já instalados em sua máquina, será necessário instalar os pacotes faltantes da seguinte forma:</p>
+<pre class="r"><code>install.packages(c(&quot;tidyverse&quot;,&quot;ggthemes&quot;,&quot;GetTDData&quot;,&quot;extrafont&quot;,&quot;ggrepel&quot;))</code></pre>
+<p>Em seguida, carregamos todos os pacotes e selecionamos a fonte que será utilizada para o nosso gráfico final (Lembrando que a fonte pode ser alterada para qualquer outra de sua escolha).<br />
+</p>
+<pre class="r"><code>library(tidyverse)
+library(ggthemes)
+library(GetTDData)
+library(extrafont)
+library(ggrepel)
+font_import()
+loadfonts(device = &quot;win&quot;)
+custom_font &lt;- &quot;Gadugi&quot;</code></pre>
+<p><br />
+A função <strong><code>font_import()</code></strong> faz o download de um conjunto de fontes, a função <strong><code>loadfonts(device= “win”)</code></strong> carrega as fontes baixadas para estarem disponíveis no R e o comando <strong><code>custom_font &lt;- “Gadugi”</code></strong> atribui à variável <strong><code>custom_font</code></strong> o nome da fonte <strong>Gadugi</strong> que será utilizada em toda visualização.</p>
+<blockquote>
+<p>Dica: Para selecionar a fonte desejada use o comando fonts() apresenta no terminal o nome de todas as fontes carregadas pelos comandos anteriores.<br />
+</p>
+</blockquote>
+</div>
+<div id="carregando-os-dados-do-tesouro-direto" class="section level3">
+<h3>2. Carregando os dados do Tesouro Direto</h3>
+<pre class="r"><code># download data
+download.TD.data(asset.codes = &quot;NTN-B&quot;)
+NTNB &lt;- read.TD.files(asset.codes = &quot;NTN-B&quot;)</code></pre>
+<p><br />
+Após o carregamento dos pacotes, a função <strong><code>download.TD.data()</code></strong> efetua o download do histórico do sistema oficial do Tesouro e salva todos os arquivos dentro de uma pasta chamada “TD Files”. Em seguida, a função <strong><code>read.TD.files()</code></strong> procura a pasta “TD Files” dentro do seu diretório atual e lê todos os arquivos dentro dela, de acordo com o argumento buscado “NTN-B”.</p>
+<blockquote>
+<p>Dicas:<br />
+- Para consultar seu diretório atual, execute o comando getwd() e, para selecionar o diretório de sua escolha, digite o atalho CTRL + SHIFT + H.<br />
+- Para a seleção de múltiplos títulos é necessário inserir um vetor com os títulos no argumento das funções. <code>assets &lt;- c(“NTN-B”, “LTN”, “NTN-C”)</code>.<br />
+</p>
+</blockquote>
+<p>Com o comando <strong><code>tail(NTNB, 10)</code></strong> é possível conferir rapidamente os 10 últimos dados da base extraida do TD.
+A base contém a data de referência (diária), o valor da taxa de compra do título, o preço de compra, o nome do título e a data de vencimento.</p>
+<p><img src="head_func.png" /></p>
+</div>
+<div id="tratando-os-dados" class="section level3">
+<h3>3. Tratando os dados</h3>
+<p><strong>Introdução ao Operador Pipe (%&gt;%)</strong></p>
+<p>Antes de começarmos os tratamentos dos dados, vou introduzir rapidamente o conceito do operador pipe, pois, além de ser utilizado no nosso código, ele possui vantagens na leitura de código e é amplamente utilizado na comunidade R, e você poderá se deparar com ele novamente. Para isso, eu peguei emprestado um exemplo do <a href="http://material.curso-r.com/pipe/">tutorial da curso-R</a> que apresenta um caso simples e de rápido entendimento do uso do operador.</p>
+<p><img src="pipe.png" /></p>
+<p>Em resumo, o operador pipe acumula o resultado da operação à esquerda do operador e aplica o resultado à função à direita do operador. Desta forma, é possível encadear diferentes ações que ocorrem em uma única base de dados, em uma única sequência de código altamente legível.</p>
+<p><strong>Voltando aos filtros</strong></p>
+<p>Como nosso objetivo é avaliar o impacto dos acontecimentos ocorridos em março/20 e abril/20 no mercado de títulos, devemos aplicar alguns filtros para prosseguirmos a análise.</p>
+<p>Iremos selecionar <strong>(i)</strong> as negociações que ocorreram no intervalo de Outubro/2019 a Maio/2020, <strong>(ii)</strong> os títulos NTN-B com pagamentos de juros semestrais para isolar a diferença de taxa entre títulos com e sem cupom e, por fim, <strong>(iii)</strong> selecionar alguns vencimentos específicos para não poluirmos a visualização e conseguirmos avaliar o impacto em diferentes maturidades.</p>
+<pre class="r"><code># wrangle the data
+NTNB %&gt;% 
+  filter(matur.date %in% venc_ntnbs,
+         ref.date &gt; as.Date(&quot;2019-08-01&quot;), 
+         !str_detect(asset.code,&quot;Principal&quot;)) %&gt;%  
+  mutate(taxa = yield.bid*100,
+         NTN_B = format(matur.date, &quot;%Y/%m&quot;),
+         label = if_else(ref.date == min(ref.date),
+                         format(matur.date, &quot;%Y&quot;),
+                         NA_character_)) %&gt;%
+  arrange(NTN_B,desc(ref.date), .by_group = TRUE) %&gt;%
+  select(-c(yield.bid, asset.code, price.bid)) %&gt;%</code></pre>
+<p><br />
+</p>
+<p>Criamos um vetor venc_ntnbs com os vencimentos selecionados em 2020, 2024, 2035 e 2050 onde iremos filtrar vencimentos.</p>
+<p>Em seguida, filtramos as observações cuja variável <strong>matur.date</strong> é a mesma que algum dos vencimentos selecionados no vetor venc_ntnbs. Para isso, utilizamos o operador <strong><code>%in%</code></strong> dentro da função <strong><code>filter</code></strong>. O segundo filtro seleciona observações cuja variável de negociação <strong>ref.date</strong> é menor que a data 2019-08-01. O último filtro seleciona observações que não possuem o texto “Principal” na variável <strong>asset.code</strong>.</p>
+<p>Com a função mutate podemos criar diversas variáveis de uma única vez rapidamente. Primeiro multiplicamos a coluna <strong>yield.bid</strong> por 100 para uma melhor visualização no gráfico, depois criamos a variável <strong>NTN_B</strong> contendo o ano e o mês do vencimento no formato (AAAA/MM) e por último utilizamos uma condição com a função <strong><code>if_else()</code></strong> para criar a variável <strong>label</strong>, contendo o ano do vencimento na primeira observação e contendo NA nas demais observações para criarmos o rótulo do vencimento no gráfico.</p>
+<p>Por fim, a função <strong><code>arrange()</code></strong> ordena a tabela através das variáveis <strong>NTN_B</strong> e <strong>ref.date</strong> e retiramos as colunas <strong>yield.bid</strong>, <strong>asset.code</strong> e <strong>price.bid</strong> com a função <strong><code>select()</code></strong>. Segue abaixo o output do comando <strong><code>tail(NTNB, 10)</code></strong>.</p>
+<p><img src="head_func2.png" /></p>
+</div>
+<div id="construindo-a-visualização" class="section level3">
+<h3>4. Construindo a visualização</h3>
+<p>Agora entraremos na parte mais complexa do código devido ao uso de inúmeras funções distintas, com cada uma delas contendo vários argumentos. Como seria inviável explicar item por item, vou passar uma visão geral sobre quais são as funções que geram os principais elementos do nosso gráfico final, dando insumos para que você encontre as respostas de dúvidas futuras sobre o código completo nas documentações das funções. Além disso, dúvidas e/ou sugestões nos comentários também são bem vindas. =]</p>
+<p>Inicialmente, somente estas duas linhas do pacote <strong><code>ggplot2</code></strong> contido no pacote <strong><code>tidyverse</code></strong> são capazes de gerar nosso gráfico. Porém, apesar da visualização ser esclarecedora, ela não é nem um pouco atrativa esteticamente.</p>
+<pre class="r"><code># continuando do pipe acima, temos:
+ggplot(aes(x = ref.date, y =  taxa, color = NTN_B)) +
+geom_line(size = 1.5) +</code></pre>
+<p><img src="graf01.png" /></p>
+<p>Para melhorar esteticamente nossa visualização, precisamos customizar os elementos do gráfico como um todo, ajustar nomes de eixos e títulos, adicionar créditos e fonte, substituir a legenda por rótulos dentro do gráfico com apenas o ano de vencimento e, por fim, indicar os períodos de destaque através de linhas, setas e rótulos.</p>
+<p>Pois bem, começando com os destaques da nossa análise, utilizei a função <strong><code>geom_vline()</code></strong> para criar as linhas verticais para cada um dos dias, a função <strong><code>geom_label()</code></strong> para criar os rótulos com os textos “Corona Day” e “Moro Day” e a função <strong><code>geom_curve()</code></strong> para criar as curvas que ligam os rótulos às linhas verticais. Para todas as funções é necessário indicar, através dos argumentos, as posições dos elementos nos eixos, junto com cores e elementos específicos. Adicionalmente, utilizei a função <strong><code>geom_label_repel()</code></strong> do pacote <strong><code>ggrepel</code></strong> para criar os rótulos com o vencimento de cada título.</p>
+<p><img src="graf02.png" /></p>
+<p>Em seguida, renomeei eixos e títulos, adicionei crédito e fonte através de funções como <strong><code>ggtitle()</code></strong>, <strong><code>xlab()</code></strong>, <strong><code>ylab()</code></strong> e <strong><code>caption()</code></strong>. Também adicionei um tema de gráfico, conforme o meu gosto pessoal utilizando o padrão <strong><code>theme_clean()</code></strong> do pacote <strong><code>ggthemes</code></strong>. Além disso, foi necessário fazer alguns ajustes internos ao tema escolhido utilizando a função <strong><code>theme()</code></strong>, como excluir a legenda que não era mais necessária e centralizar o título.</p>
+<p><em>Dicas:</em>
+<em>(i) Faça testes utilizando diferentes temas do pacote ggplot2 e também do ggthemes para você descobrir diversos temas de gráfico que podem agradar você.</em>
+<em>ii) Fazendo ajustes dentro da função theme() é possível customizar QUALQUER elemento do seu gráfico.</em></p>
+<p><img src="graf03.png" /></p>
+<p>Por fim, escolhi uma paleta de cores diferente com a função <strong><code>scale_color_brewer()</code></strong> e fiz ajustes nas escalas de data e taxa com as funções <strong><code>scale_x_date()</code></strong> e <strong><code>scale_y_continuous()</code></strong>, ajustando formato de data e decimal da taxa. Após isso, utilizei a função <strong><code>ggsave()</code></strong> para adicionar as dime nsões desejadas para o gráfico, resultando na nossa visualização final.</p>
+<p><img src="ntnb_plot.png" /></p>
+<p>Caso deseje baixar e reproduzir o código completo, acesse esse <a href="https://github.com/AugustoCL/NTN-B_ggplot2/blob/master/ntnbs.R">link</a> no github.</p>
+</div>
+
+  </div>
+
+  
+<div>
+  <ul class="tags"></ul>
+</div>
+
+
+
+  <div class="share-buttons">
+  <a class="twitter-share-button"
+     href="#"
+     title="Share on Twitter"
+     data-url="https://augustocl.github.io/AugustoLeal/post/2021-04-29-tesouro-direto-com-r/"
+     data-text="Analisando Dados do Tesouro Direto com R"><i class="fab fa-twitter"></i></a>
+
+  <a class="linkedin-share-button"
+     href="#"
+     title="Share on LinkedIn"
+     data-url="https://augustocl.github.io/AugustoLeal/post/2021-04-29-tesouro-direto-com-r/"
+     data-text="Analisando Dados do Tesouro Direto com R"><i class="fab fa-linkedin-in"></i></a>
+
+  <a class="facebook-share-button"
+     href="#"
+     title="Share on Facebook"
+     data-url="https://augustocl.github.io/AugustoLeal/post/2021-04-29-tesouro-direto-com-r/"
+     data-text="Analisando Dados do Tesouro Direto com R"><i class="fab fa-facebook"></i></a>
+
+  <a class="telegram-share-button"
+     href="#"
+     title="Share on Telegram"
+     data-url="https://augustocl.github.io/AugustoLeal/post/2021-04-29-tesouro-direto-com-r/"
+     data-text="Analisando Dados do Tesouro Direto com R"><i class="fab fa-telegram"></i></a>
+
+  <a class="pinterest-share-button"
+     href="#"
+     title="Share on Pinterest"
+     data-url="https://augustocl.github.io/AugustoLeal/post/2021-04-29-tesouro-direto-com-r/"
+     data-text="Analisando Dados do Tesouro Direto com R"><i class="fab fa-pinterest"></i></a>
+</div>
+
+
+  
+</div>
+  </main>
+
+  <footer>
+  <div>
+    <p>
+      &copy; Augusto Leal 2021
+
+      &middot; <a href="https://creativecommons.org/licenses/by-sa/4.0" target="_blank">CC BY-SA 4.0</a>
+
+      &middot; Build with <a href="https://gohugo.io/" target="_blank">Hugo</a> & <a href="https://themes.gohugo.io/soho/" target="_blank">Soho</a> theme
+    </p>
+  </div>
+</footer>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/js/all.min.js"
+          integrity="sha256-MAgcygDRahs+F/Nk5Vz387whB4kSK9NXlDN3w58LLq0="
+          crossorigin="anonymous"></script>
+
+
+  <script src="/AugustoLeal/js/jquery.min.js"></script>
+  <script src="/AugustoLeal/js/soho.js"></script>
+
+  
+
+  
+</body>
+</html>

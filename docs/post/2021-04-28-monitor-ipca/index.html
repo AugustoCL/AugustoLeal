@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="generator" content="Hugo 0.81.0" />
+
+  <title>Monitor do IPCA [R] &middot; Augusto Leal</title>
+
+  <meta name="description" content="Acessando diretamenta a API do IBGE, o monitor do IPCA apresenta uma análise interativa dos grupos de produtos que compõem o IPCA que é atualizada automaticamente" />
+
+  
+
+<meta itemprop="name" content="Monitor do IPCA [R]">
+<meta itemprop="description" content="Acessando diretamenta a API do IBGE, o monitor do IPCA apresenta uma análise interativa dos grupos de produtos que compõem o IPCA que é atualizada automaticamente"><meta itemprop="datePublished" content="2021-04-28T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2021-04-28T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="112"><meta itemprop="image" content="https://augustocl.github.io/AugustoLeal/images/profile1.png"/>
+<meta itemprop="keywords" content="Shiny,R,API,IBGE,Finance," />
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://augustocl.github.io/AugustoLeal/images/profile1.png"/>
+
+<meta name="twitter:title" content="Monitor do IPCA [R]"/>
+<meta name="twitter:description" content="Acessando diretamenta a API do IBGE, o monitor do IPCA apresenta uma análise interativa dos grupos de produtos que compõem o IPCA que é atualizada automaticamente"/>
+
+
+<meta property="og:title" content="Monitor do IPCA [R]" />
+<meta property="og:description" content="Acessando diretamenta a API do IBGE, o monitor do IPCA apresenta uma análise interativa dos grupos de produtos que compõem o IPCA que é atualizada automaticamente" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://augustocl.github.io/AugustoLeal/post/2021-04-28-monitor-ipca/" /><meta property="og:image" content="https://augustocl.github.io/AugustoLeal/images/profile1.png"/><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2021-04-28T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2021-04-28T00:00:00&#43;00:00" /><meta property="og:site_name" content="Soho Theme" />
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type":"Person",
+      "@id": "https://augustocl.github.io/AugustoLeal/#author",
+      "name":  null ,
+      "image": {
+        "@type":"ImageObject",
+        
+        "url": "https://augustocl.github.io/AugustoLeal/images/profile1.png"
+        
+      },
+      "description": ""
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://augustocl.github.io/AugustoLeal/#website",
+      "url": "https://augustocl.github.io/AugustoLeal/",
+      "name": "Augusto Leal",
+      "description": "",
+      "publisher": {
+        "@id": "https://augustocl.github.io/AugustoLeal/#author"
+      },
+      "inLanguage": "en"
+    },
+    {
+      "@type": "ImageObject",
+      "url": "https://augustocl.github.io/AugustoLeal/images/profile1.png",
+      "caption": "Augusto Leal"
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://augustocl.github.io/AugustoLeal/post/2021-04-28-monitor-ipca/#webpage",
+      "url": "https://augustocl.github.io/AugustoLeal/post/2021-04-28-monitor-ipca/",
+      "name": "Monitor do IPCA [R]",
+      "isPartOf": {
+        "@id": "https://augustocl.github.io/AugustoLeal/#website"
+      },
+      "about": {
+         "@id": "https://augustocl.github.io/AugustoLeal/#author"
+      },
+      "datePublished": "2021-04-28T00:00:00+00:00",
+      "dateModified": "2021-04-28T00:00:00+00:00",
+      "description": "Acessando diretamenta a API do IBGE, o monitor do IPCA apresenta uma análise interativa dos grupos de produtos que compõem o IPCA que é atualizada automaticamente",
+      "inLanguage": "en",
+      "potentialAction": [
+        {
+          "@type": "ReadAction",
+          "target": [
+            "https://augustocl.github.io/AugustoLeal/post/2021-04-28-monitor-ipca/"
+          ]
+        }
+      ]
+    },
+    {
+      "@type": "Article",
+      "isPartOf": {
+        "@id": "https://augustocl.github.io/AugustoLeal/post/2021-04-28-monitor-ipca/#webpage"
+      },
+      "mainEntityOfPage": {
+        "@id": "https://augustocl.github.io/AugustoLeal/post/2021-04-28-monitor-ipca/#webpage"
+      },
+      "headline": "Monitor do IPCA [R]",
+      "datePublished": "2021-04-28T00:00:00+00:00",
+      "dateModified": "2021-04-28T00:00:00+00:00",
+      "publisher": {
+        "@id": "https://augustocl.github.io/AugustoLeal/#author"
+      },
+      "keywords": [
+        "Shiny",
+        "R",
+        "API",
+        "IBGE",
+        "Finance"
+      ],
+      "articleSection": [
+        "API",
+        "R",
+        "Shiny",
+        "Finance",
+        "IBGE",
+        "Golem"
+      ],
+      "inLanguage": "en",
+      "author": {
+        "@type": "Person",
+        "name": "AugustoCL"
+      },
+      "potentialAction": [
+        {
+          "@type": "CommentAction",
+          "name": "Comment",
+          "target": [
+            "https://augustocl.github.io/AugustoLeal/post/2021-04-28-monitor-ipca/#comments"
+          ]
+        }
+      ]
+    }
+  ]
+}
+</script>
+
+
+
+  <link type="text/css"
+        rel="stylesheet"
+        href="/AugustoLeal/css/print.css"
+        media="print">
+
+  <link type="text/css"
+        rel="stylesheet"
+        href="/AugustoLeal/css/poole.css">
+
+  <link type="text/css"
+        rel="stylesheet"
+        href="/AugustoLeal/css/hyde.css">
+
+  
+<style type="text/css">
+  .sidebar {
+    background-color: #000162;
+  }
+
+  .read-more-link a {
+    border-color: #000162;
+  }
+
+  .read-more-link a:hover {
+    background-color: #000162;
+  }
+
+  .pagination li a {
+    color: #000162;
+    border: 1px solid #000162;
+  }
+
+  .pagination li.active a {
+    background-color: #000162;
+  }
+
+  .pagination li a:hover {
+    background-color: #000162;
+    opacity: 0.75;
+  }
+
+  footer a,
+  .content a,
+  .related-posts li a:hover {
+    color: #000162;
+  }
+</style>
+
+
+
+  
+
+  <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700&display=swap">
+
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css"
+        integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk="
+        crossorigin="anonymous" />
+
+  <link rel="apple-touch-icon-precomposed"
+        sizes="144x144"
+        href="/apple-touch-icon-144-precomposed.png">
+
+  <link rel="shortcut icon" href="/favicon.png">
+
+  
+  </head>
+<body>
+  <aside class="sidebar">
+  <div class="container">
+    <div class="sidebar-about">
+      
+        
+        <div class="author-image">
+          <a href="https://augustocl.github.io/AugustoLeal/">
+            <img src="/AugustoLeal/images/profile1.png" class="img-circle img-headshot center" alt="Profile Picture">
+          </a>
+        </div>
+        
+      
+
+      <h1>Augusto Leal</h1>
+
+      
+    </div>
+
+    <nav>
+      <ul class="sidebar-nav">
+        <li>
+          <a href="https://augustocl.github.io/AugustoLeal/">Home</a>
+        </li>
+        <li>
+          <a href="/AugustoLeal/about/">Sobre</a>
+        </li><li>
+          <a href="/AugustoLeal/contact/">Contato</a>
+        </li><li>
+          <a href="/AugustoLeal/posts/">Posts</a>
+        </li><li>
+          <a href="/AugustoLeal/categories/">Categorias</a>
+        </li><li>
+          <a href="/AugustoLeal/tags/">Tags</a>
+        </li>
+      </ul>
+    </nav>
+
+    <section class="social-icons">
+      
+      <a href="#" rel="me" title="Linkedin" target="_blank">
+        <i class="fab fa-linkedin" aria-hidden="true"></i>
+      </a>
+      
+      <a href="https://github.com/alexandrevicenzi/soho" rel="me" title="GitHub" target="_blank">
+        <i class="fab fa-github" aria-hidden="true"></i>
+      </a>
+      
+      <a href="#" rel="me" title="Twitter" target="_blank">
+        <i class="fab fa-twitter" aria-hidden="true"></i>
+      </a>
+      
+    </section>
+  </div>
+</aside>
+
+
+  <main class="content container">
+  <div class="post">
+  <h1 class="title">Monitor do IPCA [R]</h1>
+  
+
+  <div class="post-date">
+    <time datetime="2021-04-28T00:00:00Z">Apr 28, 2021</time> <span class="readtime">&middot; 1 min read</span>
+  </div>
+
+  <div>
+  
+
+
+<p>Este projeto gera um <u><a href="https://augustoleal.shinyapps.io/Monitor_IPCA/">dashboard interativo</a></u> que monitora o <strong>Índice de Preços ao Consumidor Amplo (IPCA)</strong> com dados alimentados diretamente do IBGE através da API SIDRA. O dashboard é atualizado mensalmente de acordo com a API e avalia desde dez/2012 as séries do IPCA total e dos seus 9 componentes.</p>
+<p>Todo o projeto foi feito com R, guiado pela filosofia do pacote <a href="https://thinkr-open.github.io/golem/index.html">Golem</a> do <a href="https://github.com/ThinkR-open">ThinkR</a>.</p>
+<p>O código inteiro do projeto está disponível neste <a href="https://github.com/AugustoCL/monitor.ipca"><u><strong>link</strong></u></a> do Github.</p>
+<hr />
+<div id="monitor-ipca" class="section level3">
+<h3><a href="https://augustoleal.shinyapps.io/Monitor_IPCA/">Monitor IPCA</a></h3>
+<iframe width="768" height="432" src="https://www.youtube.com/embed/7VvSfpDQG_o" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+</iframe>
+<hr />
+</div>
+<div id="planos-futuros" class="section level3">
+<h3>Planos Futuros</h3>
+<ul>
+<li><p>Adicionar o índice <strong>IGPM</strong>.</p>
+<p>Gostaria de comparar os índices IPCA e IGPM, porém ainda não encontrei uma fonte pública do IGPM. Caso conheçam, ficarei grato se compartilhar.</p></li>
+<li><p>Melhorar a Experiência do Usuário.</p></li>
+</ul>
+</div>
+
+  </div>
+
+  
+<div>
+  <ul class="tags">
+  <li>
+    <a href="https://augustocl.github.io/AugustoLeal/tags/shiny/" class="tag-link">Shiny</a>
+  </li>
+  
+  <li>
+    <a href="https://augustocl.github.io/AugustoLeal/tags/r/" class="tag-link">R</a>
+  </li>
+  
+  <li>
+    <a href="https://augustocl.github.io/AugustoLeal/tags/api/" class="tag-link">API</a>
+  </li>
+  
+  <li>
+    <a href="https://augustocl.github.io/AugustoLeal/tags/ibge/" class="tag-link">IBGE</a>
+  </li>
+  
+  <li>
+    <a href="https://augustocl.github.io/AugustoLeal/tags/finance/" class="tag-link">Finance</a>
+  </li>
+  </ul>
+</div>
+
+
+
+  <div class="share-buttons">
+  <a class="twitter-share-button"
+     href="#"
+     title="Share on Twitter"
+     data-url="https://augustocl.github.io/AugustoLeal/post/2021-04-28-monitor-ipca/"
+     data-text="Monitor do IPCA [R]"><i class="fab fa-twitter"></i></a>
+
+  <a class="linkedin-share-button"
+     href="#"
+     title="Share on LinkedIn"
+     data-url="https://augustocl.github.io/AugustoLeal/post/2021-04-28-monitor-ipca/"
+     data-text="Monitor do IPCA [R]"><i class="fab fa-linkedin-in"></i></a>
+
+  <a class="facebook-share-button"
+     href="#"
+     title="Share on Facebook"
+     data-url="https://augustocl.github.io/AugustoLeal/post/2021-04-28-monitor-ipca/"
+     data-text="Monitor do IPCA [R]"><i class="fab fa-facebook"></i></a>
+
+  <a class="telegram-share-button"
+     href="#"
+     title="Share on Telegram"
+     data-url="https://augustocl.github.io/AugustoLeal/post/2021-04-28-monitor-ipca/"
+     data-text="Monitor do IPCA [R]"><i class="fab fa-telegram"></i></a>
+
+  <a class="pinterest-share-button"
+     href="#"
+     title="Share on Pinterest"
+     data-url="https://augustocl.github.io/AugustoLeal/post/2021-04-28-monitor-ipca/"
+     data-text="Monitor do IPCA [R]"><i class="fab fa-pinterest"></i></a>
+</div>
+
+
+  
+</div>
+  </main>
+
+  <footer>
+  <div>
+    <p>
+      &copy; Augusto Leal 2021
+
+      &middot; <a href="https://creativecommons.org/licenses/by-sa/4.0" target="_blank">CC BY-SA 4.0</a>
+
+      &middot; Build with <a href="https://gohugo.io/" target="_blank">Hugo</a> & <a href="https://themes.gohugo.io/soho/" target="_blank">Soho</a> theme
+    </p>
+  </div>
+</footer>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/js/all.min.js"
+          integrity="sha256-MAgcygDRahs+F/Nk5Vz387whB4kSK9NXlDN3w58LLq0="
+          crossorigin="anonymous"></script>
+
+
+  <script src="/AugustoLeal/js/jquery.min.js"></script>
+  <script src="/AugustoLeal/js/soho.js"></script>
+
+  
+
+  
+</body>
+</html>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>theme on Augusto Leal</title>
+    <link>https://augustocl.github.io/AugustoLeal/tags/theme/</link>
+    <description>Recent content in theme on Augusto Leal</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Fri, 01 May 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://augustocl.github.io/AugustoLeal/tags/theme/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Soho Theme</title>
+      <link>https://augustocl.github.io/AugustoLeal/post/soho/</link>
+      <pubDate>Fri, 01 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://augustocl.github.io/AugustoLeal/post/soho/</guid>
+      <description>Soho is a minimalist two-column hugo theme based on Hyde and inspired by the success of Flex.</description>
+    </item>
+    
+  </channel>
+</rss>

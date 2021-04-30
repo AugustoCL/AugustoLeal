@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="generator" content="Hugo 0.81.0" />
+
+  <title>Analisando um Portfólio de Ações (Dashboard com R) &middot; Augusto Leal</title>
+
+  <meta name="description" content="Acessando diretamente a API do Yahoo Finance, esse dashboard interativo analisa retorno, desvio padrão, assimetria e curtose de um portfolio." />
+
+  
+
+<meta itemprop="name" content="Analisando um Portfólio de Ações (Dashboard com R)">
+<meta itemprop="description" content="Acessando diretamente a API do Yahoo Finance, esse dashboard interativo analisa retorno, desvio padrão, assimetria e curtose de um portfolio."><meta itemprop="datePublished" content="2021-04-28T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2021-04-28T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="571"><meta itemprop="image" content="https://augustocl.github.io/AugustoLeal/images/profile1.png"/>
+<meta itemprop="keywords" content="Shiny,R,API,YahooFinance,Finance," />
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://augustocl.github.io/AugustoLeal/images/profile1.png"/>
+
+<meta name="twitter:title" content="Analisando um Portfólio de Ações (Dashboard com R)"/>
+<meta name="twitter:description" content="Acessando diretamente a API do Yahoo Finance, esse dashboard interativo analisa retorno, desvio padrão, assimetria e curtose de um portfolio."/>
+
+
+<meta property="og:title" content="Analisando um Portfólio de Ações (Dashboard com R)" />
+<meta property="og:description" content="Acessando diretamente a API do Yahoo Finance, esse dashboard interativo analisa retorno, desvio padrão, assimetria e curtose de um portfolio." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://augustocl.github.io/AugustoLeal/post/2021-04-28-portf-acoes/" /><meta property="og:image" content="https://augustocl.github.io/AugustoLeal/images/profile1.png"/><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2021-04-28T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2021-04-28T00:00:00&#43;00:00" /><meta property="og:site_name" content="Soho Theme" />
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type":"Person",
+      "@id": "https://augustocl.github.io/AugustoLeal/#author",
+      "name":  null ,
+      "image": {
+        "@type":"ImageObject",
+        
+        "url": "https://augustocl.github.io/AugustoLeal/images/profile1.png"
+        
+      },
+      "description": ""
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://augustocl.github.io/AugustoLeal/#website",
+      "url": "https://augustocl.github.io/AugustoLeal/",
+      "name": "Augusto Leal",
+      "description": "",
+      "publisher": {
+        "@id": "https://augustocl.github.io/AugustoLeal/#author"
+      },
+      "inLanguage": "en"
+    },
+    {
+      "@type": "ImageObject",
+      "url": "https://augustocl.github.io/AugustoLeal/images/profile1.png",
+      "caption": "Augusto Leal"
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://augustocl.github.io/AugustoLeal/post/2021-04-28-portf-acoes/#webpage",
+      "url": "https://augustocl.github.io/AugustoLeal/post/2021-04-28-portf-acoes/",
+      "name": "Analisando um Portfólio de Ações (Dashboard com R)",
+      "isPartOf": {
+        "@id": "https://augustocl.github.io/AugustoLeal/#website"
+      },
+      "about": {
+         "@id": "https://augustocl.github.io/AugustoLeal/#author"
+      },
+      "datePublished": "2021-04-28T00:00:00+00:00",
+      "dateModified": "2021-04-28T00:00:00+00:00",
+      "description": "Acessando diretamente a API do Yahoo Finance, esse dashboard interativo analisa retorno, desvio padrão, assimetria e curtose de um portfolio.",
+      "inLanguage": "en",
+      "potentialAction": [
+        {
+          "@type": "ReadAction",
+          "target": [
+            "https://augustocl.github.io/AugustoLeal/post/2021-04-28-portf-acoes/"
+          ]
+        }
+      ]
+    },
+    {
+      "@type": "Article",
+      "isPartOf": {
+        "@id": "https://augustocl.github.io/AugustoLeal/post/2021-04-28-portf-acoes/#webpage"
+      },
+      "mainEntityOfPage": {
+        "@id": "https://augustocl.github.io/AugustoLeal/post/2021-04-28-portf-acoes/#webpage"
+      },
+      "headline": "Analisando um Portfólio de Ações (Dashboard com R)",
+      "datePublished": "2021-04-28T00:00:00+00:00",
+      "dateModified": "2021-04-28T00:00:00+00:00",
+      "publisher": {
+        "@id": "https://augustocl.github.io/AugustoLeal/#author"
+      },
+      "keywords": [
+        "Shiny",
+        "R",
+        "API",
+        "YahooFinance",
+        "finance"
+      ],
+      "articleSection": [
+        "Dashboard",
+        "Shiny",
+        "R"
+      ],
+      "inLanguage": "en",
+      "author": {
+        "@type": "Person",
+        "name": "AugustoCL"
+      },
+      "potentialAction": [
+        {
+          "@type": "CommentAction",
+          "name": "Comment",
+          "target": [
+            "https://augustocl.github.io/AugustoLeal/post/2021-04-28-portf-acoes/#comments"
+          ]
+        }
+      ]
+    }
+  ]
+}
+</script>
+
+
+
+  <link type="text/css"
+        rel="stylesheet"
+        href="/AugustoLeal/css/print.css"
+        media="print">
+
+  <link type="text/css"
+        rel="stylesheet"
+        href="/AugustoLeal/css/poole.css">
+
+  <link type="text/css"
+        rel="stylesheet"
+        href="/AugustoLeal/css/hyde.css">
+
+  
+<style type="text/css">
+  .sidebar {
+    background-color: #000162;
+  }
+
+  .read-more-link a {
+    border-color: #000162;
+  }
+
+  .read-more-link a:hover {
+    background-color: #000162;
+  }
+
+  .pagination li a {
+    color: #000162;
+    border: 1px solid #000162;
+  }
+
+  .pagination li.active a {
+    background-color: #000162;
+  }
+
+  .pagination li a:hover {
+    background-color: #000162;
+    opacity: 0.75;
+  }
+
+  footer a,
+  .content a,
+  .related-posts li a:hover {
+    color: #000162;
+  }
+</style>
+
+
+
+  
+
+  <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700&display=swap">
+
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css"
+        integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk="
+        crossorigin="anonymous" />
+
+  <link rel="apple-touch-icon-precomposed"
+        sizes="144x144"
+        href="/apple-touch-icon-144-precomposed.png">
+
+  <link rel="shortcut icon" href="/favicon.png">
+
+  
+  </head>
+<body>
+  <aside class="sidebar">
+  <div class="container">
+    <div class="sidebar-about">
+      
+        
+        <div class="author-image">
+          <a href="https://augustocl.github.io/AugustoLeal/">
+            <img src="/AugustoLeal/images/profile1.png" class="img-circle img-headshot center" alt="Profile Picture">
+          </a>
+        </div>
+        
+      
+
+      <h1>Augusto Leal</h1>
+
+      
+    </div>
+
+    <nav>
+      <ul class="sidebar-nav">
+        <li>
+          <a href="https://augustocl.github.io/AugustoLeal/">Home</a>
+        </li>
+        <li>
+          <a href="/AugustoLeal/about/">Sobre</a>
+        </li><li>
+          <a href="/AugustoLeal/contact/">Contato</a>
+        </li><li>
+          <a href="/AugustoLeal/posts/">Posts</a>
+        </li><li>
+          <a href="/AugustoLeal/categories/">Categorias</a>
+        </li><li>
+          <a href="/AugustoLeal/tags/">Tags</a>
+        </li>
+      </ul>
+    </nav>
+
+    <section class="social-icons">
+      
+      <a href="#" rel="me" title="Linkedin" target="_blank">
+        <i class="fab fa-linkedin" aria-hidden="true"></i>
+      </a>
+      
+      <a href="https://github.com/alexandrevicenzi/soho" rel="me" title="GitHub" target="_blank">
+        <i class="fab fa-github" aria-hidden="true"></i>
+      </a>
+      
+      <a href="#" rel="me" title="Twitter" target="_blank">
+        <i class="fab fa-twitter" aria-hidden="true"></i>
+      </a>
+      
+    </section>
+  </div>
+</aside>
+
+
+  <main class="content container">
+  <div class="post">
+  <h1 class="title">Analisando um Portfólio de Ações (Dashboard com R)</h1>
+  
+
+  <div class="post-date">
+    <time datetime="2021-04-28T00:00:00Z">Apr 28, 2021</time> <span class="readtime">&middot; 3 min read</span>
+  </div>
+
+  <div>
+  
+
+
+<p>Esse projeto é um <u><a href="https://augustoleal.shinyapps.io/Portf_Analysis_ACL/"><strong>dashboard interativo</strong></a></u> onde é possível analisar um portfólio de até <strong>5</strong> ativos, a partir de 4 visões (<strong>retorno</strong>, <strong>desvio padrão</strong>, <strong>assimetria</strong> e <strong>curtose</strong>).</p>
+<hr />
+<div id="dashboard" class="section level3">
+<h3><a href="https://augustoleal.shinyapps.io/Portf_Analysis_ACL/"><u>Dashboard</u></a></h3>
+</div>
+<div id="section" class="section level2">
+<h2><iframe width="666" height="360" src="https://www.youtube.com/embed/iLZoYiBmzDE" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></h2>
+<p>Todo o dashboard foi construído com a linguagem R, usando as ferramentas:<br />
+- <strong>Shiny</strong> (Reatividade do Dashboard)<br />
+- <strong>Flexdashboard</strong> (Template Rápido de Dashboards)<br />
+- <strong>Highcharter</strong> (Visualização Gráfica em JavaScript)<br />
+- <strong>Tidyquant</strong> (Pacote R que traz dados do <em>Yahoo Finance</em>)</p>
+<p>Objetivo do projeto foi gerar conjunto de visualizações relevantes para uma análise descritiva de um portfólio, utilizando os conhecimentos aprendidos no livro <a href="http://www.reproduciblefinance.com/">Reproducible Finance with R</a>.
+Como esta é uma aplicação dos conhecimentos do livro, sinta-se a vontade para utilizá-la como complemento ao conteúdo do livro e seus estudos pessoais.</p>
+<p>Aproveite a interatividade dos gráficos no dashboard e experimente os filtros de tempo, gráficos reativos e outras funcionalidades que o <a href="http://jkunst.com/highcharter/">Highcharter</a> disponibiliza para aperfeiçoar a sua análise.</p>
+<p>O código inteiro do projeto está disponível neste <a href="https://github.com/AugustoCL/DashPortfolio"><u><strong>link</strong></u></a> do Github.</p>
+<hr />
+</div>
+<div id="inputs" class="section level2">
+<h2>INPUTS</h2>
+<p><strong>TICKER</strong>: Como o dash se alimenta com dados do <a href="https://finance.yahoo.com/">Yahoo Finance</a>, todos os ativos da plataforma podem ser adicionados ao dashboard e, portanto, devem cumprir o padrão de ticker do mesmo.</p>
+<table>
+<thead>
+<tr class="header">
+<th>Ação Brasileira</th>
+<th>Ação Americana</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>WEGE3.SA</strong> (WEG)</td>
+<td><strong>SBUX</strong> (Starbucks)</td>
+</tr>
+</tbody>
+</table>
+<p>Em caso de dúvidas do ticker correto, acesse o <a href="https://finance.yahoo.com/">Yahoo Finance</a> para a captura dos ativos desejados.</p>
+<p><strong>PESOS</strong>: Certifique-se de que os pesos somem 100% para que os cálculos do dashboard sejam efetuados. Para isso, o botão ‘Calcular’ fica disponível somente quando os pesos somam 100%.</p>
+<p><strong>DATAS</strong>: Quando selecionar as datas de início e fim de análise, atente-se para que todas as 5 ações estejam disponíveis neste período. Caso alguma cia não esteja disponível no intervalo os cálculos do portfólio irão quebrar. –&gt; (<em>Este caso está incluso na lista de melhorias abaixo</em>)</p>
+<p><strong>PERIODICIDADE e JANELA MÓVEL</strong>: Utilize estas opções para detalhar sua análise. Os log-retornos serão analisados de acordo com a periodicidade selecionada (anual, mensal e semanal) e a janela móvel te permite observar o comportamento histórico de medidas de risco do portfólio, como desvio padrão, assimetria e curtose.</p>
+</div>
+<div id="resumo-das-4-visões" class="section level2">
+<h2>Resumo das 4 visões</h2>
+<p><strong>Log-Retornos</strong>: Para avaliarmos as distribuições históricas dos retornos, é necessário utilizar o <code>log-retorno</code> para equalizar os pesos para os retornos reais positivos e negativos. Acesse esse <a href="http://ferramentasdoinvestidor.com.br/dicas-de-excel/entenda-o-log-retorno/">link</a> para uma maior compreensão do uso necessário do log-retorno na avaliação de retornos acumulados.</p>
+<p><strong>Desvio Padrão</strong>: Indica o grau de dispersão dos log-retornos dos ativos em relação a sua média. Quanto maior o desvio padrão, mais volátil (risco) é o log-retorno do ativo.</p>
+<p><strong>Assimetria</strong>: Descrever o comportamento histórico dos retornos através da assimetria de sua distribuição em relação a média. Como a média dos log-retornos tendem a zero, assimetria negativa indica forte presença de retornos positivos, enquanto assimetria positiva indica grandes retorno negativos. <img src="assim.JPG" /></p>
+<p><strong>Curtose</strong>: Descreve a intensidade de valores extremos na distribuição de retornos.Curtose alta significa recorrência de retornos extremos no histórico do ativo.<img src="curtose.png" /></p>
+<p>Obs.: Ilustrações retiradas do <a href="http://www.portalaction.com.br/">Portal Action</a></p>
+<div id="lista-de-melhorias" class="section level3">
+<h3>Lista de Melhorias</h3>
+<ul>
+<li><input type="checkbox" disabled="" />
+Permitir o input de 4 ativos ou menos no portfólio.</li>
+<li><input type="checkbox" disabled="" />
+Permitir o input 5 ativos ou mais no portfólio.</li>
+<li><input type="checkbox" disabled="" />
+Permitir o cálculo do portfólio em intervalos de tempo que algum ativo não esteja disponível.</li>
+<li><input type="checkbox" disabled="" />
+Adicionar novas páginas contendo CAPM, Sharpe Ratio e Frama-French Model</li>
+<li><input type="checkbox" disabled="" />
+Refazer o Dashboard utilizando <strong>Shiny</strong> ou <strong>Shinydashboard</strong>.</li>
+<li><input type="checkbox" disabled="" />
+Modularizar o dash para organizar o script, com um módulo para cada página.</li>
+<li><input type="checkbox" disabled="" />
+Construir o app usando <strong>Golem</strong> para colocar o app em produção utilizando um container (<strong>docker</strong>) em alguma nuvem na web.</li>
+</ul>
+<p>Obs.: A sequência das melhorias não indica ordem de prioridades.</p>
+</div>
+</div>
+
+  </div>
+
+  
+<div>
+  <ul class="tags">
+  <li>
+    <a href="https://augustocl.github.io/AugustoLeal/tags/shiny/" class="tag-link">Shiny</a>
+  </li>
+  
+  <li>
+    <a href="https://augustocl.github.io/AugustoLeal/tags/r/" class="tag-link">R</a>
+  </li>
+  
+  <li>
+    <a href="https://augustocl.github.io/AugustoLeal/tags/api/" class="tag-link">API</a>
+  </li>
+  
+  <li>
+    <a href="https://augustocl.github.io/AugustoLeal/tags/yahoofinance/" class="tag-link">YahooFinance</a>
+  </li>
+  
+  <li>
+    <a href="https://augustocl.github.io/AugustoLeal/tags/finance/" class="tag-link">finance</a>
+  </li>
+  </ul>
+</div>
+
+
+
+  <div class="share-buttons">
+  <a class="twitter-share-button"
+     href="#"
+     title="Share on Twitter"
+     data-url="https://augustocl.github.io/AugustoLeal/post/2021-04-28-portf-acoes/"
+     data-text="Analisando um Portfólio de Ações (Dashboard com R)"><i class="fab fa-twitter"></i></a>
+
+  <a class="linkedin-share-button"
+     href="#"
+     title="Share on LinkedIn"
+     data-url="https://augustocl.github.io/AugustoLeal/post/2021-04-28-portf-acoes/"
+     data-text="Analisando um Portfólio de Ações (Dashboard com R)"><i class="fab fa-linkedin-in"></i></a>
+
+  <a class="facebook-share-button"
+     href="#"
+     title="Share on Facebook"
+     data-url="https://augustocl.github.io/AugustoLeal/post/2021-04-28-portf-acoes/"
+     data-text="Analisando um Portfólio de Ações (Dashboard com R)"><i class="fab fa-facebook"></i></a>
+
+  <a class="telegram-share-button"
+     href="#"
+     title="Share on Telegram"
+     data-url="https://augustocl.github.io/AugustoLeal/post/2021-04-28-portf-acoes/"
+     data-text="Analisando um Portfólio de Ações (Dashboard com R)"><i class="fab fa-telegram"></i></a>
+
+  <a class="pinterest-share-button"
+     href="#"
+     title="Share on Pinterest"
+     data-url="https://augustocl.github.io/AugustoLeal/post/2021-04-28-portf-acoes/"
+     data-text="Analisando um Portfólio de Ações (Dashboard com R)"><i class="fab fa-pinterest"></i></a>
+</div>
+
+
+  
+</div>
+  </main>
+
+  <footer>
+  <div>
+    <p>
+      &copy; Augusto Leal 2021
+
+      &middot; <a href="https://creativecommons.org/licenses/by-sa/4.0" target="_blank">CC BY-SA 4.0</a>
+
+      &middot; Build with <a href="https://gohugo.io/" target="_blank">Hugo</a> & <a href="https://themes.gohugo.io/soho/" target="_blank">Soho</a> theme
+    </p>
+  </div>
+</footer>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/js/all.min.js"
+          integrity="sha256-MAgcygDRahs+F/Nk5Vz387whB4kSK9NXlDN3w58LLq0="
+          crossorigin="anonymous"></script>
+
+
+  <script src="/AugustoLeal/js/jquery.min.js"></script>
+  <script src="/AugustoLeal/js/soho.js"></script>
+
+  
+
+  
+</body>
+</html>

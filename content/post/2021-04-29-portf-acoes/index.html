@@ -1,0 +1,85 @@
+---
+title: Analisando um Portfólio de Ações [R] [Shiny]
+author: 'AugustoCL'
+date: '2021-04-29'
+slug: []
+categories: [Dashboard,Shiny,R]
+tags:
+  - Shiny
+  - R
+  - API
+  - YahooFinance
+  - Finance
+description: 'Acessando diretamente a API do Yahoo Finance, esse dashboard interativo analisa retorno, desvio padrão, assimetria e curtose de um portfolio.'
+---
+
+
+
+<p>Esse projeto é um <strong><em><u><a href="https://augustoleal.shinyapps.io/Portf_Analysis_ACL/">dashboard interativo</a></u></em></strong> onde é possível analisar um portfólio de até 5 ativos, a partir de 4 visões (<strong>retorno</strong>, <strong>desvio padrão</strong>, <strong>assimetria</strong> e <strong>curtose</strong>).</p>
+<hr />
+<div id="dashboard" class="section level3">
+<h3><strong><em><u><a href="https://augustoleal.shinyapps.io/Portf_Analysis_ACL/">Dashboard</a></u></em></strong></h3>
+</div>
+<div id="section" class="section level2">
+<h2><iframe width="666" height="360" src="https://www.youtube.com/embed/iLZoYiBmzDE" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></h2>
+<p>Todo o dashboard foi construído com a linguagem R, usando as ferramentas:<br />
+- <strong>Shiny</strong> (Reatividade do Dashboard)<br />
+- <strong>Flexdashboard</strong> (Template Rápido de Dashboards)<br />
+- <strong>Highcharter</strong> (Visualização Gráfica em JavaScript)<br />
+- <strong>Tidyquant</strong> (Pacote R que traz dados do <em>Yahoo Finance</em>)</p>
+<p>Objetivo do projeto foi gerar conjunto de visualizações relevantes para uma análise descritiva de um portfólio, utilizando os conhecimentos aprendidos no livro <strong><em><u><a href="http://www.reproduciblefinance.com/">Reproducible Finance with R</a></u></em></strong>.
+Como esta é uma aplicação dos conhecimentos do livro, sinta-se a vontade para utilizá-la como complemento ao conteúdo do livro e seus estudos pessoais.</p>
+<p>Aproveite a interatividade dos gráficos no dashboard e experimente os filtros de tempo, gráficos reativos e outras funcionalidades que o <strong><em><u><a href="http://jkunst.com/highcharter/">Highcharter</a></u></em></strong> disponibiliza para aperfeiçoar a sua análise.</p>
+<p>O código inteiro do projeto está disponível neste <strong><em><u><a href="https://github.com/AugustoCL/DashPortfolio">link</a></u></em></strong> do Github.</p>
+<hr />
+<div id="inputs" class="section level3">
+<h3>INPUTS</h3>
+<p><strong>TICKER</strong>: Como o dash se alimenta com dados do <strong><em><u><a href="https://finance.yahoo.com/">Yahoo Finance</a></u></em></strong>, todos os ativos da plataforma podem ser adicionados ao dashboard e, portanto, devem cumprir o padrão de ticker do mesmo.</p>
+<table>
+<thead>
+<tr class="header">
+<th>Ação Brasileira</th>
+<th>Ação Americana</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>WEGE3.SA</strong> (WEG)</td>
+<td><strong>SBUX</strong> (Starbucks)</td>
+</tr>
+</tbody>
+</table>
+<p>Em caso de dúvidas do ticker correto, acesse o <strong><em><u><a href="https://finance.yahoo.com/">Yahoo Finance</a></u></em></strong> para a captura dos ativos desejados.</p>
+<p><strong>PESOS</strong>: Certifique-se de que os pesos somem 100% para que os cálculos do dashboard sejam efetuados. Para isso, o botão ‘Calcular’ fica disponível somente quando os pesos somam 100%.</p>
+<p><strong>DATAS</strong>: Quando selecionar as datas de início e fim de análise, atente-se para que todas as 5 ações estejam disponíveis neste período. Caso alguma cia não esteja disponível no intervalo os cálculos do portfólio irão quebrar. –&gt; (<em>Este caso está incluso na lista de melhorias abaixo</em>)</p>
+<p><strong>PERIODICIDADE e JANELA MÓVEL</strong>: Utilize estas opções para detalhar sua análise. Os log-retornos serão analisados de acordo com a periodicidade selecionada (anual, mensal e semanal) e a janela móvel te permite observar o comportamento histórico de medidas de risco do portfólio, como desvio padrão, assimetria e curtose.</p>
+</div>
+<div id="resumo-das-4-visões" class="section level3">
+<h3>Resumo das 4 visões</h3>
+<p><strong>Log-Retornos</strong>: Para avaliarmos as distribuições históricas dos retornos, é necessário utilizar o <code>log-retorno</code> para equalizar os pesos para os retornos reais positivos e negativos. Acesse esse <strong><em><u><a href="http://ferramentasdoinvestidor.com.br/dicas-de-excel/entenda-o-log-retorno/">link</a></u></em></strong> para uma maior compreensão do uso necessário do log-retorno na avaliação de retornos acumulados.</p>
+<p><strong>Desvio Padrão</strong>: Indica o grau de dispersão dos log-retornos dos ativos em relação a sua média. Quanto maior o desvio padrão, mais volátil (risco) é o log-retorno do ativo.</p>
+<p><strong>Assimetria</strong>: Descrever o comportamento histórico dos retornos através da assimetria de sua distribuição em relação a média. Como a média dos log-retornos tendem a zero, assimetria negativa indica forte presença de retornos positivos, enquanto assimetria positiva indica grandes retorno negativos. <img src="assim.JPG" /></p>
+<p><strong>Curtose</strong>: Descreve a intensidade de valores extremos na distribuição de retornos. Curtose baixa significa uma grande quantidade de retornos extremos no histórico do ativo e curtose alta há pouca quantidade de retornos extremos.<img src="curtose.png" /></p>
+<p>Obs.: Ilustrações retiradas do <strong><em><u><a href="http://www.portalaction.com.br/">Portal Action</a></u></em></strong></p>
+</div>
+<div id="lista-de-melhorias" class="section level3">
+<h3>Lista de Melhorias</h3>
+<ul>
+<li><input type="checkbox" disabled="" />
+Permitir o input de 4 ativos ou menos no portfólio.</li>
+<li><input type="checkbox" disabled="" />
+Permitir o input 5 ativos ou mais no portfólio.</li>
+<li><input type="checkbox" disabled="" />
+Permitir o cálculo do portfólio em intervalos de tempo que algum ativo não esteja disponível.</li>
+<li><input type="checkbox" disabled="" />
+Adicionar novas páginas contendo CAPM, Sharpe Ratio e Frama-French Model</li>
+<li><input type="checkbox" disabled="" />
+Refazer o Dashboard utilizando <strong>Shiny</strong> ou <strong>Shinydashboard</strong>.</li>
+<li><input type="checkbox" disabled="" />
+Modularizar o dash para organizar o script, com um módulo para cada página.</li>
+<li><input type="checkbox" disabled="" />
+Construir o app usando <strong>Golem</strong> para colocar o app em produção utilizando um container (<strong>docker</strong>) em alguma nuvem na web.</li>
+</ul>
+<p>Obs.: A sequência das melhorias não indica ordem de prioridades.</p>
+</div>
+</div>

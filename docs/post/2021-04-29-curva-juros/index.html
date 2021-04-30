@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="generator" content="Hugo 0.81.0" />
+
+  <title>Webscraping e visualização Interativa da ETTJ [Python] e [R] &middot; Augusto Leal</title>
+
+  <meta name="description" content="Entendendo o comportamento histórico das curvas de juros com uma visualização animada (gif), automatizando a extração dos dados da SUSEP." />
+
+  
+
+<meta itemprop="name" content="Webscraping e visualização Interativa da ETTJ [Python] e [R]">
+<meta itemprop="description" content="Entendendo o comportamento histórico das curvas de juros com uma visualização animada (gif), automatizando a extração dos dados da SUSEP."><meta itemprop="datePublished" content="2021-04-27T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2021-04-27T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="188"><meta itemprop="image" content="https://augustocl.github.io/AugustoLeal/images/profile1.png"/>
+<meta itemprop="keywords" content="webscraping,visualizacao,ETTJ,SUSEP," />
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://augustocl.github.io/AugustoLeal/images/profile1.png"/>
+
+<meta name="twitter:title" content="Webscraping e visualização Interativa da ETTJ [Python] e [R]"/>
+<meta name="twitter:description" content="Entendendo o comportamento histórico das curvas de juros com uma visualização animada (gif), automatizando a extração dos dados da SUSEP."/>
+
+
+<meta property="og:title" content="Webscraping e visualização Interativa da ETTJ [Python] e [R]" />
+<meta property="og:description" content="Entendendo o comportamento histórico das curvas de juros com uma visualização animada (gif), automatizando a extração dos dados da SUSEP." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://augustocl.github.io/AugustoLeal/post/2021-04-29-curva-juros/" /><meta property="og:image" content="https://augustocl.github.io/AugustoLeal/images/profile1.png"/><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2021-04-27T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2021-04-27T00:00:00&#43;00:00" /><meta property="og:site_name" content="Soho Theme" />
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type":"Person",
+      "@id": "https://augustocl.github.io/AugustoLeal/#author",
+      "name":  null ,
+      "image": {
+        "@type":"ImageObject",
+        
+        "url": "https://augustocl.github.io/AugustoLeal/images/profile1.png"
+        
+      },
+      "description": ""
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://augustocl.github.io/AugustoLeal/#website",
+      "url": "https://augustocl.github.io/AugustoLeal/",
+      "name": "Augusto Leal",
+      "description": "",
+      "publisher": {
+        "@id": "https://augustocl.github.io/AugustoLeal/#author"
+      },
+      "inLanguage": "en"
+    },
+    {
+      "@type": "ImageObject",
+      "url": "https://augustocl.github.io/AugustoLeal/images/profile1.png",
+      "caption": "Augusto Leal"
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://augustocl.github.io/AugustoLeal/post/2021-04-29-curva-juros/#webpage",
+      "url": "https://augustocl.github.io/AugustoLeal/post/2021-04-29-curva-juros/",
+      "name": "Webscraping e visualização Interativa da ETTJ [Python] e [R]",
+      "isPartOf": {
+        "@id": "https://augustocl.github.io/AugustoLeal/#website"
+      },
+      "about": {
+         "@id": "https://augustocl.github.io/AugustoLeal/#author"
+      },
+      "datePublished": "2021-04-27T00:00:00+00:00",
+      "dateModified": "2021-04-27T00:00:00+00:00",
+      "description": "Entendendo o comportamento histórico das curvas de juros com uma visualização animada (gif), automatizando a extração dos dados da SUSEP.",
+      "inLanguage": "en",
+      "potentialAction": [
+        {
+          "@type": "ReadAction",
+          "target": [
+            "https://augustocl.github.io/AugustoLeal/post/2021-04-29-curva-juros/"
+          ]
+        }
+      ]
+    },
+    {
+      "@type": "Article",
+      "isPartOf": {
+        "@id": "https://augustocl.github.io/AugustoLeal/post/2021-04-29-curva-juros/#webpage"
+      },
+      "mainEntityOfPage": {
+        "@id": "https://augustocl.github.io/AugustoLeal/post/2021-04-29-curva-juros/#webpage"
+      },
+      "headline": "Webscraping e visualização Interativa da ETTJ [Python] e [R]",
+      "datePublished": "2021-04-27T00:00:00+00:00",
+      "dateModified": "2021-04-27T00:00:00+00:00",
+      "publisher": {
+        "@id": "https://augustocl.github.io/AugustoLeal/#author"
+      },
+      "keywords": [
+        "webscraping",
+        "visualizacao",
+        "ETTJ",
+        "SUSEP"
+      ],
+      "articleSection": [
+      ],
+      "inLanguage": "en",
+      "author": {
+        "@type": "Person",
+        "name": ""
+      },
+      "potentialAction": [
+        {
+          "@type": "CommentAction",
+          "name": "Comment",
+          "target": [
+            "https://augustocl.github.io/AugustoLeal/post/2021-04-29-curva-juros/#comments"
+          ]
+        }
+      ]
+    }
+  ]
+}
+</script>
+
+
+
+  <link type="text/css"
+        rel="stylesheet"
+        href="/AugustoLeal/css/print.css"
+        media="print">
+
+  <link type="text/css"
+        rel="stylesheet"
+        href="/AugustoLeal/css/poole.css">
+
+  <link type="text/css"
+        rel="stylesheet"
+        href="/AugustoLeal/css/hyde.css">
+
+  
+<style type="text/css">
+  .sidebar {
+    background-color: #000162;
+  }
+
+  .read-more-link a {
+    border-color: #000162;
+  }
+
+  .read-more-link a:hover {
+    background-color: #000162;
+  }
+
+  .pagination li a {
+    color: #000162;
+    border: 1px solid #000162;
+  }
+
+  .pagination li.active a {
+    background-color: #000162;
+  }
+
+  .pagination li a:hover {
+    background-color: #000162;
+    opacity: 0.75;
+  }
+
+  footer a,
+  .content a,
+  .related-posts li a:hover {
+    color: #000162;
+  }
+</style>
+
+
+
+  
+
+  <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700&display=swap">
+
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css"
+        integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk="
+        crossorigin="anonymous" />
+
+  <link rel="apple-touch-icon-precomposed"
+        sizes="144x144"
+        href="/apple-touch-icon-144-precomposed.png">
+
+  <link rel="shortcut icon" href="/favicon.png">
+
+  
+  </head>
+<body>
+  <aside class="sidebar">
+  <div class="container">
+    <div class="sidebar-about">
+      
+        
+        <div class="author-image">
+          <a href="https://augustocl.github.io/AugustoLeal/">
+            <img src="/AugustoLeal/images/profile1.png" class="img-circle img-headshot center" alt="Profile Picture">
+          </a>
+        </div>
+        
+      
+
+      <h1>Augusto Leal</h1>
+
+      
+    </div>
+
+    <nav>
+      <ul class="sidebar-nav">
+        <li>
+          <a href="https://augustocl.github.io/AugustoLeal/">Home</a>
+        </li>
+        <li>
+          <a href="/AugustoLeal/about/">Sobre</a>
+        </li><li>
+          <a href="/AugustoLeal/contact/">Contato</a>
+        </li><li>
+          <a href="/AugustoLeal/posts/">Posts</a>
+        </li><li>
+          <a href="/AugustoLeal/categories/">Categorias</a>
+        </li><li>
+          <a href="/AugustoLeal/tags/">Tags</a>
+        </li>
+      </ul>
+    </nav>
+
+    <section class="social-icons">
+      
+      <a href="#" rel="me" title="Linkedin" target="_blank">
+        <i class="fab fa-linkedin" aria-hidden="true"></i>
+      </a>
+      
+      <a href="https://github.com/alexandrevicenzi/soho" rel="me" title="GitHub" target="_blank">
+        <i class="fab fa-github" aria-hidden="true"></i>
+      </a>
+      
+      <a href="#" rel="me" title="Twitter" target="_blank">
+        <i class="fab fa-twitter" aria-hidden="true"></i>
+      </a>
+      
+    </section>
+  </div>
+</aside>
+
+
+  <main class="content container">
+  <div class="post">
+  <h1 class="title">Webscraping e visualização Interativa da ETTJ [Python] e [R]</h1>
+  
+
+  <div class="post-date">
+    <time datetime="2021-04-27T00:00:00Z">Apr 27, 2021</time> <span class="readtime">&middot; 1 min read</span>
+  </div>
+
+  <div>
+  
+
+
+<p>Gosto muito deste pequeno trabalho porque ele conecta diferentes ferramentas e assuntos técnicos que eu julgo interessante para todos que trabalham com dados.</p>
+<ul>
+<li>Primeiro, temos o <strong>webscraping</strong> que automatiza a coleta, leitura e o tratamento dos dados com <strong><code>Python</code></strong>.</li>
+<li>Segundo, temos a <strong>comunicação</strong> de um conceito complexo de forma intuitiva, através da criação de um <strong>gif</strong> com <strong><code>R</code></strong>.</li>
+</ul>
+<div id="o-que-é-uma-curva-de-juros" class="section level3">
+<h3>O que é uma curva de juros?</h3>
+<p>Para avaliar uma curva de juro é necessário primeiro entender o juro que ela representa. O juro da curva é a taxa que um título público de determinado vencimento t irá pagar. Então avaliando hoje, se você abrir o site do <a href="https://www.tesourodireto.com.br/">Tesouro Direto</a>, irá encontrar diversos títulos públicos com diferentes datas de vencimento, onde cada um pagará uma taxa específica.
+<img src="tesouro_direto.JPG" /></p>
+<p>A curva de juros representa todas estas taxas de títulos com diferentes vencimentos quando tiramos uma foto no tempo, ou melhor, quando abrimos o tesouro direto ^^<br />
+Ela pode ter diferentes formatos e inclinações, conforme imagem abaixo e ela representa o</p>
+<p>Sucintamente, uma curva de juros é uma foto, em determinado instante X, do valor do juro negociado em diferentes instantes no tempo.</p>
+</div>
+
+  </div>
+
+  
+<div>
+  <ul class="tags">
+  <li>
+    <a href="https://augustocl.github.io/AugustoLeal/tags/webscraping/" class="tag-link">webscraping</a>
+  </li>
+  
+  <li>
+    <a href="https://augustocl.github.io/AugustoLeal/tags/visualizacao/" class="tag-link">visualizacao</a>
+  </li>
+  
+  <li>
+    <a href="https://augustocl.github.io/AugustoLeal/tags/ettj/" class="tag-link">ETTJ</a>
+  </li>
+  
+  <li>
+    <a href="https://augustocl.github.io/AugustoLeal/tags/susep/" class="tag-link">SUSEP</a>
+  </li>
+  </ul>
+</div>
+
+
+
+  <div class="share-buttons">
+  <a class="twitter-share-button"
+     href="#"
+     title="Share on Twitter"
+     data-url="https://augustocl.github.io/AugustoLeal/post/2021-04-29-curva-juros/"
+     data-text="Webscraping e visualização Interativa da ETTJ [Python] e [R]"><i class="fab fa-twitter"></i></a>
+
+  <a class="linkedin-share-button"
+     href="#"
+     title="Share on LinkedIn"
+     data-url="https://augustocl.github.io/AugustoLeal/post/2021-04-29-curva-juros/"
+     data-text="Webscraping e visualização Interativa da ETTJ [Python] e [R]"><i class="fab fa-linkedin-in"></i></a>
+
+  <a class="facebook-share-button"
+     href="#"
+     title="Share on Facebook"
+     data-url="https://augustocl.github.io/AugustoLeal/post/2021-04-29-curva-juros/"
+     data-text="Webscraping e visualização Interativa da ETTJ [Python] e [R]"><i class="fab fa-facebook"></i></a>
+
+  <a class="telegram-share-button"
+     href="#"
+     title="Share on Telegram"
+     data-url="https://augustocl.github.io/AugustoLeal/post/2021-04-29-curva-juros/"
+     data-text="Webscraping e visualização Interativa da ETTJ [Python] e [R]"><i class="fab fa-telegram"></i></a>
+
+  <a class="pinterest-share-button"
+     href="#"
+     title="Share on Pinterest"
+     data-url="https://augustocl.github.io/AugustoLeal/post/2021-04-29-curva-juros/"
+     data-text="Webscraping e visualização Interativa da ETTJ [Python] e [R]"><i class="fab fa-pinterest"></i></a>
+</div>
+
+
+  
+</div>
+  </main>
+
+  <footer>
+  <div>
+    <p>
+      &copy; Augusto Leal 2021
+
+      &middot; <a href="https://creativecommons.org/licenses/by-sa/4.0" target="_blank">CC BY-SA 4.0</a>
+
+      &middot; Build with <a href="https://gohugo.io/" target="_blank">Hugo</a> & <a href="https://themes.gohugo.io/soho/" target="_blank">Soho</a> theme
+    </p>
+  </div>
+</footer>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/js/all.min.js"
+          integrity="sha256-MAgcygDRahs+F/Nk5Vz387whB4kSK9NXlDN3w58LLq0="
+          crossorigin="anonymous"></script>
+
+
+  <script src="/AugustoLeal/js/jquery.min.js"></script>
+  <script src="/AugustoLeal/js/soho.js"></script>
+
+  
+
+  
+</body>
+</html>
