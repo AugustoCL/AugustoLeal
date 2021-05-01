@@ -37,17 +37,17 @@ themeColor = "#00004d"  # #000162 #1d2f6b
   [[params.socialIcons]]
   icon = "fa-linkedin"
   title = "Linkedin"
-  url = "#"
+  url = "https://www.linkedin.com/in/augustocleal/"
 
   [[params.socialIcons]]
   icon = "fa-github"
   title = "GitHub"
-  url = "https://github.com/alexandrevicenzi/soho"
+  url = "https://github.com/AugustoCL"
 
   [[params.socialIcons]]
-  icon = "fa-twitter"
-  title = "Twitter"
-  url = "#"
+  icon = "fa fa-envelope"
+  title = "email"
+  url = "mailto:leal.augusto@unifesp.br"
 
 [taxonomies]
   series = "series"
