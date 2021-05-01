@@ -6,14 +6,14 @@
     <description>Recent content in webscraping on Augusto Leal</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Tue, 27 Apr 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://augustocl.github.io/AugustoLeal/tags/webscraping/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 30 Apr 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://augustocl.github.io/AugustoLeal/tags/webscraping/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Webscraping e visualização Interativa da ETTJ [Python] e [R]</title>
-      <link>https://augustocl.github.io/AugustoLeal/post/2021-04-29-curva-juros/</link>
-      <pubDate>Tue, 27 Apr 2021 00:00:00 +0000</pubDate>
+      <title>Webscraping e visualização animada da ETTJ [Python] e [R]</title>
+      <link>https://augustocl.github.io/AugustoLeal/post/2021-04-30-curva-juros/</link>
+      <pubDate>Fri, 30 Apr 2021 00:00:00 +0000</pubDate>
       
-      <guid>https://augustocl.github.io/AugustoLeal/post/2021-04-29-curva-juros/</guid>
-      <description>Gosto muito deste pequeno trabalho porque ele conecta diferentes ferramentas e assuntos técnicos que eu julgo interessante para todos que trabalham com dados.</description>
+      <guid>https://augustocl.github.io/AugustoLeal/post/2021-04-30-curva-juros/</guid>
+      <description>Esse projeto utiliza o modelo de curvas de juros NelsonSiegelSvensson, que é utilizado pela SUSEP, ANBIMA e diversos Bancos Centrais pelo mundo, para a gerar:- O histórico das curvas de juros futuras pré, ipca, igpm e tr extraídas diretamente do site da SUSEP via Webscraping.</description>
     </item>
     
   </channel>

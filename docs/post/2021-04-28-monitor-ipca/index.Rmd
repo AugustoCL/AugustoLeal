@@ -3,14 +3,10 @@ title: Monitor do IPCA [R]
 author: 'AugustoCL'
 date: '2021-04-28'
 slug: []
-categories: [API, R, Shiny, Finance, IBGE, Golem]
-tags:
-  - Shiny
-  - R
-  - API
-  - IBGE
-  - Finance
+categories: ["R"]
+tags:  ["Shiny", "API", "IBGE", "Finance", "Golem"]
 description: 'Acessando diretamenta a API do IBGE, o monitor do IPCA apresenta uma análise interativa dos grupos de produtos que compõem o IPCA que é atualizada automaticamente'
+css: "style.css"
 ---
 
 Este projeto gera um <u>[dashboard interativo](https://augustoleal.shinyapps.io/Monitor_IPCA/)</u> que monitora o **Índice de Preços ao Consumidor Amplo (IPCA)** com dados alimentados diretamente do IBGE através da API SIDRA. O dashboard é atualizado mensalmente de acordo com a API e avalia desde dez/2012 as séries do IPCA total e dos seus 9 componentes.

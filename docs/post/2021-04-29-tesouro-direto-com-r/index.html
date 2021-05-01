@@ -5,26 +5,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="generator" content="Hugo 0.81.0" />
 
-  <title>Analisando Dados do Tesouro Direto com R &middot; Augusto Leal</title>
+  <title>Analisando Dados do Tesouro Direto [R] &middot; Augusto Leal</title>
 
   <meta name="description" content="Extraí os dados da API do Tesouro Direto e gera uma visualização completa do cenário de stress provocado pela saída do Ministro da Justica Sergio Moro do governo" />
 
   
 
-<meta itemprop="name" content="Analisando Dados do Tesouro Direto com R">
+<meta itemprop="name" content="Analisando Dados do Tesouro Direto [R]">
 <meta itemprop="description" content="Extraí os dados da API do Tesouro Direto e gera uma visualização completa do cenário de stress provocado pela saída do Ministro da Justica Sergio Moro do governo"><meta itemprop="datePublished" content="2021-04-25T00:00:00&#43;00:00" />
 <meta itemprop="dateModified" content="2021-04-25T00:00:00&#43;00:00" />
 <meta itemprop="wordCount" content="1649"><meta itemprop="image" content="https://augustocl.github.io/AugustoLeal/images/profile1.png"/>
-<meta itemprop="keywords" content="" />
+<meta itemprop="keywords" content="API,ggplot2,gif,finanças,ETTJ,juros," />
 
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:image" content="https://augustocl.github.io/AugustoLeal/images/profile1.png"/>
 
-<meta name="twitter:title" content="Analisando Dados do Tesouro Direto com R"/>
+<meta name="twitter:title" content="Analisando Dados do Tesouro Direto [R]"/>
 <meta name="twitter:description" content="Extraí os dados da API do Tesouro Direto e gera uma visualização completa do cenário de stress provocado pela saída do Ministro da Justica Sergio Moro do governo"/>
 
 
-<meta property="og:title" content="Analisando Dados do Tesouro Direto com R" />
+<meta property="og:title" content="Analisando Dados do Tesouro Direto [R]" />
 <meta property="og:description" content="Extraí os dados da API do Tesouro Direto e gera uma visualização completa do cenário de stress provocado pela saída do Ministro da Justica Sergio Moro do governo" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://augustocl.github.io/AugustoLeal/post/2021-04-29-tesouro-direto-com-r/" /><meta property="og:image" content="https://augustocl.github.io/AugustoLeal/images/profile1.png"/><meta property="article:section" content="post" />
@@ -70,7 +70,7 @@
       "@type": "WebPage",
       "@id": "https://augustocl.github.io/AugustoLeal/post/2021-04-29-tesouro-direto-com-r/#webpage",
       "url": "https://augustocl.github.io/AugustoLeal/post/2021-04-29-tesouro-direto-com-r/",
-      "name": "Analisando Dados do Tesouro Direto com R",
+      "name": "Analisando Dados do Tesouro Direto [R]",
       "isPartOf": {
         "@id": "https://augustocl.github.io/AugustoLeal/#website"
       },
@@ -98,15 +98,22 @@
       "mainEntityOfPage": {
         "@id": "https://augustocl.github.io/AugustoLeal/post/2021-04-29-tesouro-direto-com-r/#webpage"
       },
-      "headline": "Analisando Dados do Tesouro Direto com R",
+      "headline": "Analisando Dados do Tesouro Direto [R]",
       "datePublished": "2021-04-25T00:00:00+00:00",
       "dateModified": "2021-04-25T00:00:00+00:00",
       "publisher": {
         "@id": "https://augustocl.github.io/AugustoLeal/#author"
       },
       "keywords": [
+        "API",
+        "ggplot2",
+        "gif",
+        "finanças",
+        "ETTJ",
+        "juros"
       ],
       "articleSection": [
+        "R"
       ],
       "inLanguage": "en",
       "author": {
@@ -181,6 +188,12 @@
 
   
 
+  
+  <link rel="stylesheet" href="https://augustocl.github.io/AugustoLeal/css/SH/railscasts.css" rel="stylesheet" id="theme-stylesheet">
+  <script src="https://augustocl.github.io/AugustoLeal/js/highlight.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  
+
   <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700&display=swap">
 
@@ -226,7 +239,7 @@
         </li><li>
           <a href="/AugustoLeal/contact/">Contato</a>
         </li><li>
-          <a href="/AugustoLeal/posts/">Posts</a>
+          <a href="/AugustoLeal/post/">Posts</a>
         </li><li>
           <a href="/AugustoLeal/categories/">Categorias</a>
         </li><li>
@@ -256,7 +269,7 @@
 
   <main class="content container">
   <div class="post">
-  <h1 class="title">Analisando Dados do Tesouro Direto com R</h1>
+  <h1 class="title">Analisando Dados do Tesouro Direto [R]</h1>
   
 
   <div class="post-date">
@@ -379,7 +392,31 @@ geom_line(size = 1.5) +</code></pre>
 
   
 <div>
-  <ul class="tags"></ul>
+  <ul class="tags">
+  <li>
+    <a href="https://augustocl.github.io/AugustoLeal/tags/api/" class="tag-link">API</a>
+  </li>
+  
+  <li>
+    <a href="https://augustocl.github.io/AugustoLeal/tags/ggplot2/" class="tag-link">ggplot2</a>
+  </li>
+  
+  <li>
+    <a href="https://augustocl.github.io/AugustoLeal/tags/gif/" class="tag-link">gif</a>
+  </li>
+  
+  <li>
+    <a href="https://augustocl.github.io/AugustoLeal/tags/finan%C3%A7as/" class="tag-link">finanças</a>
+  </li>
+  
+  <li>
+    <a href="https://augustocl.github.io/AugustoLeal/tags/ettj/" class="tag-link">ETTJ</a>
+  </li>
+  
+  <li>
+    <a href="https://augustocl.github.io/AugustoLeal/tags/juros/" class="tag-link">juros</a>
+  </li>
+  </ul>
 </div>
 
 
@@ -389,31 +426,31 @@ geom_line(size = 1.5) +</code></pre>
      href="#"
      title="Share on Twitter"
      data-url="https://augustocl.github.io/AugustoLeal/post/2021-04-29-tesouro-direto-com-r/"
-     data-text="Analisando Dados do Tesouro Direto com R"><i class="fab fa-twitter"></i></a>
+     data-text="Analisando Dados do Tesouro Direto [R]"><i class="fab fa-twitter"></i></a>
 
   <a class="linkedin-share-button"
      href="#"
      title="Share on LinkedIn"
      data-url="https://augustocl.github.io/AugustoLeal/post/2021-04-29-tesouro-direto-com-r/"
-     data-text="Analisando Dados do Tesouro Direto com R"><i class="fab fa-linkedin-in"></i></a>
+     data-text="Analisando Dados do Tesouro Direto [R]"><i class="fab fa-linkedin-in"></i></a>
 
   <a class="facebook-share-button"
      href="#"
      title="Share on Facebook"
      data-url="https://augustocl.github.io/AugustoLeal/post/2021-04-29-tesouro-direto-com-r/"
-     data-text="Analisando Dados do Tesouro Direto com R"><i class="fab fa-facebook"></i></a>
+     data-text="Analisando Dados do Tesouro Direto [R]"><i class="fab fa-facebook"></i></a>
 
   <a class="telegram-share-button"
      href="#"
      title="Share on Telegram"
      data-url="https://augustocl.github.io/AugustoLeal/post/2021-04-29-tesouro-direto-com-r/"
-     data-text="Analisando Dados do Tesouro Direto com R"><i class="fab fa-telegram"></i></a>
+     data-text="Analisando Dados do Tesouro Direto [R]"><i class="fab fa-telegram"></i></a>
 
   <a class="pinterest-share-button"
      href="#"
      title="Share on Pinterest"
      data-url="https://augustocl.github.io/AugustoLeal/post/2021-04-29-tesouro-direto-com-r/"
-     data-text="Analisando Dados do Tesouro Direto com R"><i class="fab fa-pinterest"></i></a>
+     data-text="Analisando Dados do Tesouro Direto [R]"><i class="fab fa-pinterest"></i></a>
 </div>
 
 

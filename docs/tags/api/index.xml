@@ -25,5 +25,14 @@
       <description>Este projeto gera um dashboard interativo que monitora o Índice de Preços ao Consumidor Amplo (IPCA) com dados alimentados diretamente do IBGE através da API SIDRA.</description>
     </item>
     
+    <item>
+      <title>Analisando Dados do Tesouro Direto [R]</title>
+      <link>https://augustocl.github.io/AugustoLeal/post/2021-04-29-tesouro-direto-com-r/</link>
+      <pubDate>Sun, 25 Apr 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://augustocl.github.io/AugustoLeal/post/2021-04-29-tesouro-direto-com-r/</guid>
+      <description>O caso de hoje é uma análise de impacto do cenário pandêmico e político no mercado de renda fixa brasileiro utilizando os dados do sistema oficial do Tesouro Direto (TD).</description>
+    </item>
+    
   </channel>
 </rss>

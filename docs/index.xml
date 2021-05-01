@@ -6,7 +6,16 @@
     <description>Recent content in Soho Theme on Augusto Leal</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Thu, 29 Apr 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://augustocl.github.io/AugustoLeal/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 30 Apr 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://augustocl.github.io/AugustoLeal/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Webscraping e visualização animada da ETTJ [Python] e [R]</title>
+      <link>https://augustocl.github.io/AugustoLeal/post/2021-04-30-curva-juros/</link>
+      <pubDate>Fri, 30 Apr 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://augustocl.github.io/AugustoLeal/post/2021-04-30-curva-juros/</guid>
+      <description>Esse projeto utiliza o modelo de curvas de juros NelsonSiegelSvensson, que é utilizado pela SUSEP, ANBIMA e diversos Bancos Centrais pelo mundo, para a gerar:- O histórico das curvas de juros futuras pré, ipca, igpm e tr extraídas diretamente do site da SUSEP via Webscraping.</description>
+    </item>
+    
     <item>
       <title>Analisando um Portfólio de Ações [R] [Shiny]</title>
       <link>https://augustocl.github.io/AugustoLeal/post/2021-04-29-portf-acoes/</link>
@@ -26,7 +35,7 @@
     </item>
     
     <item>
-      <title>Analisando Dados do Tesouro Direto com R</title>
+      <title>Analisando Dados do Tesouro Direto [R]</title>
       <link>https://augustocl.github.io/AugustoLeal/post/2021-04-29-tesouro-direto-com-r/</link>
       <pubDate>Sun, 25 Apr 2021 00:00:00 +0000</pubDate>
       

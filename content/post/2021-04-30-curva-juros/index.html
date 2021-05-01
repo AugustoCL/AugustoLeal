@@ -1,0 +1,34 @@
+---
+title: Webscraping e visualização animada da ETTJ [Python] e [R]
+author: ''
+date: '2021-04-30'
+slug: []
+categories: ["R","Python"]
+tags: ["webscraping","visualizacao","ETTJ","SUSEP"]
+description: 'Entendendo o comportamento histórico das curvas de juros com uma visualização animada (gif), automatizando a extração dos dados da SUSEP.'
+css: "style.css"
+---
+
+  <link rel="stylesheet" href="style.css" type="text/css" />
+
+
+<p>Esse projeto utiliza o modelo de curvas de juros <em>NelsonSiegelSvensson</em>, que é utilizado pela SUSEP, ANBIMA e diversos Bancos Centrais pelo mundo, para a gerar:
+- O histórico das curvas de juros futuras <strong>pré</strong>, <strong>ipca</strong>, <strong>igpm</strong> e <strong>tr</strong> extraídas diretamente do site da SUSEP via Webscraping.
+- Uma visualização animada (gif) do comportamento histórico de cada uma das curvas.</p>
+<p><img src="curvas_201512_202002_dark.gif" />
+<img src="curvas_201512_202002.gif" />
+<a href="https://github.com/AugustoCL/ETTJ_SUSEP">Códigos disponíveis do projeto</a></p>
+<div id="ferramentas-utilizadas" class="section level3">
+<h3>Ferramentas utilizadas</h3>
+<ul>
+<li><strong>[Python]</strong> para o <strong>webscraping</strong> que automatiza a coleta dos dados e aplica o modelo da curva de juros.</li>
+<li><strong>[R]</strong> que efetua a limpeza, tratamento e a criação do <strong>gif</strong> final.</li>
+</ul>
+</div>
+<div id="breve-descrição-dos-códigos" class="section level3">
+<h3>Breve Descrição dos Códigos</h3>
+<p>O script .py extrai todos os parâmetros mensais disponibilizados no site da <a href="http://www.susep.gov.br/setores-susep/cgsoa/coris/dicem/modelo-de-interpolacao-e-extrapolacao-da-ettj">SUSEP</a>, efetua o tratamento dos dados para a saída de uma tabela estruturada, e utiliza os parâmetros para a geração de todas as curvas futuras, gerando o output final em .xlsx<br />
+O script .R trata os dados em .xlsx e gera a animação .gif com o histórico das 4 curvas na mesma visualização.</p>
+<p><img src="site_susep.JPG" />
+<img src="coef_csv.JPG" /></p>
+</div>

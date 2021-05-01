@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>juros on Augusto Leal</title>
+    <link>https://augustocl.github.io/AugustoLeal/tags/juros/</link>
+    <description>Recent content in juros on Augusto Leal</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Sun, 25 Apr 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://augustocl.github.io/AugustoLeal/tags/juros/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Analisando Dados do Tesouro Direto [R]</title>
+      <link>https://augustocl.github.io/AugustoLeal/post/2021-04-29-tesouro-direto-com-r/</link>
+      <pubDate>Sun, 25 Apr 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://augustocl.github.io/AugustoLeal/post/2021-04-29-tesouro-direto-com-r/</guid>
+      <description>O caso de hoje é uma análise de impacto do cenário pandêmico e político no mercado de renda fixa brasileiro utilizando os dados do sistema oficial do Tesouro Direto (TD).</description>
+    </item>
+    
+  </channel>
+</rss>

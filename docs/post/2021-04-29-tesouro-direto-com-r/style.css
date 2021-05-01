@@ -1,9 +1,26 @@
-p a {
-    font-weight: bold;
-    font-style: italic;
-    text-decoration: underline;
-}
 
 blockquote p{
     font-size: 16px;
 }
+
+/*  Links inside text */
+p a {
+    font-weight: bold;
+    font-style: italic;
+}
+
+/* visited link */
+p a:visited {
+  color: darkblue;
+}
+
+/* mouse over link */
+p a:hover {
+  color: hotpink;
+}
+
+/* selected link */
+p a:active {
+  color: blue;
+}
+

@@ -1,0 +1,35 @@
+---
+title: Webscraping e visualização Interativa da ETTJ [Python] e [R]
+author: ''
+date: '2021-04-30'
+slug: []
+categories: []
+tags: ["webscraping","visualizacao","ETTJ","SUSEP"]
+description: 'Entendendo o comportamento histórico das curvas de juros com uma visualização animada (gif), automatizando a extração dos dados da SUSEP.'
+---
+
+Gosto muito deste  trabalho porque ele conecta diferentes ferramentas e assuntos técnicos que eu julgo interessante para todos que trabalham com dados. 
+
+- Primeiro, temos o **webscraping** que automatiza a coleta, leitura e o tratamento dos dados com __`Python`__. 
+- Segundo, temos a **comunicação** de um conceito complexo de forma intuitiva, através da criação de um **gif** com __`R`__.
+
+### O que é uma curva de juros?
+Vou abordar brevemente o conceito da curva de juros para trazer contexto ao problema, mas irei focar nas ferramentas disponíveis para elaborar
+Para avaliar uma curva de juro é necessário primeiro entender o juro que ela representa. O juro da curva é a taxa que um título público de determinado vencimento t irá pagar, de modo que **uma curva de juros representa todas as taxas disponíveis para cada vencimento t**. \
+
+Então avaliando hoje, se você abrir o site do [Tesouro Direto](https://www.tesourodireto.com.br/), irá encontrar diversos títulos públicos com diferentes datas de vencimento, onde cada um pagará uma taxa específica.
+
+![](tesouro_direto.JPG)
+
+A curva de juros representa todas estas taxas de títulos com diferentes vencimentos quando abrimos o tesouro direto. Em resumo, a curva é praticamente uma **foto** das taxas de juros de diferentes vencimentos em determinado instante.\
+Portanto, Para cada momento que você 'capturar a foto', a curva terá diferentes formatos e inclinações. Abaixo segue uma imagem de diferentes formatos possíveis extraido do CMFAS Academy.
+
+![](tipos_de_curvas.jpg)
+
+Não quero entrar muito no detalhe do cálculo, pois quero representar 
+
+
+
+
+Sucintamente, uma curva de juros é uma foto, em determinado instante X, do valor do juro negociado em diferentes instantes no tempo.
+

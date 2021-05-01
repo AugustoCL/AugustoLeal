@@ -1,9 +1,0 @@
-p a {
-    font-weight: bold;
-    font-style: italic;
-    text-decoration: underline;
-}
-
-blockquote p{
-    font-size: 16px;
-}

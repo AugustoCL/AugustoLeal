@@ -6,7 +6,6 @@ categories: ["R", "julia"]
 tags: ["R Markdown", "optimization", "julia", "JuMP", "ALM", "finance"]
 ---
 
-
 ```{r setup, include=FALSE}
 library(JuliaCall)
 knitr::opts_chunk$set(echo = TRUE, comment=NA)
