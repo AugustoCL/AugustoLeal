@@ -14,7 +14,7 @@
 <meta itemprop="name" content="Criando Base de Dados via Webscraping da ANBIMA [R]">
 <meta itemprop="description" content="Criando uma base de dados via webscraping automatizado da ETTJ da ANBIMA."><meta itemprop="datePublished" content="2021-05-22T00:00:00&#43;00:00" />
 <meta itemprop="dateModified" content="2021-05-22T00:00:00&#43;00:00" />
-<meta itemprop="wordCount" content="1517"><meta itemprop="image" content="https://augustocl.github.io/AugustoLeal/images/profile1.png"/>
+<meta itemprop="wordCount" content="1518"><meta itemprop="image" content="https://augustocl.github.io/AugustoLeal/images/profile1.png"/>
 <meta itemprop="keywords" content="webscraping,xml,agendamento,ETTJ,juros,ggplot2," />
 
 <meta name="twitter:card" content="summary_large_image"/>
@@ -282,7 +282,7 @@
 
 <div id="TOC">
 <ul>
-<li><a href="#por-que-raspar-estes-dados">1 - Por que raspar estes dados?</a></li>
+<li><a href="#por-que-capturar-estes-dados">1 - Por que capturar estes dados?</a></li>
 <li><a href="#o-que-são-e-para-que-servem-estes-dados">2 - O que são e para que servem estes dados?</a></li>
 <li><a href="#criando-o-script-r">3 - Criando o script R</a><ul>
 <li><a href="#extração-dos-parâmetros-via-webscraping-da-anbima">3.1 - Extração dos parâmetros via webscraping da ANBIMA</a></li>
@@ -298,15 +298,15 @@
 </div>
 
 <p>Neste post vou ensinar como criar um script de webscraping com R e como automatizar a execução deste script com o <strong><code>task scheduler</code></strong> do Windows. Com isso, teremos um arquivo <strong><code>.csv</code></strong> que recebe novos dados a cada execução semanal.</p>
-<div id="por-que-raspar-estes-dados" class="section level2">
-<h2>1 - Por que raspar estes dados?</h2>
+<div id="por-que-capturar-estes-dados" class="section level2">
+<h2>1 - Por que capturar estes dados?</h2>
 <p>A ANBIMA disponibiliza nesta <a href="https://www.anbima.com.br/informacoes/est-termo/">página</a> a estimação diária da estrutura a termo das taxas de juros (ETTJ), porém o site só permite o acesso a dados de <strong>até os últimos 5 dias úteis</strong>, conforme imagem abaixo.</p>
 <p><img src="site_anbima.png" />
 Então como nem todos possuem acesso a um terminal <a href="https://www.bloomberg.com.br/">Bloomberg</a> para ter acesso a estes dados diários, eu resolvi criar uma base própria usando um script que é executado semanalmente.</p>
 </div>
 <div id="o-que-são-e-para-que-servem-estes-dados" class="section level2">
 <h2>2 - O que são e para que servem estes dados?</h2>
-<p>A estimação diária da Estrutura a Termo das Taxas de Juros (ETTJ) é feita com os parâmetros da curva de juros disponibilizada na ANBIMA. Com estes dados (parâmetros do modelo) eu gero diferentes curvas de juros para as minhas análises de cenário de renda fixa. Abaixo há um exemplo de análise comparativa das curvas de juros entre dois períodos que eu executo com os dados.</p>
+<p>A estimação diária da Estrutura a Termo das Taxas de Juros (ETTJ) é feita com os parâmetros da curva de juros disponibilizada na ANBIMA. Com estes dados (parâmetros do modelo) é possível gerar diferentes curvas de juros para as minhas análises de cenário de renda fixa. Abaixo há um exemplo de análise comparativa das curvas de juros entre dois períodos que eu executo com os dados.</p>
 <p><img src="ipca_pre_grafico.png" /></p>
 <blockquote>
 <p>No próximo post irei ensinar como criei uma função que gera esse gráfico comparativo a partir do input de duas datas. Por agora, tenho um post aqui no site com um <em>gif</em> que mostra o histórico dessas curvas de juros que pode ser visto <a href="../2021-04-30-curva-juros/">aqui</a>. Os códigos completos para você reproduzir também estão disponíveis lá no github.</p>
@@ -340,10 +340,10 @@ r &lt;- httr::POST(url = url,
                 body = list(Idioma = &quot;PT&quot;,
                             Dt_Ref = dt,
                             saida = &quot;csv&quot;),
-                encode = &quot;form&quot;)
-r</code></pre>
+                encode = &quot;form&quot;)</code></pre>
+<pre class="r"><code>r</code></pre>
 <pre><code>Response [https://www.anbima.com.br/informacoes/est-termo/CZ-down.asp]
-  Date: 2021-05-23 18:33
+  Date: 2021-05-23 19:39
   Status: 200
   Content-Type: text/csv
   Size: 2.78 kB
@@ -436,7 +436,7 @@ $ L2    &lt;dbl&gt; 0.45105216, 0.07516751, 0.44983607, 0.08047245, 0.44435840, 
 </div>
 <div id="salvando-os-dados-em-um-.csv" class="section level3">
 <h3>3.7 - Salvando os dados em um <strong><code>.csv</code></strong></h3>
-<p>Para finalizar o script, precisamos criar uma condição que verifica se o arquivo .csv já existe. Caso exista, ele irá adicionar os novos dados ao arquivo, caso contrário, irá criar um novo arquivo com os dados raspados.</p>
+<p>Para finalizar o script, precisamos criar uma condição que verifica se o arquivo .csv já existe. Caso exista, ele irá adicionar os novos dados ao arquivo, caso contrário, irá criar um novo arquivo com os dados capturados.</p>
 </div>
 </div>
 <div id="agendando-a-execução-do-script" class="section level2">

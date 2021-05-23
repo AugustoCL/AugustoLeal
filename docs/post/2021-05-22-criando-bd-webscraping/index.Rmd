@@ -22,14 +22,14 @@ library(httr)
 
 Neste post vou ensinar como criar um script de webscraping com R e como automatizar a execução deste script com o __`task scheduler`__ do Windows. Com isso, teremos um arquivo __`.csv`__ que recebe novos dados a cada execução semanal.
 
-## 1 - Por que raspar estes dados?
+## 1 - Por que capturar estes dados?
 A ANBIMA disponibiliza nesta [página](https://www.anbima.com.br/informacoes/est-termo/) a estimação diária da estrutura a termo das taxas de juros (ETTJ), porém o site só permite o acesso a dados de **até os últimos 5 dias úteis**, conforme imagem abaixo.
 
 ![](site_anbima.png)
 Então como nem todos possuem acesso a um terminal [Bloomberg](https://www.bloomberg.com.br/) para ter acesso a estes dados diários, eu resolvi criar uma base própria usando um script que é executado semanalmente.  
 
 ## 2 - O que são e para que servem estes dados?
-A estimação diária da Estrutura a Termo das Taxas de Juros (ETTJ) é feita com os parâmetros da curva de juros disponibilizada na ANBIMA. Com estes dados (parâmetros do modelo) eu gero diferentes curvas de juros para as minhas análises de cenário de renda fixa. Abaixo há um exemplo de análise comparativa das curvas de juros entre dois períodos que eu executo com os dados.
+A estimação diária da Estrutura a Termo das Taxas de Juros (ETTJ) é feita com os parâmetros da curva de juros disponibilizada na ANBIMA. Com estes dados (parâmetros do modelo) é possível gerar diferentes curvas de juros para as minhas análises de cenário de renda fixa. Abaixo há um exemplo de análise comparativa das curvas de juros entre dois períodos que eu executo com os dados.
 
 ![](ipca_pre_grafico.png)
 
@@ -68,8 +68,12 @@ r <- httr::POST(url = url,
                             Dt_Ref = dt,
                             saida = "csv"),
                 encode = "form")
+```
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
 r
 ```
+
 
 ### 3.3 - Faxinando o dado 
 Como a requisição possui status __`200`__, sabemos que foi bem sucedida. Agora podemos conferir o conteúdo com a função __`content()`__. Com o argumento __`as =`__ a função permite interpretar o resultado como texto puro 'text' ou binário 'raw'. Com os teste que fiz, o mais indicado é ler o output como binário e então converter o binário em texto usando a função __`RawToChar()`__.
@@ -146,7 +150,7 @@ glimpse(result)
 Nesse caso eu também utilizo o __`possibily()`__ para lidar com possíveis erros em alguma iteração do map. Com ela, caso ocorra um erro em uma iteração, o map não vai parar de executar, ele irá inputar NA nos dados e continuara a execuçao no próximo item.
 
 ### 3.7 - Salvando os dados em um __`.csv`__
-Para finalizar o script, precisamos criar uma condição que verifica se o arquivo .csv já existe. Caso exista, ele irá adicionar os novos dados ao arquivo, caso contrário, irá criar um novo arquivo com os dados raspados.
+Para finalizar o script, precisamos criar uma condição que verifica se o arquivo .csv já existe. Caso exista, ele irá adicionar os novos dados ao arquivo, caso contrário, irá criar um novo arquivo com os dados capturados.
 ```{r echo=FALSE}
 name_db <- "hist_coef_pre_ipca.csv"
 
