@@ -1,0 +1,57 @@
+
+body {
+  font-family: gadugi, serif;
+}
+h1, h2, h3, h4, h5, h6, .nav, .article-duration, .archive-item-link, .footer, .sidebar {
+  font-family: gadugi, sans-serif;
+}
+
+blockquote p{
+    font-size: 16px;
+}
+
+/*  Links inside text */
+p a {
+    font-weight: bold;
+    font-style: italic;
+}
+
+/* visited link */
+p a:visited {
+  color: darkblue;
+}
+
+/* mouse over link */
+p a:hover {
+  color: hotpink;
+}
+
+/* selected link */
+p a:active {
+  color: blue;
+}
+
+
+
+
+
+/* table of contents links */
+.content a {
+    font-weight: bold;
+}
+
+/* visited link */
+.content a:visited {
+  color: darkblue;
+}
+
+/* mouse over link */
+.content a:hover {
+  color: hotpink;
+}
+
+/* selected link */
+.content a:active {
+  color: blue;
+}
+

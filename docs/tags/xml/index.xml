@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>xml on Augusto Leal</title>
+    <link>https://augustocl.github.io/AugustoLeal/tags/xml/</link>
+    <description>Recent content in xml on Augusto Leal</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Sat, 22 May 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://augustocl.github.io/AugustoLeal/tags/xml/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Criando Base de Dados via Webscraping da ANBIMA [R]</title>
+      <link>https://augustocl.github.io/AugustoLeal/post/2021-05-22-criando-bd-webscraping/</link>
+      <pubDate>Sat, 22 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://augustocl.github.io/AugustoLeal/post/2021-05-22-criando-bd-webscraping/</guid>
+      <description>1 - Por que raspar estes dados?2 - O que são e para que servem estes dados?</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -45,7 +45,7 @@ themeColor = "#00004d"  # #000162 #1d2f6b
   url = "https://github.com/AugustoCL"
 
   [[params.socialIcons]]
-  icon = "fa fa-envelope"
+  icon = "fa-envelope"
   title = "email"
   url = "mailto:leal.augusto@unifesp.br"
 
