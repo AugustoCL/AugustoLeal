@@ -7,25 +7,25 @@
 
   <title>Criando Base de Dados via Webscraping da ANBIMA [R] &middot; Augusto Leal</title>
 
-  <meta name="description" content="Criando uma base de dados via webscraping automatizado da ETTJ da ANBIMA." />
+  <meta name="description" content="" />
 
   
 
 <meta itemprop="name" content="Criando Base de Dados via Webscraping da ANBIMA [R]">
-<meta itemprop="description" content="Criando uma base de dados via webscraping automatizado da ETTJ da ANBIMA."><meta itemprop="datePublished" content="2021-05-22T00:00:00&#43;00:00" />
+<meta itemprop="description" content="1 - Por que capturar estes dados?2 - O que são e para que servem estes dados?"><meta itemprop="datePublished" content="2021-05-22T00:00:00&#43;00:00" />
 <meta itemprop="dateModified" content="2021-05-22T00:00:00&#43;00:00" />
-<meta itemprop="wordCount" content="1518"><meta itemprop="image" content="https://augustocl.github.io/AugustoLeal/images/profile1.png"/>
+<meta itemprop="wordCount" content="1604"><meta itemprop="image" content="https://augustocl.github.io/AugustoLeal/images/profile1.png"/>
 <meta itemprop="keywords" content="webscraping,xml,agendamento,ETTJ,juros,ggplot2," />
 
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:image" content="https://augustocl.github.io/AugustoLeal/images/profile1.png"/>
 
 <meta name="twitter:title" content="Criando Base de Dados via Webscraping da ANBIMA [R]"/>
-<meta name="twitter:description" content="Criando uma base de dados via webscraping automatizado da ETTJ da ANBIMA."/>
+<meta name="twitter:description" content="1 - Por que capturar estes dados?2 - O que são e para que servem estes dados?"/>
 
 
 <meta property="og:title" content="Criando Base de Dados via Webscraping da ANBIMA [R]" />
-<meta property="og:description" content="Criando uma base de dados via webscraping automatizado da ETTJ da ANBIMA." />
+<meta property="og:description" content="1 - Por que capturar estes dados?2 - O que são e para que servem estes dados?" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://augustocl.github.io/AugustoLeal/post/2021-05-22-criando-bd-webscraping/" /><meta property="og:image" content="https://augustocl.github.io/AugustoLeal/images/profile1.png"/><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2021-05-22T00:00:00&#43;00:00" />
@@ -79,7 +79,7 @@
       },
       "datePublished": "2021-05-22T00:00:00+00:00",
       "dateModified": "2021-05-22T00:00:00+00:00",
-      "description": "Criando uma base de dados via webscraping automatizado da ETTJ da ANBIMA.",
+      "description": "1 - Por que capturar estes dados?\r2 - O que são e para que servem estes dados?",
       "inLanguage": "en",
       "potentialAction": [
         {
@@ -258,10 +258,6 @@
         <i class="fab fa-github" aria-hidden="true"></i>
       </a>
       
-      <a href="mailto:leal.augusto@unifesp.br" rel="me" title="email" target="_blank">
-        <i class="fab fa-envelope" aria-hidden="true"></i>
-      </a>
-      
     </section>
   </div>
 </aside>
@@ -340,10 +336,10 @@ r &lt;- httr::POST(url = url,
                 body = list(Idioma = &quot;PT&quot;,
                             Dt_Ref = dt,
                             saida = &quot;csv&quot;),
-                encode = &quot;form&quot;)</code></pre>
-<pre class="r"><code>r</code></pre>
+                encode = &quot;form&quot;)
+r</code></pre>
 <pre><code>Response [https://www.anbima.com.br/informacoes/est-termo/CZ-down.asp]
-  Date: 2021-05-23 19:39
+  Date: 2021-05-23 20:03
   Status: 200
   Content-Type: text/csv
   Size: 2.78 kB
@@ -398,22 +394,23 @@ $ data  &lt;chr&gt; &quot;21/05/2021&quot;, &quot;21/05/2021&quot;</code></pre>
 <div id="obtendo-o-vetor-de-dias-úteis-com-o-bizdays" class="section level3">
 <h3>3.5 - Obtendo o vetor de dias úteis com o <strong><code>bizdays</code></strong></h3>
 <p>Para iterar as datas precisamos criar um vetor com os últimos 5 dias úteis. Felizmente o pacote <strong><code>bizdays</code></strong> nos permite selecionar os últimos 5 dias úteis independente do dia que vc executar o script.</p>
-<pre class="r"><code>data(holidaysANBIMA, 
-     package = &#39;bizdays&#39;)       # load the working days by calendar of anbima
+<pre class="r"><code># load the working days by calendar of anbima
+data(holidaysANBIMA, 
+     package = &#39;bizdays&#39;)
 cal &lt;- create.calendar(holidaysANBIMA, 
-                       weekdays=c(&#39;saturday&#39;, &#39;sunday&#39;), name=&#39;ANBIMA&#39;)
-
+                       weekdays=c(&#39;saturday&#39;, &#39;sunday&#39;),
+                       name=&#39;ANBIMA&#39;)
 d2 = Sys.Date()
 d1 = add.bizdays(d2, -6, cal = cal)
-data_seq &lt;- bizseq(d1,d2,cal)
+data_seq &lt;- bizseq(d1, d2, cal)
 data_seq</code></pre>
 <pre><code>[1] &quot;2021-05-14&quot; &quot;2021-05-17&quot; &quot;2021-05-18&quot; &quot;2021-05-19&quot; &quot;2021-05-20&quot;
 [6] &quot;2021-05-21&quot;</code></pre>
-<p>Primeiro carregamos o calendário da ANBIMA, já disponível no pacote, carregando o calendário na variável <strong><code>cal</code></strong>. Em seguida, criamos o dia atual com a função <strong><code>Sys.Date()</code></strong> e com as funções do pacote__<code>bizdays</code>__obtemos o sexto dia útil anterior para obtermos o vetor de 5 dias úteis completo.</p>
+<p>Primeiro carregamos o calendário da ANBIMA, já disponível no pacote, carregando o calendário na variável <strong><code>cal</code></strong>. Em seguida, criamos o dia atual com a função <strong><code>Sys.Date()</code></strong> e com as funções do pacote <strong><code>bizdays</code></strong> obtemos o sexto dia útil anterior para obtermos o vetor de 5 dias úteis completo.</p>
 </div>
 <div id="iterando-a-função-em-múltiplas-datas-com-o-purrr" class="section level3">
 <h3>3.6 - Iterando a função em múltiplas datas com o <strong><code>purrr</code></strong></h3>
-<p>O <strong><code>purrr</code></strong> permite adotarmos o paradigma de programação funcional permitindo que eliminemos for loops do nosso código utilizando funções como o <strong><code>map()</code></strong>. Além disso ele possui variações como o <strong><code>map_dfr()</code></strong> que além de iterar o vetor de input na função desejada, ele já executa o append dos dados e retorna um data frame completo.</p>
+<p>O <strong><code>purrr</code></strong> permite adotarmos o paradigma de programação funcional permitindo que eliminemos for loops do nosso código utilizando funções como o <strong><code>map()</code></strong>. Além disso ele possui variações como o <strong><code>map_dfr()</code></strong> que além de iterar o vetor de input na função desejada, ele já executa o empilhamento dos dados, retornando um data frame completo.</p>
 <pre class="r"><code>deal_error &lt;- 
     purrr::possibly(get_ettj_param, 
                     otherwise = NA_real_) # deal with error
@@ -432,11 +429,33 @@ $ B3    &lt;dbl&gt; -0.05449712, -0.05520741, -0.05577582, -0.06527348, -0.05790
 $ B4    &lt;dbl&gt; -0.02525242, -0.01498020, -0.02865571, -0.01958474, -0.02715793,~
 $ L1    &lt;dbl&gt; 2.193240, 1.235860, 2.237047, 1.252852, 2.264847, 1.254316, 2.27~
 $ L2    &lt;dbl&gt; 0.45105216, 0.07516751, 0.44983607, 0.08047245, 0.44435840, 0.08~</code></pre>
-<p>Nesse caso eu também utilizo o <strong><code>possibily()</code></strong> para lidar com possíveis erros em alguma iteração do map. Com ela, caso ocorra um erro em uma iteração, o map não vai parar de executar, ele irá inputar NA nos dados e continuara a execuçao no próximo item.</p>
+<p>Nesse caso eu também utilizo o <strong><code>possibily()</code></strong> para lidar com possíveis erros em alguma iteração do map. Com ela, caso ocorra um erro em uma iteração, o map não vai parar de iterar, ele irá inputar NA nos dados que falharam e continuará a execuçao do próximo item.</p>
 </div>
 <div id="salvando-os-dados-em-um-.csv" class="section level3">
 <h3>3.7 - Salvando os dados em um <strong><code>.csv</code></strong></h3>
 <p>Para finalizar o script, precisamos criar uma condição que verifica se o arquivo .csv já existe. Caso exista, ele irá adicionar os novos dados ao arquivo, caso contrário, irá criar um novo arquivo com os dados capturados.</p>
+<pre class="r"><code>name_db &lt;- &quot;hist_coef_pre_ipca.csv&quot;
+
+if (file.exists(name_db)){
+    datas_unicas &lt;- unique(as.Date(read.csv2(name_db,header = 1)$data, &quot;%Y-%m-%d&quot;))
+    
+    result &lt;- result %&gt;% filter(!data %in% datas_unicas)
+    
+    write.table(result,
+                file =  name_db,
+                append = TRUE,
+                row.names = FALSE,
+                col.names = FALSE,
+                sep = &quot;;&quot;, 
+                fileEncoding = &quot;UTF-8&quot;)
+} else {
+    write.table(result, 
+                file =  name_db,
+                append = FALSE,
+                row.names = FALSE,
+                sep = &quot;;&quot;, 
+                fileEncoding = &quot;UTF-8&quot;)
+}</code></pre>
 </div>
 </div>
 <div id="agendando-a-execução-do-script" class="section level2">
@@ -451,9 +470,10 @@ $ L2    &lt;dbl&gt; 0.45105216, 0.07516751, 0.44983607, 0.08047245, 0.44435840, 
 <p>Para os usuários de Linux é possível usar o <strong><code>crontab</code></strong> para fazer o mesmo agendamento.
 Essa estrutura permite executar scripts de diferentes linguagens. Caso queira agendar um script python, basta usar o caminho do executável do python e referenciar o script .py que deseja.</p>
 </blockquote>
-<p>Eu deixo agendado para que seja executado toda segunda-feira. Como eu criei o script em Julho/2020 eu tenho dados desde esse período no meu arquivo .csv</p>
+<p>No meu caso, agendo o script para que seja executado toda segunda-feira para capturar. Então como eu criei o script em Julho/2020 eu tenho dados desde esse período no meu arquivo .csv.</p>
 <p><img src="base_de_dados_csv.png" width="500" height="500" /></p>
-<p>Por fim, o script R final se encontra no seguinte <a href="https://gist.github.com/AugustoCL/866b568efbebff538f198986fec22ef7">gist</a> do github.</p>
+<p>Por fim, o script R que utilizo se encontra no seguinte <a href="https://gist.github.com/AugustoCL/866b568efbebff538f198986fec22ef7">gist</a> do github.
+No próximo post irei detalhar o script R que executa o plot apresentado no início do artigo.</p>
 </div>
 
   </div>

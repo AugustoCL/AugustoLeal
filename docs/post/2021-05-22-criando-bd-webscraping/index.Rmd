@@ -10,6 +10,7 @@ output:
   keep_md: yes
   blogdown::html_page:
     toc: yes
+    toc_float: yes
     css: "style.css"
 ---
 
@@ -68,9 +69,6 @@ r <- httr::POST(url = url,
                             Dt_Ref = dt,
                             saida = "csv"),
                 encode = "form")
-```
-
-```{r echo=TRUE, message=FALSE, warning=FALSE}
 r
 ```
 
@@ -123,20 +121,21 @@ get_ettj_param <- function(dt){
 Para iterar as datas precisamos criar um vetor com os últimos 5 dias úteis. Felizmente o pacote __`bizdays`__ nos permite selecionar os últimos 5 dias úteis independente do dia que vc executar o script. 
 
 ```{r}
+# load the working days by calendar of anbima
 data(holidaysANBIMA, 
-     package = 'bizdays')       # load the working days by calendar of anbima
+     package = 'bizdays')
 cal <- create.calendar(holidaysANBIMA, 
-                       weekdays=c('saturday', 'sunday'), name='ANBIMA')
-
+                       weekdays=c('saturday', 'sunday'),
+                       name='ANBIMA')
 d2 = Sys.Date()
 d1 = add.bizdays(d2, -6, cal = cal)
-data_seq <- bizseq(d1,d2,cal)
+data_seq <- bizseq(d1, d2, cal)
 data_seq
 ```
-Primeiro carregamos o calendário da ANBIMA, já disponível no pacote, carregando o calendário na variável __`cal`__. Em seguida, criamos o dia atual com a função __`Sys.Date()`__ e com as funções do pacote__`bizdays`__obtemos o sexto dia útil anterior para obtermos o vetor de 5 dias úteis completo. 
+Primeiro carregamos o calendário da ANBIMA, já disponível no pacote, carregando o calendário na variável __`cal`__. Em seguida, criamos o dia atual com a função __`Sys.Date()`__ e com as funções do pacote __`bizdays`__ obtemos o sexto dia útil anterior para obtermos o vetor de 5 dias úteis completo. 
 
 ### 3.6 - Iterando a função em múltiplas datas com o __`purrr`__
-O __`purrr`__ permite adotarmos o paradigma de programação funcional permitindo que eliminemos for loops do nosso código utilizando funções como o __`map()`__. Além disso ele possui variações como o __`map_dfr()`__ que além de iterar o vetor de input na função desejada, ele já executa o append dos dados e retorna um data frame completo.
+O __`purrr`__ permite adotarmos o paradigma de programação funcional permitindo que eliminemos for loops do nosso código utilizando funções como o __`map()`__. Além disso ele possui variações como o __`map_dfr()`__ que além de iterar o vetor de input na função desejada, ele já executa o empilhamento dos dados, retornando um data frame completo.
 ```{r message=FALSE, warning=FALSE}
 deal_error <- 
     purrr::possibly(get_ettj_param, 
@@ -147,11 +146,11 @@ result <-
 
 glimpse(result)
 ```
-Nesse caso eu também utilizo o __`possibily()`__ para lidar com possíveis erros em alguma iteração do map. Com ela, caso ocorra um erro em uma iteração, o map não vai parar de executar, ele irá inputar NA nos dados e continuara a execuçao no próximo item.
+Nesse caso eu também utilizo o __`possibily()`__ para lidar com possíveis erros em alguma iteração do map. Com ela, caso ocorra um erro em uma iteração, o map não vai parar de iterar, ele irá inputar NA nos dados que falharam e continuará a execuçao do próximo item.
 
 ### 3.7 - Salvando os dados em um __`.csv`__
 Para finalizar o script, precisamos criar uma condição que verifica se o arquivo .csv já existe. Caso exista, ele irá adicionar os novos dados ao arquivo, caso contrário, irá criar um novo arquivo com os dados capturados.
-```{r echo=FALSE}
+```{r echo=TRUE, results='hide'}
 name_db <- "hist_coef_pre_ipca.csv"
 
 if (file.exists(name_db)){
@@ -192,8 +191,9 @@ Para não prolongar ainda mais este post, deixo aqui um [tutorial](https://www.s
 > Para os usuários de Linux é possível usar o __`crontab`__ para fazer o mesmo agendamento. 
 > Essa estrutura permite executar scripts de diferentes linguagens. Caso queira agendar um script python, basta usar o caminho do executável do python e referenciar o script .py que deseja.
 
-Eu deixo agendado para que seja executado toda segunda-feira. Como eu criei o script em Julho/2020 eu tenho dados desde esse período no meu arquivo .csv
+No meu caso, agendo o script para que seja executado toda segunda-feira para capturar. Então como eu criei o script em Julho/2020 eu tenho dados desde esse período no meu arquivo .csv.
 
 <img src="base_de_dados_csv.png" width="500" height="500" />
 
-Por fim, o script R final se encontra no seguinte [gist](https://gist.github.com/AugustoCL/866b568efbebff538f198986fec22ef7) do github.
+Por fim, o script R que utilizo se encontra no seguinte [gist](https://gist.github.com/AugustoCL/866b568efbebff538f198986fec22ef7) do github. 
+No próximo post irei detalhar o script R que executa o plot apresentado no início do artigo.

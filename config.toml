@@ -21,6 +21,7 @@ ignoreErrors = ["error-remote-getjson"]
   licenseURL = "https://creativecommons.org/licenses/by-sa/4.0"
   builtWith = true
   mainSections = ["post"]
+  layoutReverse = true
   
   highlightjsVersion = "9.12.0"
   #highlightjsCDN = "//cdnjs.cloudflare.com/ajax/libs"
@@ -43,11 +44,6 @@ themeColor = "#00004d"  # #000162 #1d2f6b
   icon = "fa-github"
   title = "GitHub"
   url = "https://github.com/AugustoCL"
-
-  [[params.socialIcons]]
-  icon = "fa-envelope"
-  title = "email"
-  url = "mailto:leal.augusto@unifesp.br"
 
 [taxonomies]
   series = "series"
