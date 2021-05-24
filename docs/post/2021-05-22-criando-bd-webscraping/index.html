@@ -14,7 +14,7 @@
 <meta itemprop="name" content="Criando Base de Dados via Webscraping da ANBIMA [R]">
 <meta itemprop="description" content="Criando uma base de dados via webscraping automatizado da ETTJ da ANBIMA."><meta itemprop="datePublished" content="2021-05-22T00:00:00&#43;00:00" />
 <meta itemprop="dateModified" content="2021-05-22T00:00:00&#43;00:00" />
-<meta itemprop="wordCount" content="1604"><meta itemprop="image" content="https://augustocl.github.io/AugustoLeal/images/profile1.png"/>
+<meta itemprop="wordCount" content="1608"><meta itemprop="image" content="https://augustocl.github.io/AugustoLeal/images/profile1.png"/>
 <meta itemprop="keywords" content="webscraping,csv,agendamento,ETTJ,juros,ggplot2," />
 
 <meta name="twitter:card" content="summary_large_image"/>
@@ -274,7 +274,7 @@
 <li><a href="#por-que-capturar-estes-dados">1 - Por que capturar estes dados?</a></li>
 <li><a href="#o-que-são-e-para-que-servem-estes-dados">2 - O que são e para que servem estes dados?</a></li>
 <li><a href="#criando-o-script-r">3 - Criando o script R</a><ul>
-<li><a href="#extração-dos-parâmetros-via-webscraping-da-anbima">3.1 - Extração dos parâmetros via webscraping da ANBIMA</a></li>
+<li><a href="#extração-dos-parâmetros-pelo-site-da-anbima">3.1 - Extração dos parâmetros pelo site da ANBIMA</a></li>
 <li><a href="#reproduzindo-a-requisição-via-script-r">3.2 - Reproduzindo a requisição via script R</a></li>
 <li><a href="#faxinando-o-dado">3.3 - Faxinando o dado</a></li>
 <li><a href="#encapsulando-em-uma-função">3.4 - Encapsulando em uma função</a></li>
@@ -289,32 +289,32 @@
 <p>Neste post vou ensinar como criar um script de webscraping com R e como automatizar a execução deste script com o <strong><code>task scheduler</code></strong> do Windows. Com isso, teremos um arquivo <strong><code>.csv</code></strong> que recebe novos dados a cada execução semanal.</p>
 <div id="por-que-capturar-estes-dados" class="section level2">
 <h2>1 - Por que capturar estes dados?</h2>
-<p>A ANBIMA disponibiliza nesta <a href="https://www.anbima.com.br/informacoes/est-termo/">página</a> a estimação diária da estrutura a termo das taxas de juros (ETTJ), porém o site só permite o acesso a dados de <strong>até os últimos 5 dias úteis</strong>, conforme imagem abaixo.</p>
+<p>A ANBIMA disponibiliza nesta <a href="https://www.anbima.com.br/informacoes/est-termo/">página</a> a estimação diária da estrutura a termo das taxas de juros (ETTJ), porém o site só permite o acesso a dados dos <strong>últimos 5 dias úteis</strong>.</p>
 <p><img src="site_anbima.png" />
-Então como nem todos possuem acesso a um terminal <a href="https://www.bloomberg.com.br/">Bloomberg</a> para ter acesso a estes dados diários, eu resolvi criar uma base própria usando um script que é executado semanalmente.</p>
+Então como nem todos possuem um terminal <a href="https://www.bloomberg.com.br/">Bloomberg</a> para ter acesso a estes dados diários, eu resolvi criar uma base própria usando um script que é executado semanalmente.</p>
 </div>
 <div id="o-que-são-e-para-que-servem-estes-dados" class="section level2">
 <h2>2 - O que são e para que servem estes dados?</h2>
-<p>A estimação diária da Estrutura a Termo das Taxas de Juros (ETTJ) é feita com os parâmetros da curva de juros disponibilizada na ANBIMA. Com estes dados (parâmetros do modelo) é possível gerar diferentes curvas de juros para as minhas análises de cenário de renda fixa. Abaixo há um exemplo de análise comparativa das curvas de juros entre dois períodos que eu executo com os dados.</p>
+<p>A estimação diária da Estrutura a Termo das Taxas de Juros (ETTJ) é feita com os parâmetros da curva de juros disponibilizada na ANBIMA. Com estes dados (parâmetros do modelo) é possível gerar diferentes curvas de juros para as minhas análises de cenário de renda fixa. Abaixo há um exemplo de análise comparativa das curvas de juros entre dois períodos.</p>
 <p><img src="ipca_pre_grafico.png" /></p>
 <blockquote>
-<p>No próximo post irei ensinar como criei uma função que gera esse gráfico comparativo a partir do input de duas datas. Por agora, tenho um post aqui no site com um <em>gif</em> que mostra o histórico dessas curvas de juros que pode ser visto <a href="../2021-04-30-curva-juros/">aqui</a>. Os códigos completos para você reproduzir também estão disponíveis lá no github.</p>
+<p>No próximo post irei ensinar como criei uma função que gera esse gráfico comparativo a partir do input de duas datas. Por agora, tenho um post no site com um <strong>gif</strong> que demonstra o comportamento o histórico dessas curvas de juros que pode ser visto <a href="../2021-04-30-curva-juros/">aqui</a>. Os códigos completos para você reproduzir também estão disponíveis no github.</p>
 </blockquote>
-<p>O site permite baixar os dados em diferentes formatos e nesse caso irei utilizar o formato <strong><code>.csv</code></strong>. Abrindo no Sublime Text, temos a seguinte estrutura do arquivo com destaque na imagem para os parâmetros que serão coletados.
+<p>O site permite baixar os dados em diferentes formatos e nesse caso irei utilizar o formato <strong><code>.csv</code></strong>. Quando abrimos o arquivo no Sublime Text, observamos a seguinte estrutura na imagem abaixo, com destaque nos parâmetros que serão coletados.
 <img src="csv_anbima.png" /></p>
 </div>
 <div id="criando-o-script-r" class="section level2">
 <h2>3 - Criando o script R</h2>
-<div id="extração-dos-parâmetros-via-webscraping-da-anbima" class="section level3">
-<h3>3.1 - Extração dos parâmetros via webscraping da ANBIMA</h3>
-<p>Quando investigamos o funcionamento do site, usando as ferramentas de desenvolvedor do navegador, verifica-se uma requisição POST que retorna os dados no formato solicitado. Abaixo há as imagens em sequência destacando os pontos de identificação da requisição.</p>
+<div id="extração-dos-parâmetros-pelo-site-da-anbima" class="section level3">
+<h3>3.1 - Extração dos parâmetros pelo site da ANBIMA</h3>
+<p>Investigando o funcionamento do site quando fazemos o download, verifica-se, através da ferramenta de desenvolvedor do navegador, uma requisição POST que retorna os dados no formato solicitado. Abaixo há uma imagem destacando os pontos de identificação da requisição na aba de redes.</p>
 <p><img src="identifcando_requisicao.png" /></p>
-<p>Quando avaliamos a requisição post, encontramos os dados que precisam ser inputados para a requisição POST retornar o que desejamos. Com eles iremos automatizar a requisição via script.</p>
+<p>Quando aprofundamos na requisição, encontramos os dados que precisam ser inputados para a requisição POST retornar o que desejamos. Com eles iremos automatizar a requisição via script.</p>
 <p><img src="dados_formulario_req.png" /></p>
 </div>
 <div id="reproduzindo-a-requisição-via-script-r" class="section level3">
 <h3>3.2 - Reproduzindo a requisição via script R</h3>
-<p>Irei abordar o passo a passo da requisição e limpeza dos dados e, em seguida, encapsularei tudo em uma função para poder iterar este processo nos 5 dias úteis disponíveis usando o pacote <strong><code>purrr</code></strong>.</p>
+<p>Agora iremos executar o passo a passo da requisição e limpeza dos dados. Em seguida, encapsularei tudo em uma função para poder iterar este processo nos 5 dias úteis disponíveis usando o pacote <strong><code>purrr</code></strong>.</p>
 <p>Com o pacote <strong><code>httr</code></strong> é possível reproduzir a requisição post passando:</p>
 <ul>
 <li>A url em texto no argumento <strong><code>url</code></strong>.</li>
@@ -332,7 +332,7 @@ r &lt;- httr::POST(url = url,
                 encode = &quot;form&quot;)
 r</code></pre>
 <pre><code>Response [https://www.anbima.com.br/informacoes/est-termo/CZ-down.asp]
-  Date: 2021-05-23 20:08
+  Date: 2021-05-24 17:29
   Status: 200
   Content-Type: text/csv
   Size: 2.78 kB
@@ -340,7 +340,7 @@ NA</code></pre>
 </div>
 <div id="faxinando-o-dado" class="section level3">
 <h3>3.3 - Faxinando o dado</h3>
-<p>Como a requisição possui status <strong><code>200</code></strong>, sabemos que foi bem sucedida. Agora podemos conferir o conteúdo com a função <strong><code>content()</code></strong>. Com o argumento <strong><code>as =</code></strong> a função permite interpretar o resultado como texto puro ‘text’ ou binário ‘raw’. Com os teste que fiz, o mais indicado é ler o output como binário e então converter o binário em texto usando a função <strong><code>RawToChar()</code></strong>.</p>
+<p>Como a requisição possui status <strong><code>200</code></strong>, sabemos que foi bem sucedida. Agora podemos conferir o conteúdo com a função <strong><code>content()</code></strong>. Com o argumento <strong><code>as</code></strong> a função permite interpretar o resultado como texto puro ‘text’ ou binário ‘raw’. Com os teste que fiz, o mais indicado é ler o output como binário e então converter o binário em texto usando a função <strong><code>RawToChar()</code></strong>.</p>
 <pre class="r"><code>texto_puro &lt;- rawToChar(content(r, as = &quot;raw&quot;))</code></pre>
 <p>Com isso, podemos passar o texto puro para a função <strong><code>read_csv2()</code></strong> que irá gerar o dataframe com os dados desejados. Como o texto já está configurado com notaçao científica, a função já entende que os dados são numéricos e interpreta eles corretamente.</p>
 <p>Mas antes de passar na função, lembrem-se da imagem do arquivo .csv no sublime text, com ela vemos que é necessário lermos somente as 3 primeiras linhas do texto (1 cabeçalho + 2 observações). Então passaremos essa condição no argumento <strong><code>n_max</code></strong>, iremos ajustar o nome das colunas e adicionar uma columa com a data. Tudo em uma sequência de pipe.</p>
@@ -363,7 +363,7 @@ $ data  &lt;chr&gt; &quot;21/05/2021&quot;, &quot;21/05/2021&quot;</code></pre>
 </div>
 <div id="encapsulando-em-uma-função" class="section level3">
 <h3>3.4 - Encapsulando em uma função</h3>
-<p>Agora podemos criar uma função que recebe a data e retorna o nosso datafame desejado. Nesse caso precisamos generalizar o argumento de data no nosso código usando a função <strong><code>format(dt, "%d/%m/%Y")</code></strong> no argumento da requisição POST e também na coluna de data que adicionamos no dataframe <strong><code>mutate(data = dt)</code></strong>. A função final fica dessa forma:</p>
+<p>Agora podemos criar uma função que recebe a data e retorna o nosso datafame desejado. Nesse caso precisamos generalizar o argumento de data no nosso código usando a função <strong><code>format(dt, "%d/%m/%Y")</code></strong> no argumento da requisição POST e a função <strong><code>mutate(data = dt)</code></strong> na coluna de data que adicionamos no dataframe. A função final fica dessa forma:</p>
 <pre class="r"><code>get_ettj_param &lt;- function(dt){
     
     url &lt;- &quot;https://www.anbima.com.br/informacoes/est-termo/CZ-down.asp&quot;
@@ -386,7 +386,7 @@ $ data  &lt;chr&gt; &quot;21/05/2021&quot;, &quot;21/05/2021&quot;</code></pre>
 </div>
 <div id="obtendo-o-vetor-de-dias-úteis-com-o-bizdays" class="section level3">
 <h3>3.5 - Obtendo o vetor de dias úteis com o <strong><code>bizdays</code></strong></h3>
-<p>Para iterar as datas precisamos criar um vetor com os últimos 5 dias úteis. Felizmente o pacote <strong><code>bizdays</code></strong> nos permite selecionar os últimos 5 dias úteis independente do dia que vc executar o script.</p>
+<p>Para iterar as datas precisamos criar um vetor com os últimos 5 dias úteis. Felizmente o pacote <strong><code>bizdays</code></strong> nos permite selecionar os últimos 5 dias úteis independente do dia que você executar o script e considerando o calendário oficial da ANBIMA. É um pacote excelente.</p>
 <pre class="r"><code># load the working days by calendar of anbima
 data(holidaysANBIMA, 
      package = &#39;bizdays&#39;)
@@ -398,8 +398,8 @@ d1 = add.bizdays(d2, -6, cal = cal)
 data_seq &lt;- bizseq(d1, d2, cal)
 data_seq</code></pre>
 <pre><code>[1] &quot;2021-05-14&quot; &quot;2021-05-17&quot; &quot;2021-05-18&quot; &quot;2021-05-19&quot; &quot;2021-05-20&quot;
-[6] &quot;2021-05-21&quot;</code></pre>
-<p>Primeiro carregamos o calendário da ANBIMA, já disponível no pacote, carregando o calendário na variável <strong><code>cal</code></strong>. Em seguida, criamos o dia atual com a função <strong><code>Sys.Date()</code></strong> e com as funções do pacote <strong><code>bizdays</code></strong> obtemos o sexto dia útil anterior para obtermos o vetor de 5 dias úteis completo.</p>
+[6] &quot;2021-05-21&quot; &quot;2021-05-24&quot;</code></pre>
+<p>Primeiro carregamos o calendário da ANBIMA, já disponível no pacote, na variável <strong><code>cal</code></strong>. Depois obtemos o dia atual com a função <strong><code>Sys.Date()</code></strong> e o sexto dia útil passado com a função <strong><code>add.bizdays(., -6)</code></strong> e por fim criamos o vetor dos últimos 5 dias úteis com a função <strong><code>bizseq()</code></strong>.</p>
 </div>
 <div id="iterando-a-função-em-múltiplas-datas-com-o-purrr" class="section level3">
 <h3>3.6 - Iterando a função em múltiplas datas com o <strong><code>purrr</code></strong></h3>
@@ -422,7 +422,7 @@ $ B3    &lt;dbl&gt; -0.05449712, -0.05520741, -0.05577582, -0.06527348, -0.05790
 $ B4    &lt;dbl&gt; -0.02525242, -0.01498020, -0.02865571, -0.01958474, -0.02715793,~
 $ L1    &lt;dbl&gt; 2.193240, 1.235860, 2.237047, 1.252852, 2.264847, 1.254316, 2.27~
 $ L2    &lt;dbl&gt; 0.45105216, 0.07516751, 0.44983607, 0.08047245, 0.44435840, 0.08~</code></pre>
-<p>Nesse caso eu também utilizo o <strong><code>possibily()</code></strong> para lidar com possíveis erros em alguma iteração do map. Com ela, caso ocorra um erro em uma iteração, o map não vai parar de iterar, ele irá inputar NA nos dados que falharam e continuará a execuçao do próximo item.</p>
+<p>Nesse caso eu também utilizo o <strong><code>possibily()</code></strong> para lidar com possíveis erros em alguma iteração do map. Com ela, caso ocorra um erro em uma iteração, ele irá inputar <strong><code>NA</code></strong> nos dados que falharam e continuará a execuçao do próximo item, sem quebrar a iteração no meio.</p>
 </div>
 <div id="salvando-os-dados-em-um-.csv" class="section level3">
 <h3>3.7 - Salvando os dados em um <strong><code>.csv</code></strong></h3>
@@ -453,15 +453,15 @@ if (file.exists(name_db)){
 </div>
 <div id="agendando-a-execução-do-script" class="section level2">
 <h2>4 - Agendando a execução do script</h2>
-<p>Com o script pronto, podemos agendar a execução do scraper usando um script <strong><code>.bat</code></strong> que executa via linha de comando o script R.</p>
-<p>O script .bat fica dessa forma</p>
+<p>Com o script pronto, podemos agendar a execução do scraper usando um arquivo <strong><code>.bat</code></strong> que executa via linha de comando o script R.</p>
+<p>O arquivo .bat fica dessa forma</p>
 <pre class="bat"><code>&quot;C:\Program Files\R\R-4.0.2\bin\R.exe&quot; CMD BATCH C:\Users\augus\Documents\dev_R\schedule_R\coef_curv_anbima_scheduler.R</code></pre>
 <p>Nele é passado o executável do R na string inicial, depois o comando <strong><code>CMD BATCH</code></strong> chama a linha de comando que será executado o script R que vem logo em seguida.</p>
 <p>A partir desse simples código o <strong><code>TaskScheduler</code></strong> do Windows irá agendar a execução do script e assim toda semana sua base irá receber os dados da semana anterior.</p>
-<p>Para não prolongar ainda mais este post, deixo aqui um <a href="https://www.softdownload.com.br/como-automatizar-execucao-de-programas.html">tutorial</a> de como agendar tarefas com essa ferramenta. Basta seguir estes passos e selecionar o script .bat como programa (script) a ser executado.</p>
+<p>Para não prolongar ainda mais este post, deixo aqui um <a href="https://www.softdownload.com.br/como-automatizar-execucao-de-programas.html">tutorial</a> de como agendar tarefas com essa ferramenta. Basta seguir estes passos e selecionar o arquivo .bat como programa/script a ser executado.</p>
 <blockquote>
 <p>Para os usuários de Linux é possível usar o <strong><code>crontab</code></strong> para fazer o mesmo agendamento.
-Essa estrutura permite executar scripts de diferentes linguagens. Caso queira agendar um script python, basta usar o caminho do executável do python e referenciar o script .py que deseja.</p>
+Essa estrutura permite executar scripts de diferentes linguagens. Por exemplo, caso queira agendar um script python, basta usar o caminho do executável do python e referenciar o script .py que deseja.</p>
 </blockquote>
 <p>No meu caso, agendo o script para que seja executado toda segunda-feira para capturar. Então como eu criei o script em Julho/2020 eu tenho dados desde esse período no meu arquivo .csv.</p>
 <p><img src="base_de_dados_csv.png" width="500" height="500" /></p>

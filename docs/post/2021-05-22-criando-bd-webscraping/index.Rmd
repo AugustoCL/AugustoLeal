@@ -10,7 +10,7 @@ output:
   keep_md: yes
   blogdown::html_page:
     toc: yes
-    tposs: "style.css"
+css: "style.css"
 ---
 
 ```{r setup, include=FALSE}
