@@ -6,7 +6,16 @@
     <description>Recent content in ETTJ on Augusto Leal</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Fri, 30 Apr 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://augustocl.github.io/AugustoLeal/tags/ettj/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 22 May 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://augustocl.github.io/AugustoLeal/tags/ettj/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Criando Base de Dados via Webscraping da ANBIMA [R]</title>
+      <link>https://augustocl.github.io/AugustoLeal/post/2021-05-22-criando-bd-webscraping/</link>
+      <pubDate>Sat, 22 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://augustocl.github.io/AugustoLeal/post/2021-05-22-criando-bd-webscraping/</guid>
+      <description>1 - Por que capturar estes dados?2 - O que são e para que servem estes dados?</description>
+    </item>
+    
     <item>
       <title>Webscraping e visualização animada da ETTJ [Python] e [R]</title>
       <link>https://augustocl.github.io/AugustoLeal/post/2021-04-30-curva-juros/</link>

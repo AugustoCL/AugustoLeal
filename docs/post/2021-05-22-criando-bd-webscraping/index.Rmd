@@ -6,11 +6,11 @@ slug: []
 categories: ["R"]
 tags: ["webscraping", "csv", "agendamento", "ETTJ", "juros", "ggplot2"]
 description: 'Criando uma base de dados via webscraping automatizado da ETTJ da ANBIMA.'
+css: "style.css"
 output:
   keep_md: yes
   blogdown::html_page:
     toc: yes
-css: "style.css"
 ---
 
 ```{r setup, include=FALSE}

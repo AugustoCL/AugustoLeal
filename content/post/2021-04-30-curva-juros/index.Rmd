@@ -1,6 +1,6 @@
 ---
 title: Webscraping e visualização animada da ETTJ [Python] e [R]
-author: ''
+author: 'AugustoCL'
 date: '2021-04-30'
 slug: []
 categories: ["R","Python"]
