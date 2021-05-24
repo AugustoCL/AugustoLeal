@@ -7,25 +7,25 @@
 
   <title>Criando Base de Dados via Webscraping da ANBIMA [R] &middot; Augusto Leal</title>
 
-  <meta name="description" content="" />
+  <meta name="description" content="Criando uma base de dados via webscraping automatizado da ETTJ da ANBIMA." />
 
   
 
 <meta itemprop="name" content="Criando Base de Dados via Webscraping da ANBIMA [R]">
-<meta itemprop="description" content="1 - Por que capturar estes dados?2 - O que são e para que servem estes dados?"><meta itemprop="datePublished" content="2021-05-22T00:00:00&#43;00:00" />
+<meta itemprop="description" content="Criando uma base de dados via webscraping automatizado da ETTJ da ANBIMA."><meta itemprop="datePublished" content="2021-05-22T00:00:00&#43;00:00" />
 <meta itemprop="dateModified" content="2021-05-22T00:00:00&#43;00:00" />
 <meta itemprop="wordCount" content="1604"><meta itemprop="image" content="https://augustocl.github.io/AugustoLeal/images/profile1.png"/>
-<meta itemprop="keywords" content="webscraping,xml,agendamento,ETTJ,juros,ggplot2," />
+<meta itemprop="keywords" content="webscraping,csv,agendamento,ETTJ,juros,ggplot2," />
 
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:image" content="https://augustocl.github.io/AugustoLeal/images/profile1.png"/>
 
 <meta name="twitter:title" content="Criando Base de Dados via Webscraping da ANBIMA [R]"/>
-<meta name="twitter:description" content="1 - Por que capturar estes dados?2 - O que são e para que servem estes dados?"/>
+<meta name="twitter:description" content="Criando uma base de dados via webscraping automatizado da ETTJ da ANBIMA."/>
 
 
 <meta property="og:title" content="Criando Base de Dados via Webscraping da ANBIMA [R]" />
-<meta property="og:description" content="1 - Por que capturar estes dados?2 - O que são e para que servem estes dados?" />
+<meta property="og:description" content="Criando uma base de dados via webscraping automatizado da ETTJ da ANBIMA." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://augustocl.github.io/AugustoLeal/post/2021-05-22-criando-bd-webscraping/" /><meta property="og:image" content="https://augustocl.github.io/AugustoLeal/images/profile1.png"/><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2021-05-22T00:00:00&#43;00:00" />
@@ -79,7 +79,7 @@
       },
       "datePublished": "2021-05-22T00:00:00+00:00",
       "dateModified": "2021-05-22T00:00:00+00:00",
-      "description": "1 - Por que capturar estes dados?\r2 - O que são e para que servem estes dados?",
+      "description": "Criando uma base de dados via webscraping automatizado da ETTJ da ANBIMA.",
       "inLanguage": "en",
       "potentialAction": [
         {
@@ -106,7 +106,7 @@
       },
       "keywords": [
         "webscraping",
-        "xml",
+        "csv",
         "agendamento",
         "ETTJ",
         "juros",
@@ -339,7 +339,7 @@ r &lt;- httr::POST(url = url,
                 encode = &quot;form&quot;)
 r</code></pre>
 <pre><code>Response [https://www.anbima.com.br/informacoes/est-termo/CZ-down.asp]
-  Date: 2021-05-23 20:03
+  Date: 2021-05-23 20:08
   Status: 200
   Content-Type: text/csv
   Size: 2.78 kB
@@ -486,7 +486,7 @@ No próximo post irei detalhar o script R que executa o plot apresentado no iní
   </li>
   
   <li>
-    <a href="https://augustocl.github.io/AugustoLeal/tags/xml/" class="tag-link">xml</a>
+    <a href="https://augustocl.github.io/AugustoLeal/tags/csv/" class="tag-link">csv</a>
   </li>
   
   <li>
