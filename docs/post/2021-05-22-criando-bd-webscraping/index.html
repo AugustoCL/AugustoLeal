@@ -14,7 +14,7 @@
 <meta itemprop="name" content="Criando Base de Dados via Webscraping da ANBIMA [R]">
 <meta itemprop="description" content="Criando uma base de dados via webscraping automatizado da ETTJ da ANBIMA."><meta itemprop="datePublished" content="2021-05-22T00:00:00&#43;00:00" />
 <meta itemprop="dateModified" content="2021-05-22T00:00:00&#43;00:00" />
-<meta itemprop="wordCount" content="1608"><meta itemprop="image" content="https://augustocl.github.io/AugustoLeal/images/profile1.png"/>
+<meta itemprop="wordCount" content="1607"><meta itemprop="image" content="https://augustocl.github.io/AugustoLeal/images/profile1.png"/>
 <meta itemprop="keywords" content="webscraping,csv,agendamento,ETTJ,juros,ggplot2," />
 
 <meta name="twitter:card" content="summary_large_image"/>
@@ -332,7 +332,7 @@ r &lt;- httr::POST(url = url,
                 encode = &quot;form&quot;)
 r</code></pre>
 <pre><code>Response [https://www.anbima.com.br/informacoes/est-termo/CZ-down.asp]
-  Date: 2021-05-24 17:30
+  Date: 2021-05-29 22:37
   Status: 200
   Content-Type: text/csv
   Size: 2.78 kB
@@ -397,8 +397,8 @@ d2 = Sys.Date()
 d1 = add.bizdays(d2, -6, cal = cal)
 data_seq &lt;- bizseq(d1, d2, cal)
 data_seq</code></pre>
-<pre><code>[1] &quot;2021-05-14&quot; &quot;2021-05-17&quot; &quot;2021-05-18&quot; &quot;2021-05-19&quot; &quot;2021-05-20&quot;
-[6] &quot;2021-05-21&quot; &quot;2021-05-24&quot;</code></pre>
+<pre><code>[1] &quot;2021-05-21&quot; &quot;2021-05-24&quot; &quot;2021-05-25&quot; &quot;2021-05-26&quot; &quot;2021-05-27&quot;
+[6] &quot;2021-05-28&quot;</code></pre>
 <p>Primeiro carregamos o calendário da ANBIMA, já disponível no pacote, na variável <strong><code>cal</code></strong>. Depois obtemos o dia atual com a função <strong><code>Sys.Date()</code></strong> e o sexto dia útil passado com a função <strong><code>add.bizdays(., -6)</code></strong> e por fim criamos o vetor dos últimos 5 dias úteis com a função <strong><code>bizseq()</code></strong>.</p>
 </div>
 <div id="iterando-a-função-em-múltiplas-datas-com-o-purrr" class="section level3">
@@ -414,14 +414,14 @@ result &lt;-
 glimpse(result)</code></pre>
 <pre><code>Rows: 12
 Columns: 8
-$ data  &lt;date&gt; 2021-05-14, 2021-05-14, 2021-05-17, 2021-05-17, 2021-05-18, 202~
+$ data  &lt;date&gt; 2021-05-21, 2021-05-21, 2021-05-24, 2021-05-24, 2021-05-25, 202~
 $ Grupo &lt;chr&gt; &quot;PREFIXADOS&quot;, &quot;IPCA&quot;, &quot;PREFIXADOS&quot;, &quot;IPCA&quot;, &quot;PREFIXADOS&quot;, &quot;IPCA&quot;~
-$ B1    &lt;dbl&gt; 0.10919289, 0.05321720, 0.10923041, 0.05425540, 0.10985908, 0.06~
-$ B2    &lt;dbl&gt; -0.07455333, -0.04302222, -0.07407226, -0.04066612, -0.07433412,~
-$ B3    &lt;dbl&gt; -0.05449712, -0.05520741, -0.05577582, -0.06527348, -0.05790379,~
-$ B4    &lt;dbl&gt; -0.02525242, -0.01498020, -0.02865571, -0.01958474, -0.02715793,~
-$ L1    &lt;dbl&gt; 2.193240, 1.235860, 2.237047, 1.252852, 2.264847, 1.254316, 2.27~
-$ L2    &lt;dbl&gt; 0.45105216, 0.07516751, 0.44983607, 0.08047245, 0.44435840, 0.08~</code></pre>
+$ B1    &lt;dbl&gt; 0.11373832, 0.05791674, 0.11197249, 0.05878552, 0.11159105, 0.05~
+$ B2    &lt;dbl&gt; -0.07779597, -0.04401601, -0.07555360, -0.04795247, -0.07494723,~
+$ B3    &lt;dbl&gt; -0.05762846, -0.07163773, -0.05615549, -0.07276023, -0.05571391,~
+$ B4    &lt;dbl&gt; -0.04368595, -0.02921150, -0.03490220, -0.03105072, -0.03731779,~
+$ L1    &lt;dbl&gt; 2.296147, 1.280478, 2.252240, 1.326245, 2.241934, 1.393420, 2.24~
+$ L2    &lt;dbl&gt; 0.43812693, 0.09180126, 0.44694263, 0.08407592, 0.45680824, 0.08~</code></pre>
 <p>Nesse caso eu também utilizo o <strong><code>possibily()</code></strong> para lidar com possíveis erros em alguma iteração do map. Com ela, caso ocorra um erro em uma iteração, ele irá inputar <strong><code>NA</code></strong> nos dados que falharam e continuará a execuçao do próximo item, sem quebrar a iteração no meio.</p>
 </div>
 <div id="salvando-os-dados-em-um-.csv" class="section level3">

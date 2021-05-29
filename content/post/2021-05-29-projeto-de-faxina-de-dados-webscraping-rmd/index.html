@@ -1,0 +1,232 @@
+---
+title: 'Faxina de Dados + Webscraping [R]'
+author: ''
+date: '2021-05-29'
+categories: ["R"]
+tags: ["webscraping", "faxina", "limpeza", "purrr"]
+description: 'Trabalho final realizado para a conclusão do curso "Faxina de Dados da Curso-R"'
+css: "style.css"
+output:
+  keep_md: TRUE
+  blogdown::html_page:
+    toc: FALSE
+---
+
+  <link rel="stylesheet" href="style.css" type="text/css" />
+
+
+<p>Este post detalha o trabalho final realizado para a conclusão do curso <a href="https://curso-r.com/cursos/faxina/">Faxina de Dados</a> da <a href="https://curso-r.com/">Curso-R</a>, onde foi solicitado que o trabalho tenha <strong>no mínimo</strong>:</p>
+<ul>
+<li>Leitura de uma base bruta que não esteja no formato <em>tidy</em>, em que cada variável é uma coluna e cada linha é uma observação.</li>
+<li>Manipulação alguma coluna de texto.</li>
+<li>Que seja salvo a base no formato <em>tidy</em>, na extensão <em>.rds</em>.</li>
+</ul>
+<blockquote>
+<p>Caso queiram conferir o código final, sem precisar conferir todo o passo-a-passo abaixo, aqui está o <a href="https://gist.github.com/AugustoCL/af32c55c15d0113f0451f3d79895c5ee">link</a> do script completo.</p>
+</blockquote>
+<p><strong>Índice</strong></p>
+<ul>
+<li><a href="#resumo-do-caso">Resumo do Caso</a>
+<ul>
+<li><a href="#base-suja-untidy">Base Suja Untidy</a></li>
+<li><a href="#base-limpa-tidy">Base Limpa Tidy</a></li>
+</ul></li>
+<li><a href="#executando-o-webscraping">Executando o webscraping</a>
+<ul>
+<li><a href="#identificando-a-requisicao-no-site">Identificando a requisicao no site</a></li>
+<li><a href="#recriando-a-requisicao-via-script-(httr,-rvest,-stringr)">Recriando a requisicao via script (httr, rvest, stringr)</a></li>
+<li><a href="#solucionando-os-encodings-(stringr)">Solucionando os encodings (stringr)</a></li>
+</ul></li>
+<li><a href="#limpando-os-dados-(janitor,-dplyr,-tidyr,-stringr)">Limpando os dados (janitor, dplyr, tidyr, stringr)</a></li>
+<li><a href="#aplicando-as-functions-em-um-pipeline-(tidyr-+-purrr)">Aplicando as functions em um pipeline (tidyr + purrr)</a></li>
+<li><a href="#conferindo-os-resultados">Conferindo os resultados</a></li>
+</ul>
+<div id="resumo-do-caso" class="section level2">
+<h2>1 - Resumo do Caso</h2>
+<p>Como encontrei muitas bases públicas relativamente limpas, fui atrás de bases que necessitavam de uma boa limpeza e assim me animei para executar um webscraping para obter os dados sujos.</p>
+<blockquote>
+<p>Eu aproveitei também para encapsular todo o processo em funções do <code>purrr</code>, trabalhando com as column-lists do universo Tidyverse. Isso permitiu tornar o código mais legível e reprodutível, além de diminuir as linhas de código ao evitar o uso de for-loops.</p>
+</blockquote>
+<p>Então capturei os valores de consumo de energia em MWh dos 15 maiores munícipios consumidores de energia do estado de São Paulo, por ano, que estão disponíveis na seguinte <a href="http://dadosenergeticos.energia.sp.gov.br/portalcev2/intranet/Eletricidade/index.html">página</a> da Secretaria de Infraestrutura e Meio Ambiente de SP.</p>
+<p><img src="imgs/00.png" /></p>
+<p>No retângulo vermelho destacado na imagem há uma caixa de seleção do ano dessa tabela que possui informações de 2006 até 2019. Portanto a base completa possui cerca de 210 observações (14x15).</p>
+<p>Esta base pode ser considerada <em>untidy</em> pois temos várias colunas que representam a mesma informação do tipo de consumo. Então para transformarmos a base no formato <em>tidy</em> é necessário que essas colunas sejam transformadas em uma única variável chamada “tipo_consumo”.</p>
+<div id="base-suja-untidy" class="section level3">
+<h3>1.1 - Base Suja Untidy</h3>
+<p>A extração crua do webscraping gera a seguinte base suja com problemas de encoding.</p>
+<p><img src="imgs/01.png" /></p>
+</div>
+<div id="base-limpa-tidy" class="section level3">
+<h3>1.2 - Base Limpa Tidy</h3>
+<p>Após o webscraping, limpeza e tratamento dos dados, obtemos a seguinte base final no formato <em>tidy</em> solicitado.</p>
+<p><img src="imgs/02.png" /></p>
+</div>
+</div>
+<div id="executando-o-webscraping" class="section level2">
+<h2>2 - Executando o webscraping</h2>
+<div id="identificando-a-requisicao-no-site" class="section level3">
+<h3>2.1 - Identificando a requisicao no site</h3>
+<p>Quando abrimos a seção de rede da ferramenta de desenvolvedor do navegador e selecionamos um novo ano da tabela, é possível identificar a requisição POST que retorna o html da página que contém a tabela.</p>
+<p><img src="imgs/03.png" /></p>
+<p>Ao investigar essa requisição é possível extrair a url solicitada e os campos do formulário necessários.</p>
+<p><img src="imgs/04.png" /></p>
+</div>
+<div id="recriando-a-requisicao-via-script-httr-rvest-stringr" class="section level3">
+<h3>2.2 - Recriando a requisicao via script (httr, rvest, stringr)</h3>
+<p>Com as informações em mão, conseguimos reproduzir a mesma requisição via código da seguinte forma.</p>
+<pre class="r"><code>aaaa &lt;- 2019
+url &lt;- &quot;http://dadosenergeticos.energia.sp.gov.br/PortalCEv2/Municipios/Eletricidade/m_eletricidade.asp?ano={aaaa}&quot;
+req &lt;- httr::POST(url = glue::glue(url),
+                  body = list(Ano2 = aaaa),
+                  encode = &quot;form&quot;)</code></pre>
+<p>O resultado é uma lista com várias informações da requisição, em que o conteúdo principal está no formato binário. Então usamos a fução <code>rawToChar()</code> para transformar o binário em texto obtendo assim todo o html da página.</p>
+<pre class="r"><code>raw_html &lt;- rawToChar(req$content)</code></pre>
+<p>Dentro do html existe a tag <code>&lt;table&gt;</code> que contém todos os dados que necessitamos, mas precisamos selecionar somente o texto desta tag para conseguirmos avançar com a leitura da tabela. Para isso apliquei uma expressão regex que seleciona todo o texto entre as tags <code>&lt;table</code> e <code>&lt;/table&gt;</code> na função <code>gsub()</code>. Em seguida, adicionei a string o termo <code>&lt;table</code> que não foi capturado pela função anterior. Desse modo, conseguimos obter uma string html que é reconhece uma tabela com a função <code>html_table()</code></p>
+<pre class="r"><code>text_inside_html_table &lt;-
+  gsub(&#39;^.*&lt;table\\s*|\\s* &lt;\\/table&gt;*$&#39;, &#39;&#39;, raw_html) %&gt;%
+  paste0(&quot;&lt;table &quot;, .)</code></pre>
+<p>Em seguida apliquei as funções <code>read_html()</code> e <code>html_table()</code> do pacote <code>rvest</code>, extrai a tabela com o <code>pluck()</code> e converti em um dataframe, resultando na tabela suja apresentada na introdução do problema.</p>
+<pre class="r"><code>dirty_tibble &lt;- text_inside_html_table %&gt;%
+  rvest::read_html() %&gt;%
+  rvest::html_table() %&gt;%
+  purrr::pluck() %&gt;% 
+  base::as.data.frame() %&gt;%
+  dplyr::as_tibble()
+
+glimpse(dirty_tibble)</code></pre>
+<pre><code>## Rows: 17
+## Columns: 10
+## $ X1  &lt;chr&gt; &quot;MUNICÃ\u008dPIOS&quot;, &quot;MUNICÃ\u008dPIOS&quot;, &quot;1 - SÃƒO PAULO\r\n       ~
+## $ X2  &lt;chr&gt; &quot;CONSUMO EM MWh - PERÍODO:     2019&quot;, &quot;RESIDENCIAL&quot;, &quot;11,231,739&quot;,~
+## $ X3  &lt;chr&gt; &quot;CONSUMO EM MWh - PERÍODO:     2019&quot;, &quot;INDUSTRIAL&quot;, &quot;2,531,285&quot;, &quot;~
+## $ X4  &lt;chr&gt; &quot;CONSUMO EM MWh - PERÍODO:     2019&quot;, &quot;COMERCIAL&quot;, &quot;10,726,895&quot;, &quot;~
+## $ X5  &lt;chr&gt; &quot;CONSUMO EM MWh - PERÍODO:     2019&quot;, &quot;RURAL&quot;, &quot;2,479&quot;, &quot;20&quot;, &quot;795~
+## $ X6  &lt;chr&gt; &quot;CONSUMO EM MWh - PERÍODO:     2019&quot;, &quot;ILUMINAÃ‡ÃƒO PÚBLICA&quot;, &quot;500~
+## $ X7  &lt;chr&gt; &quot;CONSUMO EM MWh - PERÍODO:     2019&quot;, &quot;PODERES PÚBLICOS&quot;, &quot;935,899~
+## $ X8  &lt;chr&gt; &quot;CONSUMO EM MWh - PERÍODO:     2019&quot;, &quot;SERVIÇOS PÚBLICOS&quot;, &quot;1,554,~
+## $ X9  &lt;chr&gt; &quot;CONSUMO EM MWh - PERÍODO:     2019&quot;, &quot;CONSUMO PRÓPRIO&quot;, &quot;28,905&quot;,~
+## $ X10 &lt;chr&gt; &quot;CONSUMO EM MWh - PERÍODO:     2019&quot;, &quot;TOTAL MWh&quot;, &quot;27,511,918&quot;, &quot;~</code></pre>
+</div>
+<div id="solucionando-os-encodings-stringr" class="section level3">
+<h3>2.3 - Solucionando os encodings (stringr)</h3>
+<p>Observando o texto html da variável <code>raw_html</code>, percebi que já havia esses problemas de encoding. Usei a função <code>guess_encoding()</code> e descobri que o encoding era o clássico UTF-8. Testei diferentes funções de conversões de encoding que encontrei na internet, mas nenhuma funcionou. Então como eram poucos casos, resolvi fazer a substituição na mão dos casos e eu adicionei essa limpeza no código da seguinte forma.</p>
+<pre class="r"><code>raw_html &lt;- rawToChar(req$content) %&gt;% 
+  str_replace_all(., &quot;Ã\u008d&quot;, &quot;Í&quot;) %&gt;%
+  str_replace_all(., &quot;Ã‡Ãƒ&quot;, &quot;ÇÃ&quot;) %&gt;%
+  str_replace_all(., &quot;Ãƒ&quot;, &quot;Ã&quot;) %&gt;%
+  str_replace_all(., &quot;Ã‰&quot;, &quot;É&quot;) %&gt;%
+  str_replace_all(., &quot;Ã§Ã£&quot;, &quot;çã&quot;)</code></pre>
+</div>
+</div>
+<div id="limpando-os-dados-janitor-dplyr-tidyr-stringr" class="section level2">
+<h2>3 - Limpando os dados (janitor, dplyr, tidyr, stringr)</h2>
+<p>Até o momento temos a seguinte tabela suja e <em>untidy</em>.</p>
+<p><img src="imgs/05.png" /></p>
+<p>Prosseguindo, retirei a primeira linha que possui informações repetidas e desnecessárias, transformei a segunda linha em nome de coluna e apliquei uma limpeza dos nomes com a função <code>clean_names()</code> do pacote <code>janitor</code>.</p>
+<pre class="r"><code>consumo_2019 &lt;- scrapy_consumo_eletr_ano(2019)
+
+consumo_2019 %&gt;% 
+  slice(-1) %&gt;% 
+  janitor::row_to_names(row_number = 1) %&gt;% 
+  janitor::clean_names() %&gt;% 
+  rename(total_mwh = total_m_wh) %&gt;% 
+  glimpse()</code></pre>
+<pre><code>## Rows: 15
+## Columns: 10
+## $ municipios         &lt;chr&gt; &quot;1 - SÃO PAULO\r\n           \r\n          Populaçã~
+## $ residencial        &lt;chr&gt; &quot;11,231,739&quot;, &quot;11,495&quot;, &quot;938,726&quot;, &quot;1,147,449&quot;, &quot;70~
+## $ industrial         &lt;chr&gt; &quot;2,531,285&quot;, &quot;3,711,523&quot;, &quot;1,323,341&quot;, &quot;606,030&quot;, &quot;~
+## $ comercial          &lt;chr&gt; &quot;10,726,895&quot;, &quot;5,588&quot;, &quot;908,696&quot;, &quot;1,151,682&quot;, &quot;564~
+## $ rural              &lt;chr&gt; &quot;2,479&quot;, &quot;20&quot;, &quot;795&quot;, &quot;76,045&quot;, &quot;1&quot;, &quot;97&quot;, &quot;13,730&quot;~
+## $ iluminacao_publica &lt;chr&gt; &quot;500,074&quot;, &quot;1,402&quot;, &quot;51,422&quot;, &quot;85,882&quot;, &quot;46,385&quot;, &quot;~
+## $ poderes_publicos   &lt;chr&gt; &quot;935,899&quot;, &quot;1,169&quot;, &quot;63,204&quot;, &quot;143,196&quot;, &quot;46,695&quot;, ~
+## $ servicos_publicos  &lt;chr&gt; &quot;1,554,641&quot;, &quot;1,457&quot;, &quot;77,472&quot;, &quot;95,976&quot;, &quot;20,061&quot;,~
+## $ consumo_proprio    &lt;chr&gt; &quot;28,905&quot;, &quot;0&quot;, &quot;1,195&quot;, &quot;9,724&quot;, &quot;963&quot;, &quot;1,097&quot;, &quot;5~
+## $ total_mwh          &lt;chr&gt; &quot;27,511,918&quot;, &quot;3,732,654&quot;, &quot;3,364,850&quot;, &quot;3,315,985&quot;~</code></pre>
+<p>Como a variável <code>municipio</code> contém também informações do ranking e população, apliquei duas vezes a função <code>separate()</code> para transformar a variável em 3 colunas (ranking, municipio e populacao). Para isso, usei como separador as strings " - " e “População” conforme código abaixo.</p>
+<pre class="r"><code>  ... %&gt;% 
+  separate(col = &quot;municipios&quot;,
+           sep = &quot;População&quot;,
+           into = c(&quot;municipio&quot;, &quot;populacao&quot;)) %&gt;%
+  separate(col = &quot;municipio&quot;,
+           sep = &quot; - &quot;,
+           into = c(&quot;ranking&quot;, &quot;municipio&quot;)) %&gt;%</code></pre>
+<p>Após as separações, temos a seguinte base.</p>
+<pre><code>## Rows: 15
+## Columns: 12
+## $ ranking            &lt;chr&gt; &quot;1&quot;, &quot;2&quot;, &quot;3&quot;, &quot;4&quot;, &quot;5&quot;, &quot;6&quot;, &quot;7&quot;, &quot;8&quot;, &quot;9&quot;, &quot;10&quot;, ~
+## $ municipio          &lt;chr&gt; &quot;SÃO PAULO\r\n           \r\n          &quot;, &quot;ALUMÍNIO~
+## $ populacao          &lt;chr&gt; &quot;  11,811,516&quot;, &quot;  17,859&quot;, &quot;  1,338,452&quot;, &quot;  81,97~
+## $ residencial        &lt;chr&gt; &quot;11,231,739&quot;, &quot;11,495&quot;, &quot;938,726&quot;, &quot;1,147,449&quot;, &quot;70~
+## $ industrial         &lt;chr&gt; &quot;2,531,285&quot;, &quot;3,711,523&quot;, &quot;1,323,341&quot;, &quot;606,030&quot;, &quot;~
+## $ comercial          &lt;chr&gt; &quot;10,726,895&quot;, &quot;5,588&quot;, &quot;908,696&quot;, &quot;1,151,682&quot;, &quot;564~
+## $ rural              &lt;chr&gt; &quot;2,479&quot;, &quot;20&quot;, &quot;795&quot;, &quot;76,045&quot;, &quot;1&quot;, &quot;97&quot;, &quot;13,730&quot;~
+## $ iluminacao_publica &lt;chr&gt; &quot;500,074&quot;, &quot;1,402&quot;, &quot;51,422&quot;, &quot;85,882&quot;, &quot;46,385&quot;, &quot;~
+## $ poderes_publicos   &lt;chr&gt; &quot;935,899&quot;, &quot;1,169&quot;, &quot;63,204&quot;, &quot;143,196&quot;, &quot;46,695&quot;, ~
+## $ servicos_publicos  &lt;chr&gt; &quot;1,554,641&quot;, &quot;1,457&quot;, &quot;77,472&quot;, &quot;95,976&quot;, &quot;20,061&quot;,~
+## $ consumo_proprio    &lt;chr&gt; &quot;28,905&quot;, &quot;0&quot;, &quot;1,195&quot;, &quot;9,724&quot;, &quot;963&quot;, &quot;1,097&quot;, &quot;5~
+## $ total_mwh          &lt;chr&gt; &quot;27,511,918&quot;, &quot;3,732,654&quot;, &quot;3,364,850&quot;, &quot;3,315,985&quot;~</code></pre>
+<p>Em seguida, retirei as quebras de linhas e espaços vazios com a função <code>srt_squish()</code> do pacote <code>stringr</code> que remove todas essas sujeiras tanto no início quanto no fim do texto. Depois retirei as vírgulas nas variáveis de valor e, por fim, converti essas variáveis em tipos numéricos.</p>
+<pre class="r"><code>.... %&gt;% 
+  mutate(
+  across(ranking:populacao,
+         ~str_squish(.)),
+  across(c(ranking, populacao:total_mwh),
+         ~as.numeric(str_replace_all(., &quot;,&quot;, &quot;&quot;)))
+  )</code></pre>
+</div>
+<div id="aplicando-as-functions-em-um-pipeline-tidyr-purrr" class="section level2">
+<h2>4 - Aplicando as functions em um pipeline (tidyr + purrr)</h2>
+<p>Aspirando permitir a visualização dos passos do trabalho em tabelas list-columns, separei a extração e limpeza dos dados em duas funções chamadas:
+* scrapy_consumo_eletr_ano()
+* clean_table()</p>
+<blockquote>
+<p>Caso não possua familiaridade com a estrutura de list-columns do tidyr, sugiro que confiram este capítulo do livro da curso-R neste <a href="https://livro.curso-r.com/7-3-tidyr.html#list-columns">link</a>.</p>
+</blockquote>
+<p>Desse modo, foi possível executar as iterações com a função <code>map()</code> do <code>purrr</code> e salvar todos os resultados e passos intermediários em uma única tabela agregadora chamada <code>all_tbl</code>.</p>
+<pre class="r"><code>all_tbl &lt;-
+  list(&quot;anos&quot; = c(2006:2019)) %&gt;%
+  as_tibble() %&gt;%
+  mutate(
+    raw_tbl = purrr::map(anos,
+                         scrapy_consumo_eletr_ano),
+    clean_but_not_tidy_tbl = purrr::map(raw_tbl,
+                                        clean_table),
+    clean_and_tidy_tbl = purrr::map(clean_but_not_tidy_tbl,
+                                    ~unnest(.) %&gt;%
+                                      pivot_longer(populacao:total_mwh,
+                                                   names_to = &quot;tipo_consumo&quot;,
+                                                   values_to = &quot;MWh&quot;)
+                                    )
+    )</code></pre>
+<p>Eu poderia ter aplicado a função <code>pivot_longer()</code> na função de limpeza retornando a base já no formato <em>tidy</em>, porém como eu quero demonstrar as diferentes fases do tratamento, usando o <code>purrr</code>, eu preferi recriar uma função anônima dentro do map. Assim o leitor vivência diferentes abordagens da ferramenta.</p>
+</div>
+<div id="conferindo-os-resultados" class="section level2">
+<h2>5.0 - Conferindo os resultados</h2>
+<p>O objeto <code>all_tbl</code> possui a seguinte estrutura com as tabelas no formato column-list.</p>
+<p><img src="imgs/all_tbl.png" /></p>
+<p>para extrair cada uma das tabelas intermediárias e de resultado utilizei a função unnest() da seguinte forma.</p>
+<pre class="r"><code># dados brutos
+raw_tbl &lt;-
+  all_tbl %&gt;%
+  select(anos, raw_tbl) %&gt;%
+  unnest(raw_tbl)
+
+# dados limpos, mas não tidy
+clean_but_not_tidy_tbl &lt;-
+  all_tbl %&gt;%
+  select(anos, clean_but_not_tidy_tbl) %&gt;%
+  unnest(clean_but_not_tidy_tbl)
+
+# dados limpos e tidy
+clean_and_tidy_tbl &lt;-
+  all_tbl %&gt;%
+  select(anos, clean_and_tidy_tbl) %&gt;%
+  unnest(clean_and_tidy_tbl)</code></pre>
+<p>Dessa forma, conseguimos conferir as 3 fases do trabalho, com os dados brutos, os dados limpos mas untidy e os dados limpos e tidy.</p>
+<p><img src="imgs/raw_tbl.png" /></p>
+<p><img src="imgs/clean_not_tidy.png" /></p>
+<p><img src="imgs/clean_tidy.png" /></p>
+<p>Por fim, salvei os resultados em <code>.rds</code>, conforme solicitado pela atividade.</p>
+<pre class="r"><code>write_rds(&quot;clean_and_tidy_tbl&quot;, clean_and_tidy_tbl)</code></pre>
+</div>

@@ -8,9 +8,9 @@ tags: ["webscraping", "csv", "agendamento", "ETTJ", "juros", "ggplot2"]
 description: 'Criando uma base de dados via webscraping automatizado da ETTJ da ANBIMA.'
 css: "style.css"
 output:
-  keep_md: yes
+  keep_md: TRUE
   blogdown::html_page:
-    toc: yes
+    toc: TRUE
 ---
 
 ```{r setup, include=FALSE}
@@ -18,9 +18,12 @@ knitr::opts_chunk$set(echo = TRUE, comment = NA)
 library(tidyverse)
 library(bizdays)
 library(httr)
+devtools::source_gist("c83e078bf8c81b035e32c3fc0cf04ee8", 
+                      filename = 'render_toc.R')
 ```
 
 Neste post vou ensinar como criar um script de webscraping com R e como automatizar a execução deste script com o __`task scheduler`__ do Windows. Com isso, teremos um arquivo __`.csv`__ que recebe novos dados a cada execução semanal.
+
 
 ## 1 - Por que capturar estes dados?
 A ANBIMA disponibiliza nesta [página](https://www.anbima.com.br/informacoes/est-termo/) a estimação diária da estrutura a termo das taxas de juros (ETTJ), porém o site só permite o acesso a dados dos **últimos 5 dias úteis**.

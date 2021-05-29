@@ -6,7 +6,16 @@
     <description>Recent content in R on Augusto Leal</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Sat, 22 May 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://augustocl.github.io/AugustoLeal/categories/r/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 29 May 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://augustocl.github.io/AugustoLeal/categories/r/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Faxina de Dados &#43; Webscraping [R]</title>
+      <link>https://augustocl.github.io/AugustoLeal/post/2021-05-29-projeto-de-faxina-de-dados-webscraping-rmd/</link>
+      <pubDate>Sat, 29 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://augustocl.github.io/AugustoLeal/post/2021-05-29-projeto-de-faxina-de-dados-webscraping-rmd/</guid>
+      <description>Este post detalha o trabalho final realizado para a conclusão do curso Faxina de Dados da Curso-R, onde foi solicitado que o trabalho tenha no mínimo:</description>
+    </item>
+    
     <item>
       <title>Criando Base de Dados via Webscraping da ANBIMA [R]</title>
       <link>https://augustocl.github.io/AugustoLeal/post/2021-05-22-criando-bd-webscraping/</link>
