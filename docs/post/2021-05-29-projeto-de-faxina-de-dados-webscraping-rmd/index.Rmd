@@ -7,7 +7,6 @@ tags: ["webscraping", "faxina", "limpeza", "purrr"]
 description: 'Trabalho final realizado para a conclusão do curso "Faxina de Dados da Curso-R"'
 css: "style.css"
 output:
-  keep_md: TRUE
   blogdown::html_page:
     toc: FALSE
 ---
@@ -75,8 +74,7 @@ library(tidyverse)
 library(httr)
 library(rvest)
 library(janitor)
-
-devtools::source_gist("c83e078bf8c81b035e32c3fc0cf04ee8", 
+devtools::source_gist("52d1a2ec54a7a74ed99de2a800848924",
                       filename = 'render_toc.R')
 ```
 
@@ -122,7 +120,7 @@ Após o webscraping, limpeza e tratamento dos dados, obtemos a seguinte base fin
 
 ## 2 - Executando o webscraping
 
-### 2.1 - Identificando a requisicao no site
+### 2.1 - Identificando a requisição no site
 Quando abrimos a seção de rede da ferramenta de desenvolvedor do navegador e selecionamos um novo ano da tabela, é possível identificar a requisição POST que retorna o html da página que contém a tabela.
 
 ![](imgs/03.png)
@@ -131,7 +129,7 @@ Ao investigar essa requisição é possível extrair a url solicitada e os campo
 
 ![](imgs/04.png)
 
-### 2.2 - Recriando a requisicao via script (httr, rvest, stringr)
+### 2.2 - Recriando a requisição via script (httr, rvest, stringr)
 Com as informações em mão, conseguimos reproduzir a mesma requisição via código da seguinte forma.
 ```{r}
 aaaa <- 2019
@@ -234,7 +232,7 @@ Em seguida, retirei as quebras de linhas e espaços vazios com a função `srt_s
 ```
 
 
-## 4 - Aplicando as functions em um pipeline (tidyr + purrr)
+## 4 - Aplicando as funções com múltiplas datas em um pipeline (tidyr + purrr)
 Aspirando permitir a visualização dos passos do trabalho em tabelas list-columns, separei a extração e limpeza dos dados em duas funções chamadas: 
 * scrapy_consumo_eletr_ano()
 * clean_table()

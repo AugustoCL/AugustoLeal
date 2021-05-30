@@ -7,7 +7,6 @@ tags: ["webscraping", "faxina", "limpeza", "purrr"]
 description: 'Trabalho final realizado para a conclusão do curso "Faxina de Dados da Curso-R"'
 css: "style.css"
 output:
-  keep_md: TRUE
   blogdown::html_page:
     toc: FALSE
 ---
@@ -24,7 +23,7 @@ output:
 <blockquote>
 <p>Caso queiram conferir o código final, sem precisar conferir todo o passo-a-passo abaixo, aqui está o <a href="https://gist.github.com/AugustoCL/af32c55c15d0113f0451f3d79895c5ee">link</a> do script completo.</p>
 </blockquote>
-<p><strong>Índice</strong></p>
+<p><strong>ÍNDICE</strong></p>
 <ul>
 <li><a href="#resumo-do-caso">Resumo do Caso</a>
 <ul>
@@ -33,12 +32,12 @@ output:
 </ul></li>
 <li><a href="#executando-o-webscraping">Executando o webscraping</a>
 <ul>
-<li><a href="#identificando-a-requisicao-no-site">Identificando a requisicao no site</a></li>
-<li><a href="#recriando-a-requisicao-via-script-(httr,-rvest,-stringr)">Recriando a requisicao via script (httr, rvest, stringr)</a></li>
+<li><a href="#identificando-a-requisição-no-site">Identificando a requisição no site</a></li>
+<li><a href="#recriando-a-requisição-via-script-(httr,-rvest,-stringr)">Recriando a requisição via script (httr, rvest, stringr)</a></li>
 <li><a href="#solucionando-os-encodings-(stringr)">Solucionando os encodings (stringr)</a></li>
 </ul></li>
 <li><a href="#limpando-os-dados-(janitor,-dplyr,-tidyr,-stringr)">Limpando os dados (janitor, dplyr, tidyr, stringr)</a></li>
-<li><a href="#aplicando-as-functions-em-um-pipeline-(tidyr-+-purrr)">Aplicando as functions em um pipeline (tidyr + purrr)</a></li>
+<li><a href="#aplicando-as-funções-com-múltiplas-datas-em-um-pipeline-(tidyr-+-purrr)">Aplicando as funções com múltiplas datas em um pipeline (tidyr + purrr)</a></li>
 <li><a href="#conferindo-os-resultados">Conferindo os resultados</a></li>
 </ul>
 <div id="resumo-do-caso" class="section level2">
@@ -64,15 +63,15 @@ output:
 </div>
 <div id="executando-o-webscraping" class="section level2">
 <h2>2 - Executando o webscraping</h2>
-<div id="identificando-a-requisicao-no-site" class="section level3">
-<h3>2.1 - Identificando a requisicao no site</h3>
+<div id="identificando-a-requisição-no-site" class="section level3">
+<h3>2.1 - Identificando a requisição no site</h3>
 <p>Quando abrimos a seção de rede da ferramenta de desenvolvedor do navegador e selecionamos um novo ano da tabela, é possível identificar a requisição POST que retorna o html da página que contém a tabela.</p>
 <p><img src="imgs/03.png" /></p>
 <p>Ao investigar essa requisição é possível extrair a url solicitada e os campos do formulário necessários.</p>
 <p><img src="imgs/04.png" /></p>
 </div>
-<div id="recriando-a-requisicao-via-script-httr-rvest-stringr" class="section level3">
-<h3>2.2 - Recriando a requisicao via script (httr, rvest, stringr)</h3>
+<div id="recriando-a-requisição-via-script-httr-rvest-stringr" class="section level3">
+<h3>2.2 - Recriando a requisição via script (httr, rvest, stringr)</h3>
 <p>Com as informações em mão, conseguimos reproduzir a mesma requisição via código da seguinte forma.</p>
 <pre class="r"><code>aaaa &lt;- 2019
 url &lt;- &quot;http://dadosenergeticos.energia.sp.gov.br/PortalCEv2/Municipios/Eletricidade/m_eletricidade.asp?ano={aaaa}&quot;
@@ -175,8 +174,8 @@ consumo_2019 %&gt;%
          ~as.numeric(str_replace_all(., &quot;,&quot;, &quot;&quot;)))
   )</code></pre>
 </div>
-<div id="aplicando-as-functions-em-um-pipeline-tidyr-purrr" class="section level2">
-<h2>4 - Aplicando as functions em um pipeline (tidyr + purrr)</h2>
+<div id="aplicando-as-funções-com-múltiplas-datas-em-um-pipeline-tidyr-purrr" class="section level2">
+<h2>4 - Aplicando as funções com múltiplas datas em um pipeline (tidyr + purrr)</h2>
 <p>Aspirando permitir a visualização dos passos do trabalho em tabelas list-columns, separei a extração e limpeza dos dados em duas funções chamadas:
 * scrapy_consumo_eletr_ano()
 * clean_table()</p>

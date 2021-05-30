@@ -8,31 +8,30 @@ tags: ["webscraping", "csv", "agendamento", "ETTJ", "juros", "ggplot2"]
 description: 'Criando uma base de dados via webscraping automatizado da ETTJ da ANBIMA.'
 css: "style.css"
 output:
-  keep_md: TRUE
   blogdown::html_page:
-    toc: TRUE
+    toc: FALSE
 ---
 
   <link rel="stylesheet" href="style.css" type="text/css" />
 
-<div id="TOC">
-<ul>
-<li><a href="#por-que-capturar-estes-dados">1 - Por que capturar estes dados?</a></li>
-<li><a href="#o-que-são-e-para-que-servem-estes-dados">2 - O que são e para que servem estes dados?</a></li>
-<li><a href="#criando-o-script-r">3 - Criando o script R</a><ul>
-<li><a href="#extração-dos-parâmetros-pelo-site-da-anbima">3.1 - Extração dos parâmetros pelo site da ANBIMA</a></li>
-<li><a href="#reproduzindo-a-requisição-via-script-r">3.2 - Reproduzindo a requisição via script R</a></li>
-<li><a href="#faxinando-o-dado">3.3 - Faxinando o dado</a></li>
-<li><a href="#encapsulando-em-uma-função">3.4 - Encapsulando em uma função</a></li>
-<li><a href="#obtendo-o-vetor-de-dias-úteis-com-o-bizdays">3.5 - Obtendo o vetor de dias úteis com o <strong><code>bizdays</code></strong></a></li>
-<li><a href="#iterando-a-função-em-múltiplas-datas-com-o-purrr">3.6 - Iterando a função em múltiplas datas com o <strong><code>purrr</code></strong></a></li>
-<li><a href="#salvando-os-dados-em-um-.csv">3.7 - Salvando os dados em um <strong><code>.csv</code></strong></a></li>
-</ul></li>
-<li><a href="#agendando-a-execução-do-script">4 - Agendando a execução do script</a></li>
-</ul>
-</div>
 
 <p>Neste post vou ensinar como criar um script de webscraping com R e como automatizar a execução deste script com o <strong><code>task scheduler</code></strong> do Windows. Com isso, teremos um arquivo <strong><code>.csv</code></strong> que recebe novos dados a cada execução semanal.</p>
+<p><strong>ÍNDICE</strong></p>
+<ul>
+<li><a href="#por-que-capturar-estes-dados?">Por que capturar estes dados?</a></li>
+<li><a href="#o-que-são-e-para-que-servem-estes-dados?">O que são e para que servem estes dados?</a></li>
+<li><a href="#criando-o-script-r">Criando o script R</a>
+<ul>
+<li><a href="#extração-dos-parâmetros-pelo-site-da-anbima">Extração dos parâmetros pelo site da ANBIMA</a></li>
+<li><a href="#reproduzindo-a-requisição-via-script-r">Reproduzindo a requisição via script R</a></li>
+<li><a href="#faxinando-o-dado">Faxinando o dado</a></li>
+<li><a href="#encapsulando-em-uma-função">Encapsulando em uma função</a></li>
+<li><a href="#obtendo-o-vetor-de-dias-úteis-com-o-__%60bizdays%60__">Obtendo o vetor de dias úteis com o <strong><code>bizdays</code></strong></a></li>
+<li><a href="#iterando-a-função-em-múltiplas-datas-com-o-__%60purrr%60__">Iterando a função em múltiplas datas com o <strong><code>purrr</code></strong></a></li>
+<li><a href="#salvando-os-dados-em-um-__%60.csv%60__">Salvando os dados em um <strong><code>.csv</code></strong></a></li>
+</ul></li>
+<li><a href="#agendando-a-execução-do-script">Agendando a execução do script</a></li>
+</ul>
 <div id="por-que-capturar-estes-dados" class="section level2">
 <h2>1 - Por que capturar estes dados?</h2>
 <p>A ANBIMA disponibiliza nesta <a href="https://www.anbima.com.br/informacoes/est-termo/">página</a> a estimação diária da estrutura a termo das taxas de juros (ETTJ), porém o site só permite o acesso a dados dos <strong>últimos 5 dias úteis</strong>.</p>
@@ -78,7 +77,7 @@ r &lt;- httr::POST(url = url,
                 encode = &quot;form&quot;)
 r</code></pre>
 <pre><code>Response [https://www.anbima.com.br/informacoes/est-termo/CZ-down.asp]
-  Date: 2021-05-29 22:37
+  Date: 2021-05-30 02:53
   Status: 200
   Content-Type: text/csv
   Size: 2.78 kB

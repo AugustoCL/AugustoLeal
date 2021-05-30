@@ -8,9 +8,8 @@ tags: ["webscraping", "csv", "agendamento", "ETTJ", "juros", "ggplot2"]
 description: 'Criando uma base de dados via webscraping automatizado da ETTJ da ANBIMA.'
 css: "style.css"
 output:
-  keep_md: TRUE
   blogdown::html_page:
-    toc: TRUE
+    toc: FALSE
 ---
 
 ```{r setup, include=FALSE}
@@ -18,11 +17,17 @@ knitr::opts_chunk$set(echo = TRUE, comment = NA)
 library(tidyverse)
 library(bizdays)
 library(httr)
-devtools::source_gist("c83e078bf8c81b035e32c3fc0cf04ee8", 
+devtools::source_gist("52d1a2ec54a7a74ed99de2a800848924",
                       filename = 'render_toc.R')
 ```
 
 Neste post vou ensinar como criar um script de webscraping com R e como automatizar a execução deste script com o __`task scheduler`__ do Windows. Com isso, teremos um arquivo __`.csv`__ que recebe novos dados a cada execução semanal.
+
+__ÍNDICE__
+
+```{r echo=FALSE}
+render_toc("index.Rmd",toc_header_name = NULL)
+```
 
 
 ## 1 - Por que capturar estes dados?
