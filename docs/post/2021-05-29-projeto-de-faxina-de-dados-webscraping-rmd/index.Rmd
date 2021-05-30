@@ -11,7 +11,17 @@ output:
     toc: FALSE
 ---
 
-```{r include=FALSE}
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(httr)
+library(rvest)
+library(janitor)
+devtools::source_gist("52d1a2ec54a7a74ed99de2a800848924",
+                      filename = 'render_toc.R')
+```
+
+```{r, include=FALSE}
 scrapy_consumo_eletr_ano <- function(ano){
 
     # requisicao POST
@@ -68,16 +78,6 @@ clean_table <- function(tbl){
 ```
 
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-library(tidyverse)
-library(httr)
-library(rvest)
-library(janitor)
-devtools::source_gist("52d1a2ec54a7a74ed99de2a800848924",
-                      filename = 'render_toc.R')
-```
-
 Este post detalha o trabalho final realizado para a conclusão do curso [Faxina de Dados](https://curso-r.com/cursos/faxina/) da [Curso-R](https://curso-r.com/), onde foi solicitado que o trabalho tenha __no mínimo__:
 
 * Leitura de uma base bruta que não esteja no formato _tidy_, em que cada variável é uma coluna e cada linha é uma observação.
@@ -87,7 +87,7 @@ Este post detalha o trabalho final realizado para a conclusão do curso [Faxina 
 > Caso queiram conferir o código final, sem precisar conferir todo o passo-a-passo abaixo, aqui está o [link](https://gist.github.com/AugustoCL/af32c55c15d0113f0451f3d79895c5ee) do script completo.
 
 
-__Índice__
+__ÍNDICE__
 
 ```{r echo=FALSE}
 render_toc("index.Rmd",toc_header_name = NULL)
@@ -233,9 +233,66 @@ Em seguida, retirei as quebras de linhas e espaços vazios com a função `srt_s
 
 
 ## 4 - Aplicando as funções com múltiplas datas em um pipeline (tidyr + purrr)
-Aspirando permitir a visualização dos passos do trabalho em tabelas list-columns, separei a extração e limpeza dos dados em duas funções chamadas: 
+Aspirando permitir a visualização dos passos do trabalho em tabelas list-columns, separei a extração e limpeza dos dados em duas funções chamadas:
+
 * scrapy_consumo_eletr_ano()
 * clean_table()
+
+```{r, eval=FALSE}
+scrapy_consumo_eletr_ano <- function(ano){
+
+    # requisicao POST
+    aaaa <- ano
+    url <- "http://dadosenergeticos.energia.sp.gov.br/PortalCEv2/Municipios/Eletricidade/m_eletricidade.asp?ano={aaaa}"
+    req <- httr::POST(url = glue::glue(url),
+                      body = list(Ano2 = aaaa),
+                      encode = "form")
+
+    # converte o binario do html para string
+    raw_html <- rawToChar(req$content) %>%
+      str_replace_all(., "Ã\u008d", "Í") %>%
+      str_replace_all(., "Ã‡Ãƒ", "ÇÃ") %>%
+      str_replace_all(., "Ãƒ", "Ã") %>%
+      str_replace_all(., "Ã‰", "É") %>%
+      str_replace_all(., "Ã§Ã£", "çã")
+
+    # usando regex, extrai o bloco de código equivalente a tabela do html
+    text_inside_html_table <-
+        gsub('^.*<table\\s*|\\s* <\\/table>*$', '', raw_html) %>%
+        paste0("<table ", .)
+
+    # converte o html da tabela em dataframe
+    dirty_tibble <- text_inside_html_table %>%
+        read_html() %>%
+        html_table() %>%
+        pluck() %>%
+        as.data.frame() %>%
+        as_tibble()
+}
+
+# Função de Limpeza da Base -----------------------------------------------
+
+clean_table <- function(tbl){
+
+  tbl %>%
+    slice(-1) %>%
+    janitor::row_to_names(row_number = 1) %>%
+    janitor::clean_names() %>%
+    rename(total_mwh = total_m_wh) %>%
+    separate(col = "municipios",
+             sep = "População",
+             into = c("municipio", "populacao")) %>%
+    separate(col = "municipio",
+             sep = " - ",
+             into = c("ranking", "municipio")) %>%
+    mutate(
+      across(ranking:populacao,
+             ~str_squish(.)),
+      across(c(ranking, populacao:total_mwh),
+             ~as.numeric(str_replace_all(., ",", "")))
+      )
+}
+```
 
 > Caso não possua familiaridade com a estrutura de list-columns do tidyr, sugiro que confiram este capítulo do livro da curso-R neste [link](https://livro.curso-r.com/7-3-tidyr.html#list-columns).
 

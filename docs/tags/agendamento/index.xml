@@ -13,7 +13,7 @@
       <pubDate>Sat, 22 May 2021 00:00:00 +0000</pubDate>
       
       <guid>https://augustocl.github.io/AugustoLeal/post/2021-05-22-criando-bd-webscraping/</guid>
-      <description>1 - Por que capturar estes dados?2 - O que são e para que servem estes dados?</description>
+      <description>Neste post vou ensinar como criar um script de webscraping com R e como automatizar a execução deste script com o task scheduler do Windows.</description>
     </item>
     
   </channel>

@@ -176,12 +176,64 @@ consumo_2019 %&gt;%
 </div>
 <div id="aplicando-as-funções-com-múltiplas-datas-em-um-pipeline-tidyr-purrr" class="section level2">
 <h2>4 - Aplicando as funções com múltiplas datas em um pipeline (tidyr + purrr)</h2>
-<p>Aspirando permitir a visualização dos passos do trabalho em tabelas list-columns, separei a extração e limpeza dos dados em duas funções chamadas:
-* scrapy_consumo_eletr_ano()
-* clean_table()</p>
-<blockquote>
-<p>Caso não possua familiaridade com a estrutura de list-columns do tidyr, sugiro que confiram este capítulo do livro da curso-R neste <a href="https://livro.curso-r.com/7-3-tidyr.html#list-columns">link</a>.</p>
-</blockquote>
+<p>Aspirando permitir a visualização dos passos do trabalho em tabelas list-columns, separei a extração e limpeza dos dados em duas funções chamadas:</p>
+<ul>
+<li>scrapy_consumo_eletr_ano()</li>
+<li>clean_table()</li>
+</ul>
+<pre class="r"><code>scrapy_consumo_eletr_ano &lt;- function(ano){
+
+    # requisicao POST
+    aaaa &lt;- ano
+    url &lt;- &quot;http://dadosenergeticos.energia.sp.gov.br/PortalCEv2/Municipios/Eletricidade/m_eletricidade.asp?ano={aaaa}&quot;
+    req &lt;- httr::POST(url = glue::glue(url),
+                      body = list(Ano2 = aaaa),
+                      encode = &quot;form&quot;)
+
+    # converte o binario do html para string
+    raw_html &lt;- rawToChar(req$content) %&gt;%
+      str_replace_all(., &quot;Ã\u008d&quot;, &quot;Í&quot;) %&gt;%
+      str_replace_all(., &quot;Ã‡Ãƒ&quot;, &quot;ÇÃ&quot;) %&gt;%
+      str_replace_all(., &quot;Ãƒ&quot;, &quot;Ã&quot;) %&gt;%
+      str_replace_all(., &quot;Ã‰&quot;, &quot;É&quot;) %&gt;%
+      str_replace_all(., &quot;Ã§Ã£&quot;, &quot;çã&quot;)
+
+    # usando regex, extrai o bloco de código equivalente a tabela do html
+    text_inside_html_table &lt;-
+        gsub(&#39;^.*&lt;table\\s*|\\s* &lt;\\/table&gt;*$&#39;, &#39;&#39;, raw_html) %&gt;%
+        paste0(&quot;&lt;table &quot;, .)
+
+    # converte o html da tabela em dataframe
+    dirty_tibble &lt;- text_inside_html_table %&gt;%
+        read_html() %&gt;%
+        html_table() %&gt;%
+        pluck() %&gt;%
+        as.data.frame() %&gt;%
+        as_tibble()
+}
+
+# Função de Limpeza da Base -----------------------------------------------
+
+clean_table &lt;- function(tbl){
+
+  tbl %&gt;%
+    slice(-1) %&gt;%
+    janitor::row_to_names(row_number = 1) %&gt;%
+    janitor::clean_names() %&gt;%
+    rename(total_mwh = total_m_wh) %&gt;%
+    separate(col = &quot;municipios&quot;,
+             sep = &quot;População&quot;,
+             into = c(&quot;municipio&quot;, &quot;populacao&quot;)) %&gt;%
+    separate(col = &quot;municipio&quot;,
+             sep = &quot; - &quot;,
+             into = c(&quot;ranking&quot;, &quot;municipio&quot;)) %&gt;%
+    mutate(
+      across(ranking:populacao,
+             ~str_squish(.)),
+      across(c(ranking, populacao:total_mwh),
+             ~as.numeric(str_replace_all(., &quot;,&quot;, &quot;&quot;)))
+      )
+}</code></pre>
 <p>Desse modo, foi possível executar as iterações com a função <code>map()</code> do <code>purrr</code> e salvar todos os resultados e passos intermediários em uma única tabela agregadora chamada <code>all_tbl</code>.</p>
 <pre class="r"><code>all_tbl &lt;-
   list(&quot;anos&quot; = c(2006:2019)) %&gt;%
@@ -198,13 +250,16 @@ consumo_2019 %&gt;%
                                                    values_to = &quot;MWh&quot;)
                                     )
     )</code></pre>
+<blockquote>
+<p>Caso não possua familiaridade com a estrutura de list-columns do tidyr, sugiro que confiram este capítulo do livro da curso-R neste <a href="https://livro.curso-r.com/7-3-tidyr.html#list-columns">link</a>.</p>
+</blockquote>
 <p>Eu poderia ter aplicado a função <code>pivot_longer()</code> na função de limpeza retornando a base já no formato <em>tidy</em>, porém como eu quero demonstrar as diferentes fases do tratamento, usando o <code>purrr</code>, eu preferi recriar uma função anônima dentro do map. Assim o leitor vivência diferentes abordagens da ferramenta.</p>
 </div>
 <div id="conferindo-os-resultados" class="section level2">
 <h2>5.0 - Conferindo os resultados</h2>
 <p>O objeto <code>all_tbl</code> possui a seguinte estrutura com as tabelas no formato column-list.</p>
 <p><img src="imgs/all_tbl.png" /></p>
-<p>para extrair cada uma das tabelas intermediárias e de resultado utilizei a função unnest() da seguinte forma.</p>
+<p>para extrair cada uma das tabelas intermediárias e de resultado utilizei a função <code>unnest()</code> da seguinte forma.</p>
 <pre class="r"><code># dados brutos
 raw_tbl &lt;-
   all_tbl %&gt;%
