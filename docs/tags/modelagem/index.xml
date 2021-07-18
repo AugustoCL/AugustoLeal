@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>julia on Augusto Leal</title>
-    <link>https://augustocl.github.io/AugustoLeal/categories/julia/</link>
-    <description>Recent content in julia on Augusto Leal</description>
+    <title>modelagem on Augusto Leal</title>
+    <link>https://augustocl.github.io/AugustoLeal/tags/modelagem/</link>
+    <description>Recent content in modelagem on Augusto Leal</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Mon, 12 Jul 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://augustocl.github.io/AugustoLeal/categories/julia/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 12 Jul 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://augustocl.github.io/AugustoLeal/tags/modelagem/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Probabilidade de Ruina por Simulação de Monte-Carlo [Julia]x[Python]</title>
       <link>https://augustocl.github.io/AugustoLeal/post/2021-07-11-simulando-ruina-de-seguradora-julia-x-python/</link>

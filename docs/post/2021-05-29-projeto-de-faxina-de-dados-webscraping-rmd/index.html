@@ -191,6 +191,11 @@
   <script>hljs.initHighlightingOnLoad();</script>
   
 
+  
+    <script src="/AugustoLeal/js/math-code.js"></script>
+    <script async src="//cdn.bootcss.com/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+  
+
   <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700&display=swap">
 
@@ -488,9 +493,6 @@ clean_table &lt;- function(tbl){
              ~as.numeric(str_replace_all(., &quot;,&quot;, &quot;&quot;)))
       )
 }</code></pre>
-<blockquote>
-<p>Caso não possua familiaridade com a estrutura de list-columns do tidyr, sugiro que confiram este capítulo do livro da curso-R neste <a href="https://livro.curso-r.com/7-3-tidyr.html#list-columns">link</a>.</p>
-</blockquote>
 <p>Desse modo, foi possível executar as iterações com a função <code>map()</code> do <code>purrr</code> e salvar todos os resultados e passos intermediários em uma única tabela agregadora chamada <code>all_tbl</code>.</p>
 <pre class="r"><code>all_tbl &lt;-
   list(&quot;anos&quot; = c(2006:2019)) %&gt;%
@@ -507,13 +509,16 @@ clean_table &lt;- function(tbl){
                                                    values_to = &quot;MWh&quot;)
                                     )
     )</code></pre>
+<blockquote>
+<p>Caso não possua familiaridade com a estrutura de list-columns do tidyr, sugiro que confiram este capítulo do livro da curso-R neste <a href="https://livro.curso-r.com/7-3-tidyr.html#list-columns">link</a>.</p>
+</blockquote>
 <p>Eu poderia ter aplicado a função <code>pivot_longer()</code> na função de limpeza retornando a base já no formato <em>tidy</em>, porém como eu quero demonstrar as diferentes fases do tratamento, usando o <code>purrr</code>, eu preferi recriar uma função anônima dentro do map. Assim o leitor vivência diferentes abordagens da ferramenta.</p>
 </div>
 <div id="conferindo-os-resultados" class="section level2">
 <h2>5.0 - Conferindo os resultados</h2>
 <p>O objeto <code>all_tbl</code> possui a seguinte estrutura com as tabelas no formato column-list.</p>
 <p><img src="imgs/all_tbl.png" /></p>
-<p>para extrair cada uma das tabelas intermediárias e de resultado utilizei a função unnest() da seguinte forma.</p>
+<p>para extrair cada uma das tabelas intermediárias e de resultado utilizei a função <code>unnest()</code> da seguinte forma.</p>
 <pre class="r"><code># dados brutos
 raw_tbl &lt;-
   all_tbl %&gt;%

@@ -40,6 +40,11 @@
   <script>hljs.initHighlightingOnLoad();</script>
   <!-- CODE TO HIGHLIGHT.JS -->
 
+  {{ if and (not .Params.disable_mathjax) (or (in (string .Content) "\\") (in (string .Content) "$")) }}
+    <script src="{{ "/js/math-code.js" | relURL }}"></script>
+    <script async src="{{ .Site.Params.MathJaxCDN | default "//cdnjs.cloudflare.com/ajax/libs" }}/mathjax/{{ .Site.Params.MathJaxVersion | default "2.7.5" }}/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+  {{ end }}
+
   <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700&display=swap">
 

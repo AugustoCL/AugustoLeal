@@ -294,8 +294,6 @@ clean_table <- function(tbl){
 }
 ```
 
-> Caso não possua familiaridade com a estrutura de list-columns do tidyr, sugiro que confiram este capítulo do livro da curso-R neste [link](https://livro.curso-r.com/7-3-tidyr.html#list-columns).
-
 Desse modo, foi possível executar as iterações com a função `map()` do `purrr` e salvar todos os resultados e passos intermediários em uma única tabela agregadora chamada `all_tbl`.
 
 ```{r, eval=FALSE}
@@ -316,6 +314,9 @@ all_tbl <-
     )
 ```
 
+
+> Caso não possua familiaridade com a estrutura de list-columns do tidyr, sugiro que confiram este capítulo do livro da curso-R neste [link](https://livro.curso-r.com/7-3-tidyr.html#list-columns).
+
 Eu poderia ter aplicado a função `pivot_longer()` na função de limpeza retornando a base já no formato _tidy_, porém como eu quero demonstrar as diferentes fases do tratamento, usando o `purrr`, eu preferi recriar uma função anônima dentro do map. Assim o leitor vivência diferentes abordagens da ferramenta.
 
 ## 5.0 - Conferindo os resultados
@@ -324,7 +325,7 @@ O objeto `all_tbl` possui a seguinte estrutura com as tabelas no formato column-
 
 ![](imgs/all_tbl.png)
 
-para extrair cada uma das tabelas intermediárias e de resultado utilizei a função unnest() da seguinte forma.
+para extrair cada uma das tabelas intermediárias e de resultado utilizei a função `unnest()` da seguinte forma.
 
 ```{r, eval=FALSE}
 # dados brutos
