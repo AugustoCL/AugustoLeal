@@ -28,32 +28,54 @@ use_python("C:/Users/augus/AppData/Local/Programs/Python/Python38/python.exe")
 
 ## Introdução do problema e a linguagem Julia 
 
-Recentemente tenho utilizado a linguagem de programação [Julia](https://julialang.org/) para criar soluções para problemas de simulação ou que necessitem um grande poder de cálculo, principalmente aqueles que envolvem simulação. Inclusive, utilizei ela no meu TCC e isso foi uma boa forma de alavancar o aprendizado da ferramenta.  
+Recentemente tenho utilizado a linguagem de programação [Julia](https://julialang.org/) para problemas de simulação ou de problemas que necessitem bastante processamento computacional. Inclusive, utilizei ela no meu Trabalho de Conclusão de Curso (TCC) e isso foi uma boa forma de alavancar o aprendizado da nova ferramenta.  
 
 Eu escolhi ela devido a capacidade de resolver o problema das duas linguagens, [two language problems](https://www.nature.com/articles/d41586-019-02310-3), ao permitir (i) prototipar um código funcional e (ii) alcançar uma excelente performance computacional, tudo isso sem a necessidade de reescrever o algoritmo novamente em uma linguagem compilada como o C/C++, por exemplo.  
 
-Então quero compartilhar um caso simples que o uso da linguagem foi vantajoso computacionalmente e que, provavelmente, muitos alunos de ciências atuariais irão se deparar na disciplina de Matemática Atuarial Não-Vida, que é o cálculo da probabilidade de ruína de uma seguradora através de simulações de Cramér-Lundberg via simulação de monte-carlo.  
+Então quero compartilhar um caso em que o uso da linguagem foi vantajoso computacionalmente e que, provavelmente, muitos alunos de ciências atuariais irão se deparar no decorrer do curso, que é o cálculo da probabilidade de ruína de uma seguradora através de simulações de Cramér-Lundberg via simulação de monte-carlo.  
 
-> Caso queiram conferir todos os códigos implementados sem precisar conferir todo o passo-a-passo abaixo, segue o [repositório]((https://github.com/AugustoCL/cramer_lundberg_algorithm) do github.
+> Caso queiram conferir todos os códigos implementados sem precisar conferir todo o passo-a-passo abaixo, segue o [repositório](https://github.com/AugustoCL/cramer_lundberg_algorithm) do github.
 
-O algoritmo simula o patrimônio líquido de uma seguradora em tempo discreto (10 anos, nesse exemplo), visando obter a probabilidade de ruína da companhia ao calcular a razão entre os casos simulados que houveram ruína e o total de casos simulados. Aqui irei abordar o caso clássico, mas futuramente posso trazer variações mais avançadas que incorporam mais variáveis relevantes para o problema.  
+O algoritmo simula o patrimônio líquido de uma seguradora no tempo (discreto) de 10 anos (120 meses), visando obter a probabilidade de ruína da companhia ao calcular a razão entre os casos simulados que houveram ruína e o total de casos simulados. Aqui irei abordar o caso clássico, mas futuramente posso trazer variações mais avançadas que incorporam mais variáveis relevantes para o problema.  
 
-> Apresentarei os mesmos passos em Julia e Python para que no final o leitor possa reproduzir e comparar o tempo de processamento de ambos na sua máquina pessoal.
+> Eu também apresentarei os mesmos passos em **Julia** e **Python** para que no final o leitor possa reproduzir e comparar o tempo de processamento de ambos na sua máquina pessoal.
 
 
 ## Premissas do problema
 
-* Serão avaliado 120 meses (10 anos)
-* Assume-se um prêmio constante de 500 reais por cliente
+* Serão avaliado 120 meses (10 anos) do patrimônio líquido da empresa
+* É assumido um prêmio constante de 500 reais por cliente
 * A adesão de novos clientes é regida por uma distribuição $Poisson(\lambda)$ com média 50. ($n_t$)
 * É incorporado uma desistência de 5%, considerada antes das novas adesões
-* Para o cálculo do Sinistro Agregado, $S_t$: (i) o número de sinistros $N_t$ segue uma distrib. $Poisson(\lambda)$ com média igual a 10% da base de clientes naquele mês e (ii) cada sinistro, $X_t$, segue uma distrib. $Exp(\alpha = 1/5000)$ de média 5000.
+* Para o cálculo do Sinistro Agregado, $S_t$:
+    + O número de sinistros $N_t$ segue uma distrib. $Poisson(\lambda)$ com média igual a 10% da base de clientes naquele mês 
+    + Cada sinistro, $X_t$, segue uma distrib. $Exp(\alpha)$ de média 5000.
 
 
-## Modelando a adesão de novos clientes
-$n_t$
+## Número de segurados com 5% de desistência + novos clientes
 
+Ao considerarmos um número de clientes inicial ($N_0$) e as premissas de 5% de desistência dos segurados atuais + o acréscimo de novos segurados que segue uma distribuição de $Poisson(\lambda)$ ($n^*$), podemos obter os seguintes passos para o tempo t=1 e t=2. 
+
+$$
+N_1 = 0,95*N_0 + n^* \\
+N_2 = 0,95*N_1 + n^* \\
+N_2 = 0,95*(0,95*N_0 + n^*) + n^* \\
+N_2 = 0,95^2*N_0 + 0,95*n^* + n^* \\
+N_2 = 0,95^2*N_0 + (0,95 + 1)n^* 
+$$
+
+Quando generalizamos essa função em t, temos que:
+
+$$N_t = 0,95^t*N_0 + (0,95^{t-1} + ... + 0,95 + 1)n^*$$
+
+Desse modo, como $(0,95^{t-1} + ... + 0,95 + 1) = \frac{1-0,95^t}{1-0,95} = \frac{1-0,95^t}{0,05} = 20 * (1 - 0,95^t)$, temos a seguinte equação final aplicada no algoritmo.
+
+$$N_t = 0,95^t*N_0 + 20*(1-0,95^t)*n^*$$
+
+  
+  
 ## Metodologia
+
 O [modelo clássico](https://www.maxwell.vrac.puc-rio.br/15509/15509_3.PDF) de Cramer-Lundberg simula o comportamento do patrimônio líquido através da seguinte fórmula discreta:
 
 $$U_t = U_{t-1} + P_t - S_t$$
@@ -66,6 +88,7 @@ Por fim, adentramos no cálculo do **Sinistro Agregado** ou Sinistro Convoluto (
 
 * $N \sim Poisson(\alpha = 0.1*n_t)$, que simula a quantidade de sinistros ocorridos.
 * $X \sim Exp(\lambda = 1/5000)$, que simula a severidade dos sinitros ocorridos.
+
 Dessa forma, tem-se como Sinistro Agregado a seguinte forma:
 
 $$S_t = \sum_{i=1}^{N_t} X_i$$
@@ -91,24 +114,8 @@ from numpy.random import poisson as poiss
 
 
 ### Número de clientes
-Ao considerarmos um número de clientes inicial ($N_0$) e as características de 5% de desistência dos segurados atuais + o acréscimo de novos segurados que segue uma distribuição de $Poisson(\lambda)$ ($n^*$), podemos obter os seguintes passos para t=1 e t=2. 
 
-$$
-N_1 = 0,95*N_0 + n^* \\
-N_2 = 0,95*N_1 + n^* \\
-N_2 = 0,95*(0,95*N_0 + n^*) + n^* \\
-N_2 = 0,95^2*N_0 + 0,95*n^* + n^* \\
-N_2 = 0,95^2*N_0 + (0,95 + 1)n^* 
-$$
-
-Quando generalizamos essa função em t, temos que:
-
-$$N_t = 0,95^t*N_0 + (0,95^{t-1} + ... + 0,95 + 1)n^*$$
-Desse modo, como $(0,95^{t-1} + ... + 0,95 + 1) = \frac{1-0,95^t}{1-0,95} = \frac{1-0,95^t}{0,05} = 20 * (1 - 0,95^t)$, temos a seguinte equação final aplicada no algoritmo.
-
-$$N_t = 0,95^t*N_0 + 20*(1-0,95^t)*n^*$$
-
-Abaixo encontra-se a implementação da equação acima, onde a função possui como argumentos o número de segurados iniciais, no tempo t=0, a distribuição Poisson correspondente a quantidade de novos clientes por mês e o valor do tempo t avaliado. Isso permite obter a quantidade de segurados em qualquer tempo t, sem a necessidade de calcular o vetor completo do instante 1 até t.
+Abaixo encontra-se a implementação da equação final do número de segurados ($N_t$), onde a função possui como argumentos o número de segurados iniciais, no tempo t=0, a distribuição Poisson correspondente a quantidade de novos clientes por mês e o valor do tempo t avaliado. Isso permite obter a quantidade de segurados em qualquer tempo t, sem a necessidade de calcular o vetor completo do instante 1 até t.
 
 **Julia**
 ```{julia, echo=TRUE, eval=FALSE}

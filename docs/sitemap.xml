@@ -2,8 +2,38 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://augustocl.github.io/AugustoLeal/tags/atuaria/</loc>
+    <lastmod>2021-07-18T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://augustocl.github.io/AugustoLeal/categories/</loc>
-    <lastmod>2021-05-29T00:00:00+00:00</lastmod>
+    <lastmod>2021-07-18T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://augustocl.github.io/AugustoLeal/categories/julia/</loc>
+    <lastmod>2021-07-18T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://augustocl.github.io/AugustoLeal/tags/modelagem/</loc>
+    <lastmod>2021-07-18T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://augustocl.github.io/AugustoLeal/tags/monte-carlo/</loc>
+    <lastmod>2021-07-18T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://augustocl.github.io/AugustoLeal/post/</loc>
+    <lastmod>2021-07-18T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://augustocl.github.io/AugustoLeal/post/2021-07-18-simulando-ruina-julia-x-python/</loc>
+    <lastmod>2021-07-18T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://augustocl.github.io/AugustoLeal/categories/python/</loc>
+    <lastmod>2021-07-18T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://augustocl.github.io/AugustoLeal/tags/simulacao/</loc>
+    <lastmod>2021-07-18T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://augustocl.github.io/AugustoLeal/</loc>
+    <lastmod>2021-07-18T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://augustocl.github.io/AugustoLeal/tags/</loc>
+    <lastmod>2021-07-18T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://augustocl.github.io/AugustoLeal/tags/faxina/</loc>
     <lastmod>2021-05-29T00:00:00+00:00</lastmod>
@@ -14,19 +44,10 @@
     <loc>https://augustocl.github.io/AugustoLeal/tags/limpeza/</loc>
     <lastmod>2021-05-29T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://augustocl.github.io/AugustoLeal/post/</loc>
-    <lastmod>2021-05-29T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://augustocl.github.io/AugustoLeal/tags/purrr/</loc>
     <lastmod>2021-05-29T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://augustocl.github.io/AugustoLeal/categories/r/</loc>
-    <lastmod>2021-05-29T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://augustocl.github.io/AugustoLeal/</loc>
-    <lastmod>2021-05-29T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://augustocl.github.io/AugustoLeal/tags/</loc>
     <lastmod>2021-05-29T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://augustocl.github.io/AugustoLeal/tags/webscraping/</loc>
@@ -49,9 +70,6 @@
   </url><url>
     <loc>https://augustocl.github.io/AugustoLeal/tags/juros/</loc>
     <lastmod>2021-05-22T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://augustocl.github.io/AugustoLeal/categories/python/</loc>
-    <lastmod>2021-04-30T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://augustocl.github.io/AugustoLeal/tags/susep/</loc>
     <lastmod>2021-04-30T00:00:00+00:00</lastmod>

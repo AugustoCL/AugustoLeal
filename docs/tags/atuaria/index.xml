@@ -6,14 +6,14 @@
     <description>Recent content in atuaria on Augusto Leal</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Mon, 12 Jul 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://augustocl.github.io/AugustoLeal/tags/atuaria/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 18 Jul 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://augustocl.github.io/AugustoLeal/tags/atuaria/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Probabilidade de Ruina por Simulação de Monte-Carlo [Julia]x[Python]</title>
-      <link>https://augustocl.github.io/AugustoLeal/post/2021-07-11-simulando-ruina-de-seguradora-julia-x-python/</link>
-      <pubDate>Mon, 12 Jul 2021 00:00:00 +0000</pubDate>
+      <title>Probabilidade de Ruína por Simulação de Monte-Carlo [Julia] x [Python]</title>
+      <link>https://augustocl.github.io/AugustoLeal/post/2021-07-18-simulando-ruina-julia-x-python/</link>
+      <pubDate>Sun, 18 Jul 2021 00:00:00 +0000</pubDate>
       
-      <guid>https://augustocl.github.io/AugustoLeal/post/2021-07-11-simulando-ruina-de-seguradora-julia-x-python/</guid>
-      <description>Linguagem Julia e introdução do problemaRecentemente tenho utilizado a linguagem de programação Julia para criar soluções para problemas de simulação ou que necessitem um grande poder de cálculo, principalmente aqueles que envolvem simulação.</description>
+      <guid>https://augustocl.github.io/AugustoLeal/post/2021-07-18-simulando-ruina-julia-x-python/</guid>
+      <description>Introdução do problema e a linguagem JuliaRecentemente tenho utilizado a linguagem de programação Julia para problemas de simulação ou de problemas que necessitem bastante processamento computacional.</description>
     </item>
     
   </channel>
