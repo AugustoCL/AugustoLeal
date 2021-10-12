@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>scratch on Augusto Leal</title>
+    <link>https://augustocl.github.io/AugustoLeal/tags/scratch/</link>
+    <description>Recent content in scratch on Augusto Leal</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Tue, 12 Oct 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://augustocl.github.io/AugustoLeal/tags/scratch/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>K-Means and DBSCAN from scratch [Julia] - 1 of 3</title>
+      <link>https://augustocl.github.io/AugustoLeal/post/2021-10-12-kmeans-dbscan-from-scratch/</link>
+      <pubDate>Tue, 12 Oct 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://augustocl.github.io/AugustoLeal/post/2021-10-12-kmeans-dbscan-from-scratch/</guid>
+      <description>I want to introduce you the ClusterAnalysis.jl package that I and eliascarv built from scratch using only the Julia Language.</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,73 @@
+---
+title: K-Means and DBSCAN from scratch [Julia] - 1 of 3
+author: AugustoCL
+date: '2021-10-12'
+categories: ["Julia"]
+tags: ["ML", "cluster", "kmeans", "DBCAN", "algorithms", "scratch"]
+description: 'Package builted from scratch, entirely in Julia Lang, which implements clustering algorithms like K-Means and DBSCAN. Also the performance is superior to Scikit-Learn without any compiled lang, only Julia.'
+css: "style.css"
+---
+
+  <link rel="stylesheet" href="style.css" type="text/css" />
+
+
+<p>I want to introduce you the <u><a href="https://github.com/AugustoCL/ClusterAnalysis.jl">ClusterAnalysis.jl</a></u> package that <a href="https://github.com/AugustoCL">I</a> and <a href="https://github.com/eliascarv/">eliascarv</a> built from scratch using only the Julia Language. We implement <a href="https://en.wikipedia.org/wiki/K-means_clustering">K-Means</a> and <a href="https://en.wikipedia.org/wiki/DBSCAN">DBSCAN</a> clustering algorithms and achieved a performance superior to the same <a href="https://scikit-learn.org/stable/">Scikit-Learn</a> algorithms.</p>
+<p>The package is mostly a learning experiment, but the package were also built and documented to be used by anyone, Plug-and-Play. Just input your data as an Array or a Tables.jl type (like DataFrames.jl), then start training your clusters algorithms and analyze your results.
+ </p>
+<div id="a-quick-example" class="section level2">
+<h2>A quick example</h2>
+<pre class="julia"><code># load packages
+using CSV, DataFrames
+using StatsPlots
+using ClusterAnalysis
+
+# load data
+df = CSV.read(&quot;algo_overview/blob_data.csv&quot;, DataFrame, drop=[1]);
+X = df[:,1:2];
+y = df[:,end];
+
+# dbscan model
+ϵ = 0.35;
+min_pts = 10;
+m = dbscan(X, ϵ, min_pts);
+
+# plot 
+gr(size=(1000,600))
+p1 = scatter(X[:,1], X[:,2], group=y, 
+            leg=false,
+            ms=6, 
+            title=&quot;True clusters&quot;);
+p2 = scatter(X[:,1], X[:,2], zcolor=m.labels, 
+            leg=false, 
+            ms=6,
+            title=&quot;DBSCAN prediction\n(ϵ=$(ϵ), minPts=$(min_pts))&quot;);
+plot(p1, p2, layout=2)</code></pre>
+<p> 
+<img src="imgs/plot_dbscan.png" /><br />
+ </p>
+</div>
+<div id="algorithms-overview" class="section level2">
+<h2>Algorithm’s Overview</h2>
+<p><a href="https://github.com/AugustoCL/ClusterAnalysis.jl">Here</a> is the repo in github, which includes a pkg intro and a section called “Algorithm’s Overview” that succintly explains how each algorithm works. The Algorithm’s Overview of <a href="https://github.com/AugustoCL/ClusterAnalysis.jl/blob/main/algo_overview/kmeans_overview.md">K-Means</a>, by example, has a lot of images, gifs and a pseudocode to help the user understand the source-code.</p>
+<blockquote>
+<p>I really suggest you to read the Algorithm’s Overview Section along with the source code for a better understanding of the algorithm.</p>
+</blockquote>
+<p> </p>
+</div>
+<div id="benchmark" class="section level2">
+<h2>Benchmark</h2>
+<p>This implementation has an excellent computational performance, being <strong>faster than Scikit-Learn’s</strong> KMeans and DBSCAN.</p>
+<p>Here is an example with <strong>K-Means</strong>, but we also have the same benchmark in DBSCAN overview section.</p>
+<p><strong>Scikit-Learn with C in backend</strong>
+<img src="imgs/benchmark_sklearn_dbscan.png" /></p>
+<p><strong>ClusterAnalysis.jl in Pure Julia</strong>
+<img src="imgs/benchmark_code.png" /></p>
+<p>Here is another plot comparing results from Julia to SKlearn.</p>
+<p><img src="imgs/kmeans_iris_sklearn.png" />
+<img src="imgs/kmeans_iris_julia.png" />
+ </p>
+<p>In the <strong>next posts</strong> I will detail K-Means and DBSCAN algorithms produced in this package, explaining all the logic used in the construction of the source code. For now, check the Algorithm’s Overview and use the package in your clusters analysis. If you have any suggestion about the pkg, feel free to contact me in github.</p>
+<p>To install the package just type</p>
+<pre class="julia"><code>julia&gt; ]        # press ] to enter in Pkg REPL mode.
+pkg&gt; add https://github.com/AugustoCL/ClusterAnalysis.jl</code></pre>
+</div>
