@@ -8,12 +8,12 @@
     <language>en</language>
     <lastBuildDate>Tue, 12 Oct 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://augustocl.github.io/AugustoLeal/tags/scratch/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>K-Means and DBSCAN from scratch [Julia] - 1 of 3</title>
+      <title>K-Means and DBSCAN from scratch [Julia] - 1/3</title>
       <link>https://augustocl.github.io/AugustoLeal/post/2021-10-12-kmeans-dbscan-from-scratch/</link>
       <pubDate>Tue, 12 Oct 2021 00:00:00 +0000</pubDate>
       
       <guid>https://augustocl.github.io/AugustoLeal/post/2021-10-12-kmeans-dbscan-from-scratch/</guid>
-      <description>I want to introduce you the ClusterAnalysis.jl package that I and eliascarv built from scratch using only the Julia Language.</description>
+      <description>This post introduce the ClusterAnalysis.jl package that I and eliascarv built from scratch using only the Julia Language.</description>
     </item>
     
   </channel>

@@ -1,5 +1,5 @@
 ---
-title: K-Means and DBSCAN from scratch [Julia] - 1 of 3
+title: K-Means and DBSCAN from scratch [Julia] - 1/3
 author: AugustoCL
 date: '2021-10-12'
 categories: ["Julia"]
@@ -17,11 +17,20 @@ library(JuliaCall)
 julia <- julia_setup()
 ```
 
+This post introduce the <ins>[ClusterAnalysis.jl](https://github.com/AugustoCL/ClusterAnalysis.jl)</ins> package that [I](https://github.com/AugustoCL) and [eliascarv](https://github.com/eliascarv/) built from scratch using only the Julia Language. We implement [K-Means](https://en.wikipedia.org/wiki/K-means_clustering) and [DBSCAN](https://en.wikipedia.org/wiki/DBSCAN) clustering algorithms and achieved a performance superior to the same [Scikit-Learn](https://scikit-learn.org/stable/) algorithms.  
 
-I want to introduce you the <u>[ClusterAnalysis.jl](https://github.com/AugustoCL/ClusterAnalysis.jl)</u> package that [I](https://github.com/AugustoCL) and [eliascarv](https://github.com/eliascarv/) built from scratch using only the Julia Language. We implement [K-Means](https://en.wikipedia.org/wiki/K-means_clustering) and [DBSCAN](https://en.wikipedia.org/wiki/DBSCAN) clustering algorithms and achieved a performance superior to the same [Scikit-Learn](https://scikit-learn.org/stable/) algorithms.  
-
-The package is mostly a learning experiment, but the package were also built and documented to be used by anyone, Plug-and-Play. Just input your data as an Array or a Tables.jl type (like DataFrames.jl), then start training your clusters algorithms and analyze your results.
+The package is mostly a learning experiment, but the package were also built and documented to be used by anyone, Plug-and-Play. Just input your data as an Array or a [Tables.jl](https://discourse.julialang.org/t/tables-jl-a-table-interface-for-everyone/14071) type (like [DataFrames.jl](https://dataframes.juliadata.org/stable/)), then start training your clusters algorithms and analyze your results.
 &nbsp;
+
+Documentation: [https://augustocl.github.io/ClusterAnalysis.jl/](https://augustocl.github.io/ClusterAnalysis.jl/)
+
+To install the package just follow this commands in your Julia REPL. 
+```{julia, eval=FALSE}
+# press ] to enter in Pkg REPL mode.
+julia> ]
+pkg> add ClusterAnalysis
+```
+
 
 ## A quick example
 ```{julia, eval=FALSE}
@@ -30,7 +39,7 @@ using CSV, DataFrames
 using StatsPlots
 using ClusterAnalysis
 
-# load data
+# load data from github repo
 df = CSV.read("algo_overview/blob_data.csv", DataFrame, drop=[1]);
 X = df[:,1:2];
 y = df[:,end];
@@ -57,7 +66,8 @@ plot(p1, p2, layout=2)
 &nbsp;
 
 ## Algorithm's Overview
-[Here](https://github.com/AugustoCL/ClusterAnalysis.jl) is the repo in github, which includes a pkg intro and a section called "Algorithm's Overview" that succintly explains how each algorithm works. The Algorithm's Overview of [K-Means](https://github.com/AugustoCL/ClusterAnalysis.jl/blob/main/algo_overview/kmeans_overview.md), by example, has a lot of images, gifs and a pseudocode to help the user understand the source-code. 
+That section is presented in [github repo](https://github.com/AugustoCL/ClusterAnalysis.jl) or in the "Algorithms" section in [documentation](https://augustocl.github.io/ClusterAnalysis.jl/dev/algorithms/kmeans.html), which succintly explains how each algorithm works.   
+The Algorithm's Overview of [K-Means](https://github.com/AugustoCL/ClusterAnalysis.jl/blob/main/algo_overview/kmeans_overview.md), by example, has a lot of images, gifs and a pseudocode to help the user understand the source-code. 
 
 > I really suggest you to read the Algorithm's Overview Section along with the source code for a better understanding of the algorithm.
 
@@ -79,13 +89,6 @@ Here is another plot comparing results from Julia to SKlearn.
 
 ![](imgs/kmeans_iris_sklearn.png)
 ![](imgs/kmeans_iris_julia.png)
-&nbsp;
+
 
 In the **next posts** I will detail K-Means and DBSCAN algorithms produced in this package, explaining all the logic used in the construction of the source code. For now, check the Algorithm's Overview and use the package in your clusters analysis. If you have any suggestion about the pkg, feel free to contact me in github.
-
-To install the package just type  
-```{julia, eval=FALSE}
-julia> ]        # press ] to enter in Pkg REPL mode.
-pkg> add https://github.com/AugustoCL/ClusterAnalysis.jl
-```
-

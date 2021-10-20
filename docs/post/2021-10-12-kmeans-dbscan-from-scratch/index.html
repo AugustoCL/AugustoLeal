@@ -5,26 +5,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="generator" content="Hugo 0.81.0" />
 
-  <title>K-Means and DBSCAN from scratch [Julia] - 1 of 3 &middot; Augusto Leal</title>
+  <title>K-Means and DBSCAN from scratch [Julia] - 1/3 &middot; Augusto Leal</title>
 
   <meta name="description" content="Package builted from scratch, entirely in Julia Lang, which implements clustering algorithms like K-Means and DBSCAN. Also the performance is superior to Scikit-Learn without any compiled lang, only Julia." />
 
   
 
-<meta itemprop="name" content="K-Means and DBSCAN from scratch [Julia] - 1 of 3">
+<meta itemprop="name" content="K-Means and DBSCAN from scratch [Julia] - 1/3">
 <meta itemprop="description" content="Package builted from scratch, entirely in Julia Lang, which implements clustering algorithms like K-Means and DBSCAN. Also the performance is superior to Scikit-Learn without any compiled lang, only Julia."><meta itemprop="datePublished" content="2021-10-12T00:00:00&#43;00:00" />
 <meta itemprop="dateModified" content="2021-10-12T00:00:00&#43;00:00" />
-<meta itemprop="wordCount" content="345"><meta itemprop="image" content="https://augustocl.github.io/AugustoLeal/images/profile1.png"/>
+<meta itemprop="wordCount" content="351"><meta itemprop="image" content="https://augustocl.github.io/AugustoLeal/images/profile1.png"/>
 <meta itemprop="keywords" content="ML,cluster,kmeans,DBCAN,algorithms,scratch," />
 
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:image" content="https://augustocl.github.io/AugustoLeal/images/profile1.png"/>
 
-<meta name="twitter:title" content="K-Means and DBSCAN from scratch [Julia] - 1 of 3"/>
+<meta name="twitter:title" content="K-Means and DBSCAN from scratch [Julia] - 1/3"/>
 <meta name="twitter:description" content="Package builted from scratch, entirely in Julia Lang, which implements clustering algorithms like K-Means and DBSCAN. Also the performance is superior to Scikit-Learn without any compiled lang, only Julia."/>
 
 
-<meta property="og:title" content="K-Means and DBSCAN from scratch [Julia] - 1 of 3" />
+<meta property="og:title" content="K-Means and DBSCAN from scratch [Julia] - 1/3" />
 <meta property="og:description" content="Package builted from scratch, entirely in Julia Lang, which implements clustering algorithms like K-Means and DBSCAN. Also the performance is superior to Scikit-Learn without any compiled lang, only Julia." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://augustocl.github.io/AugustoLeal/post/2021-10-12-kmeans-dbscan-from-scratch/" /><meta property="og:image" content="https://augustocl.github.io/AugustoLeal/images/profile1.png"/><meta property="article:section" content="post" />
@@ -69,7 +69,7 @@
       "@type": "WebPage",
       "@id": "https://augustocl.github.io/AugustoLeal/post/2021-10-12-kmeans-dbscan-from-scratch/#webpage",
       "url": "https://augustocl.github.io/AugustoLeal/post/2021-10-12-kmeans-dbscan-from-scratch/",
-      "name": "K-Means and DBSCAN from scratch [Julia] - 1 of 3",
+      "name": "K-Means and DBSCAN from scratch [Julia] - 1/3",
       "isPartOf": {
         "@id": "https://augustocl.github.io/AugustoLeal/#website"
       },
@@ -97,7 +97,7 @@
       "mainEntityOfPage": {
         "@id": "https://augustocl.github.io/AugustoLeal/post/2021-10-12-kmeans-dbscan-from-scratch/#webpage"
       },
-      "headline": "K-Means and DBSCAN from scratch [Julia] - 1 of 3",
+      "headline": "K-Means and DBSCAN from scratch [Julia] - 1/3",
       "datePublished": "2021-10-12T00:00:00+00:00",
       "dateModified": "2021-10-12T00:00:00+00:00",
       "publisher": {
@@ -263,7 +263,7 @@
 
   <main class="content container">
   <div class="post">
-  <h1 class="title">K-Means and DBSCAN from scratch [Julia] - 1 of 3</h1>
+  <h1 class="title">K-Means and DBSCAN from scratch [Julia] - 1/3</h1>
   
 
   <div class="post-date">
@@ -275,9 +275,14 @@
   <link rel="stylesheet" href="style.css" type="text/css" />
 
 
-<p>I want to introduce you the <span><a href="https://github.com/AugustoCL/ClusterAnalysis.jl">ClusterAnalysis.jl</a></span> package that <a href="https://github.com/AugustoCL">I</a> and <a href="https://github.com/eliascarv/">eliascarv</a> built from scratch using only the Julia Language. We implement <a href="https://en.wikipedia.org/wiki/K-means_clustering">K-Means</a> and <a href="https://en.wikipedia.org/wiki/DBSCAN">DBSCAN</a> clustering algorithms and achieved a performance superior to the same <a href="https://scikit-learn.org/stable/">Scikit-Learn</a> algorithms.</p>
-<p>The package is mostly a learning experiment, but the package were also built and documented to be used by anyone, Plug-and-Play. Just input your data as an Array or a Tables.jl type (like DataFrames.jl), then start training your clusters algorithms and analyze your results.
+<p>This post introduce the <ins><a href="https://github.com/AugustoCL/ClusterAnalysis.jl">ClusterAnalysis.jl</a></ins> package that <a href="https://github.com/AugustoCL">I</a> and <a href="https://github.com/eliascarv/">eliascarv</a> built from scratch using only the Julia Language. We implement <a href="https://en.wikipedia.org/wiki/K-means_clustering">K-Means</a> and <a href="https://en.wikipedia.org/wiki/DBSCAN">DBSCAN</a> clustering algorithms and achieved a performance superior to the same <a href="https://scikit-learn.org/stable/">Scikit-Learn</a> algorithms.</p>
+<p>The package is mostly a learning experiment, but the package were also built and documented to be used by anyone, Plug-and-Play. Just input your data as an Array or a <a href="https://discourse.julialang.org/t/tables-jl-a-table-interface-for-everyone/14071">Tables.jl</a> type (like <a href="https://dataframes.juliadata.org/stable/">DataFrames.jl</a>), then start training your clusters algorithms and analyze your results.
  </p>
+<p>Documentation: <a href="https://augustocl.github.io/ClusterAnalysis.jl/">https://augustocl.github.io/ClusterAnalysis.jl/</a></p>
+<p>To install the package just follow this commands in your Julia REPL.</p>
+<pre class="julia"><code># press ] to enter in Pkg REPL mode.
+julia&gt; ]
+pkg&gt; add ClusterAnalysis</code></pre>
 <div id="a-quick-example" class="section level2">
 <h2>A quick example</h2>
 <pre class="julia"><code># load packages
@@ -285,7 +290,7 @@ using CSV, DataFrames
 using StatsPlots
 using ClusterAnalysis
 
-# load data
+# load data from github repo
 df = CSV.read(&quot;algo_overview/blob_data.csv&quot;, DataFrame, drop=[1]);
 X = df[:,1:2];
 y = df[:,end];
@@ -312,7 +317,8 @@ plot(p1, p2, layout=2)</code></pre>
 </div>
 <div id="algorithms-overview" class="section level2">
 <h2>Algorithm’s Overview</h2>
-<p><a href="https://github.com/AugustoCL/ClusterAnalysis.jl">Here</a> is the repo in github, which includes a pkg intro and a section called “Algorithm’s Overview” that succintly explains how each algorithm works. The Algorithm’s Overview of <a href="https://github.com/AugustoCL/ClusterAnalysis.jl/blob/main/algo_overview/kmeans_overview.md">K-Means</a>, by example, has a lot of images, gifs and a pseudocode to help the user understand the source-code.</p>
+<p>That section is presented in <a href="https://github.com/AugustoCL/ClusterAnalysis.jl">github repo</a> or in the “Algorithms” section in <a href="https://augustocl.github.io/ClusterAnalysis.jl/dev/algorithms/kmeans.html">documentation</a>, which succintly explains how each algorithm works.<br />
+The Algorithm’s Overview of <a href="https://github.com/AugustoCL/ClusterAnalysis.jl/blob/main/algo_overview/kmeans_overview.md">K-Means</a>, by example, has a lot of images, gifs and a pseudocode to help the user understand the source-code.</p>
 <blockquote>
 <p>I really suggest you to read the Algorithm’s Overview Section along with the source code for a better understanding of the algorithm.</p>
 </blockquote>
@@ -328,12 +334,8 @@ plot(p1, p2, layout=2)</code></pre>
 <img src="imgs/benchmark_code.png" /></p>
 <p>Here is another plot comparing results from Julia to SKlearn.</p>
 <p><img src="imgs/kmeans_iris_sklearn.png" />
-<img src="imgs/kmeans_iris_julia.png" />
- </p>
+<img src="imgs/kmeans_iris_julia.png" /></p>
 <p>In the <strong>next posts</strong> I will detail K-Means and DBSCAN algorithms produced in this package, explaining all the logic used in the construction of the source code. For now, check the Algorithm’s Overview and use the package in your clusters analysis. If you have any suggestion about the pkg, feel free to contact me in github.</p>
-<p>To install the package just type</p>
-<pre class="julia"><code>julia&gt; ]        # press ] to enter in Pkg REPL mode.
-pkg&gt; add https://github.com/AugustoCL/ClusterAnalysis.jl</code></pre>
 </div>
 
   </div>
@@ -374,31 +376,31 @@ pkg&gt; add https://github.com/AugustoCL/ClusterAnalysis.jl</code></pre>
      href="#"
      title="Share on Twitter"
      data-url="https://augustocl.github.io/AugustoLeal/post/2021-10-12-kmeans-dbscan-from-scratch/"
-     data-text="K-Means and DBSCAN from scratch [Julia] - 1 of 3"><i class="fab fa-twitter"></i></a>
+     data-text="K-Means and DBSCAN from scratch [Julia] - 1/3"><i class="fab fa-twitter"></i></a>
 
   <a class="linkedin-share-button"
      href="#"
      title="Share on LinkedIn"
      data-url="https://augustocl.github.io/AugustoLeal/post/2021-10-12-kmeans-dbscan-from-scratch/"
-     data-text="K-Means and DBSCAN from scratch [Julia] - 1 of 3"><i class="fab fa-linkedin-in"></i></a>
+     data-text="K-Means and DBSCAN from scratch [Julia] - 1/3"><i class="fab fa-linkedin-in"></i></a>
 
   <a class="facebook-share-button"
      href="#"
      title="Share on Facebook"
      data-url="https://augustocl.github.io/AugustoLeal/post/2021-10-12-kmeans-dbscan-from-scratch/"
-     data-text="K-Means and DBSCAN from scratch [Julia] - 1 of 3"><i class="fab fa-facebook"></i></a>
+     data-text="K-Means and DBSCAN from scratch [Julia] - 1/3"><i class="fab fa-facebook"></i></a>
 
   <a class="telegram-share-button"
      href="#"
      title="Share on Telegram"
      data-url="https://augustocl.github.io/AugustoLeal/post/2021-10-12-kmeans-dbscan-from-scratch/"
-     data-text="K-Means and DBSCAN from scratch [Julia] - 1 of 3"><i class="fab fa-telegram"></i></a>
+     data-text="K-Means and DBSCAN from scratch [Julia] - 1/3"><i class="fab fa-telegram"></i></a>
 
   <a class="pinterest-share-button"
      href="#"
      title="Share on Pinterest"
      data-url="https://augustocl.github.io/AugustoLeal/post/2021-10-12-kmeans-dbscan-from-scratch/"
-     data-text="K-Means and DBSCAN from scratch [Julia] - 1 of 3"><i class="fab fa-pinterest"></i></a>
+     data-text="K-Means and DBSCAN from scratch [Julia] - 1/3"><i class="fab fa-pinterest"></i></a>
 </div>
 
 
