@@ -87,18 +87,18 @@ h1, h2, h3, h4, h5, h6 {
   text-rendering: optimizeLegibility;
 }
 h1 {
-  font-size: 2rem;
+  font-size: 3rem;
 }
 h2 {
-  margin-top: 1rem;
+  margin-top: 2rem;
   font-size: 1.5rem;
 }
 h3 {
-  margin-top: 1.5rem;
+  margin-top: 2.5rem;
   font-size: 1.25rem;
 }
 h4, h5, h6 {
-  margin-top: 1rem;
+  margin-top: 2rem;
   font-size: 1rem;
 }
 
@@ -153,8 +153,12 @@ pre,
   font-family: Menlo, Monaco, "Courier New", monospace;
 }
 code {
-  color: #e83e8c;
+  /*color: #e83e8c;*/
   white-space: pre;
+  color: rgba(0, 0, 0, 0.75);
+  background-color: rgba(0,0,0,.05);
+  border-radius: 3px;
+  padding: 2px 4px;
 }
 pre {
   display: block;

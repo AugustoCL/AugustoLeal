@@ -7,14 +7,34 @@ h1, h2, h3, h4, h5, h6, .nav, .article-duration, .archive-item-link, .footer, .s
 }
 */
 
+code {
+  color: rgba(0, 0, 0, 0.75);
+  background-color: rgba(0,0,0,.05);
+  border-radius: 3px;
+  padding: 2px 4px;
+}
+
 blockquote p{
-    font-size: 16px;
+  font-size: 14px;
+}
+
+.content div {
+  text-align: justify;
+  text-justify: inter-word;
+}
+
+p {
+  margin-top: 0.5rem;
+  margin-bottom: 0rem;
 }
 
 /*  Links inside text */
 p a {
-    font-weight: bold;
-    font-style: italic;
+  /*color: #0c93e4;*/
+  color: rgb(65, 131, 196);
+  text-decoration: underline;
+  font-weight: normal;
+  /*font-style: italic;*/
 }
 
 /* visited link */
@@ -25,6 +45,7 @@ p a:visited {
 /* mouse over link */
 p a:hover {
   color: hotpink;
+  text-decoration: none;
 }
 
 /* selected link */
@@ -37,8 +58,14 @@ p a:active {
 
 
 /* table of contents links */
+
+/*.content {
+  max-width: 50rem;
+  margin-left: 30rem;
+}*/
+
 .content a {
-    font-weight: bold;
+  font-weight: normal;
 }
 
 /* visited link */
@@ -49,6 +76,7 @@ p a:active {
 /* mouse over link */
 .content a:hover {
   color: hotpink;
+  text-decoration: none;
 }
 
 /* selected link */

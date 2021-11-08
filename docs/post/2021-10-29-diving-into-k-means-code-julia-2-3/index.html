@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="generator" content="Hugo 0.81.0" />
+
+  <title>K-Means&#43;&#43; code from scratch [Julia] - 2/3 &middot; AUGUSTO LEAL</title>
+
+  <meta name="description" content="A deep diving into the source code of K-Means/Kmeans&#43;&#43; implementation in the ClusterAnalysis.jl package." />
+
+  
+
+<meta itemprop="name" content="K-Means&#43;&#43; code from scratch [Julia] - 2/3">
+<meta itemprop="description" content="A deep diving into the source code of K-Means/Kmeans&#43;&#43; implementation in the ClusterAnalysis.jl package."><meta itemprop="datePublished" content="2021-10-29T00:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2021-10-29T00:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="3603"><meta itemprop="image" content="https://augustocl.github.io/AugustoLeal/images/profile1.png"/>
+<meta itemprop="keywords" content="ML,cluster,kmeans,DBCAN,algorithms,scratch," />
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://augustocl.github.io/AugustoLeal/images/profile1.png"/>
+
+<meta name="twitter:title" content="K-Means&#43;&#43; code from scratch [Julia] - 2/3"/>
+<meta name="twitter:description" content="A deep diving into the source code of K-Means/Kmeans&#43;&#43; implementation in the ClusterAnalysis.jl package."/>
+
+
+<meta property="og:title" content="K-Means&#43;&#43; code from scratch [Julia] - 2/3" />
+<meta property="og:description" content="A deep diving into the source code of K-Means/Kmeans&#43;&#43; implementation in the ClusterAnalysis.jl package." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://augustocl.github.io/AugustoLeal/post/2021-10-29-diving-into-k-means-code-julia-2-3/" /><meta property="og:image" content="https://augustocl.github.io/AugustoLeal/images/profile1.png"/><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2021-10-29T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2021-10-29T00:00:00&#43;00:00" /><meta property="og:site_name" content="Augusto Leal" />
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type":"Person",
+      "@id": "https://augustocl.github.io/AugustoLeal/#author",
+      "name":  null ,
+      "image": {
+        "@type":"ImageObject",
+        
+        
+      },
+      "description": ""
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://augustocl.github.io/AugustoLeal/#website",
+      "url": "https://augustocl.github.io/AugustoLeal/",
+      "name": "AUGUSTO LEAL",
+      "description": "",
+      "publisher": {
+        "@id": "https://augustocl.github.io/AugustoLeal/#author"
+      },
+      "inLanguage": "en"
+    },
+    {
+      "@type": "ImageObject",
+      "url": "https://augustocl.github.io/AugustoLeal/images/profile1.png",
+      "caption": "AUGUSTO LEAL"
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://augustocl.github.io/AugustoLeal/post/2021-10-29-diving-into-k-means-code-julia-2-3/#webpage",
+      "url": "https://augustocl.github.io/AugustoLeal/post/2021-10-29-diving-into-k-means-code-julia-2-3/",
+      "name": "K-Means++ code from scratch [Julia] - 2/3",
+      "isPartOf": {
+        "@id": "https://augustocl.github.io/AugustoLeal/#website"
+      },
+      "about": {
+         "@id": "https://augustocl.github.io/AugustoLeal/#author"
+      },
+      "datePublished": "2021-10-29T00:00:00+00:00",
+      "dateModified": "2021-10-29T00:00:00+00:00",
+      "description": "A deep diving into the source code of K-Means/Kmeans++ implementation in the ClusterAnalysis.jl package.",
+      "inLanguage": "en",
+      "potentialAction": [
+        {
+          "@type": "ReadAction",
+          "target": [
+            "https://augustocl.github.io/AugustoLeal/post/2021-10-29-diving-into-k-means-code-julia-2-3/"
+          ]
+        }
+      ]
+    },
+    {
+      "@type": "Article",
+      "isPartOf": {
+        "@id": "https://augustocl.github.io/AugustoLeal/post/2021-10-29-diving-into-k-means-code-julia-2-3/#webpage"
+      },
+      "mainEntityOfPage": {
+        "@id": "https://augustocl.github.io/AugustoLeal/post/2021-10-29-diving-into-k-means-code-julia-2-3/#webpage"
+      },
+      "headline": "K-Means++ code from scratch [Julia] - 2/3",
+      "datePublished": "2021-10-29T00:00:00+00:00",
+      "dateModified": "2021-10-29T00:00:00+00:00",
+      "publisher": {
+        "@id": "https://augustocl.github.io/AugustoLeal/#author"
+      },
+      "keywords": [
+        "ML",
+        "cluster",
+        "kmeans",
+        "DBCAN",
+        "algorithms",
+        "scratch"
+      ],
+      "articleSection": [
+        "julia"
+      ],
+      "inLanguage": "en",
+      "author": {
+        "@type": "Person",
+        "name": "AugustoCL"
+      },
+      "potentialAction": [
+        {
+          "@type": "CommentAction",
+          "name": "Comment",
+          "target": [
+            "https://augustocl.github.io/AugustoLeal/post/2021-10-29-diving-into-k-means-code-julia-2-3/#comments"
+          ]
+        }
+      ]
+    }
+  ]
+}
+</script>
+
+
+
+  <link type="text/css"
+        rel="stylesheet"
+        href="/AugustoLeal/css/print.css"
+        media="print">
+
+  <link type="text/css"
+        rel="stylesheet"
+        href="/AugustoLeal/css/poole.css">
+
+  <link type="text/css"
+        rel="stylesheet"
+        href="/AugustoLeal/css/hyde.css">
+
+  
+<style type="text/css">
+  .sidebar {
+    background-color: #00004d;
+  }
+
+  .read-more-link a {
+    border-color: #00004d;
+  }
+
+  .read-more-link a:hover {
+    background-color: #00004d;
+  }
+
+  .pagination li a {
+    color: #00004d;
+    border: 1px solid #00004d;
+  }
+
+  .pagination li.active a {
+    background-color: #00004d;
+  }
+
+  .pagination li a:hover {
+    background-color: #00004d;
+    opacity: 0.75;
+  }
+
+  footer a,
+  .content a,
+  .related-posts li a:hover {
+    color: #00004d;
+  }
+</style>
+
+
+
+  
+
+  
+  <link rel="stylesheet" href="https://augustocl.github.io/AugustoLeal/css/SH/railscasts.css" rel="stylesheet" id="theme-stylesheet">
+  <script src="https://augustocl.github.io/AugustoLeal/js/highlight.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  
+
+  
+    <script src="/AugustoLeal/js/math-code.js"></script>
+    <script async src="//cdn.bootcss.com/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+  
+
+  <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700&display=swap">
+
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css"
+        integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk="
+        crossorigin="anonymous" />
+
+  <link rel="apple-touch-icon-precomposed"
+        sizes="144x144"
+        href="/apple-touch-icon-144-precomposed.png">
+
+  <link rel="shortcut icon" href="/favicon.png">
+
+  
+  </head>
+<body>
+  <aside class="sidebar">
+  <div class="container">
+    <div class="sidebar-about">
+      
+        
+      
+
+      <h1>AUGUSTO LEAL</h1>
+
+      
+    </div>
+
+    <nav>
+      <ul class="sidebar-nav">
+        <li>
+          <a href="https://augustocl.github.io/AugustoLeal/">Home</a>
+        </li>
+        <li>
+          <a href="/AugustoLeal/about/">Sobre</a>
+        </li><li>
+          <a href="/AugustoLeal/contact/">Contato</a>
+        </li><li>
+          <a href="/AugustoLeal/post/">Posts</a>
+        </li><li>
+          <a href="/AugustoLeal/categories/">Categorias</a>
+        </li><li>
+          <a href="/AugustoLeal/tags/">Tags</a>
+        </li>
+      </ul>
+    </nav>
+
+    <section class="social-icons">
+      
+      <a href="https://www.linkedin.com/in/augustocleal/" rel="me" title="Linkedin" target="_blank">
+        <i class="fab fa-linkedin" aria-hidden="true"></i>
+      </a>
+      
+      <a href="https://github.com/AugustoCL" rel="me" title="GitHub" target="_blank">
+        <i class="fab fa-github" aria-hidden="true"></i>
+      </a>
+      
+    </section>
+  </div>
+</aside>
+
+
+  <main class="content container">
+  <div class="post">
+  <h1 class="title">K-Means&#43;&#43; code from scratch [Julia] - 2/3</h1>
+  
+
+  <div class="post-date">
+    <time datetime="2021-10-29T00:00:00Z">Oct 29, 2021</time> <span class="readtime">&middot; 17 min read</span>
+  </div>
+
+  <div>
+  
+  <link rel="stylesheet" href="style.css" type="text/css" />
+
+
+<p>This post continuous the previous post about <a href="https://github.com/AugustoCL/ClusterAnalysis.jl">ClusterAnalysis.jl</a> package by detailing all code created for the K-Means++ implementation. It will dive into the pseudocode presented in ‘Algorithms Section’ in the documentation and will presenting how each step was implemented in the source code.</p>
+<blockquote>
+<p>I recommend that you read the <a href="https://augustocl.github.io/ClusterAnalysis.jl/stable/algorithms/kmeans/">Algorithms Section</a> of the K-Means, that explains the algorithm through various gifs and graphics, before diving into the details of the source code in this post.</p>
+</blockquote>
+<p>My <strong>goal</strong> here is that at the end of this post, you will be <strong>in touch with with some good practices in package development Julia</strong>.</p>
+<p>I want to go beyond creating a tutorial that only teaches how to create packages/code, as there are already several posts of these, by going further and demonstrate a bit of a Julia package developer’s <strong>line of thinking</strong> when creating an algorithm from scratch for a package.</p>
+<p>Because of this, I will assume that the reader has a good understanding of some Julia concepts such like <code>types</code>, <code>multiple dispatch</code>, <code>broadcast operator</code>, <code>immutable/mutable structs</code> and <code>positional/keywords arguments</code>.</p>
+<div id="the-k-means-struct" class="section level2">
+<h2>1 - The K-Means Struct</h2>
+<p>The goal is to create a <code>kmeans()</code> function that receive, at minimum, these 2 arguments:</p>
+<ul>
+<li>A <strong>tabular data</strong> (row <code>n</code> x column <code>m</code>), where <code>m &gt; 1</code><br />
+</li>
+<li>The desired number of clusters <strong><code>K</code></strong></li>
+</ul>
+<p>Which results in the following output:</p>
+<ul>
+<li>The number of clusters <strong><code>K</code></strong><br />
+</li>
+<li>All <strong>centroids</strong> values inside a Vector, resulting in a Vector of Vector (named <code>centroids</code>)</li>
+<li>The <strong>label for each observation</strong>, resulting in a a Vector of size<code>n</code> (named <code>cluster</code>)<br />
+</li>
+<li>The <strong>quality measure</strong> of the model, that mensure the Total Variance Within Cluster (named <code>withinss</code>)<br />
+</li>
+<li>The <strong>Number of iterations</strong> until algorithm converge (named <code>iter</code>)</li>
+</ul>
+<p>So I will start talking about the output first. Initially, we create a <code>Mutable Struct</code> with the clusters prediction that would be updated at each iteration of the algorithm, but soon we realized that this was inefficient. Then after a few refactorings, <a href="https://github.com/eliascarv/">Elias</a> and I concluded that the best structure would be to have a <code>immutable struct</code> that would receive only the optimal values after finish all iterations.</p>
+<p>In this <strong>initial version</strong>, we add the algorithm initialization inside the <code>struct</code> initialization. This make the process more complex because in the next iterations we need to update this values that were initialized and also we lost performance by utilizing a <code>mutable struct</code> instead of an <code>imutable struct</code>, as <a href="https://docs.julialang.org/en/v1/manual/performance-tips/">Performance Tips</a> section in Julia Documentation suggests.</p>
+<blockquote>
+<p>I suggest you read the <a href="https://docs.julialang.org/en/v1/manual/performance-tips">Performance Tips</a> Section of Julia documentation. It contains a lot practices that was implemented in this package.</p>
+</blockquote>
+<p>See how it was:</p>
+<pre class="julia"><code># Now I see how terrible it was haha
+mutable struct Kmeans{T&lt;:AbstractFloat}
+    df::Matrix{T}
+    K::Int
+    centroids::Vector{Vector{T}}
+    cluster::Vector{T}
+    variance::T
+
+    # initialization function
+    function Kmeans(df::Matrix{T}, K::Int) where {T&lt;:AbstractFloat}
+      # generate random centroids
+        # ...
+
+        # estimate clusters
+        # ...
+            
+        # evaluate total variance
+        # ...
+        return new{T}(df, K, centroids, cluster, variance)
+    end
+end</code></pre>
+<p>And see how it becomes:</p>
+<pre class="julia"><code>struct KmeansResult{T&lt;:AbstractFloat}
+    K::Int
+    centroids::Vector{Vector{T}}
+    cluster::Vector{Int}
+    withinss::T
+    iter::Int
+end</code></pre>
+<p>Now It’s much more simple to anyone understand and also more performatic.</p>
+<p>It’s like they say: <em>“Less is more”</em>. 😆</p>
+<blockquote>
+<p><strong>Quick tip:</strong> The use of an AbstractType in the Struct, like the <code>T&lt;:AbstractFloat</code>, it’s recommended for a package because allow the Julia Compiler adapt the code to different versions of Floats that computers could have (Float32, Float64, etc).</p>
+<p>So, you will see for all functions in the package, that we use <code>AbstractMatrix</code> for Matrix, <code>AbstractVector</code> for Vectors and so on….</p>
+</blockquote>
+</div>
+<div id="the-nstart-argument" class="section level2">
+<h2>2 - The <code>nstart</code> argument</h2>
+<p>Our K-Means implementation repeats the algorithms <code>nstart</code> times and selects the best result from them.</p>
+<p>The idea is that as the initialization of the algorithm is completely random, when we run it several times, we try to avoid local minimums, thus getting a little closer to the global minimum.</p>
+<p>So we encapsulate the algorithm inside the <code>_kmeans()</code> function and run the following for-loop in to the <code>kmeans()</code> function:</p>
+<pre class="julia"><code>function kmeans(data::AbstractMatrix{T}, K::Int;
+                nstart::Int = 1,
+                maxiter::Int = 10,
+                init::Symbol = :kmpp) where {T&lt;:AbstractFloat}
+
+    # create the variables outside for-loop to be updated
+    centroids = ...
+    cluster = ...
+    withinss = ...
+    iter = ...
+
+    # run multiple kmeans to get the best result
+    for _ in 1:nstart
+
+        # execute the algorithm searching for a global minimum
+        new_centroids, new_cluster, new_withinss, new_iter = _kmeans(data, K, maxiter, init)
+
+        if new_error &lt; withinss
+            # update the final values and error
+            # ...
+        end
+    end
+
+    return KmeansResult(K, centroids, cluster, withinss, iter)
+end</code></pre>
+<p>In the end, we pass all the parameters of the optimal result inside the struct <code>KmeansResult</code> constructed before.</p>
+<p>Now, lets go dive into the algorithm, where all the magic happens, by constructing the function <code>_kmeans()</code>.</p>
+</div>
+<div id="the-k-means-pseudocode" class="section level2">
+<h2>3 - The K-Means pseudocode</h2>
+<p>Moving on in the algorithm, I rescued the pseudocode steps presented in the package documentation:</p>
+<ol style="list-style-type: decimal">
+<li>Initialize k centroids by K-Means++ algorithm or by random initialization.<br />
+</li>
+<li>Calculate the distance of every point to every centroid.<br />
+</li>
+<li>Assign every point to a cluster, by choosing the centroid with the minimum distance to the point.<br />
+</li>
+<li>Calculate the Total Variance Within Cluster by the Sum of Squared Error (SSE) of this iteration.<br />
+</li>
+<li>Recalculate the centroids using the mean of the assigned points.<br />
+</li>
+<li>Repeat the steps 3 to 5, <code>maxiter</code> times or until reaching convergence with minimum total variance at step 4.</li>
+</ol>
+<p>Here it’s a gif that represent these iterations of the algorithm, available at the <a href="https://en.wikipedia.org/wiki/K-means_clustering">K-Means wikipedia page</a>.
+<img src="https://augustocl.github.io/ClusterAnalysis.jl/stable/algorithms/Kmeans_convergence.gif" /></p>
+</div>
+<div id="distance-function" class="section level2">
+<h2>4 - Distance function</h2>
+<p>As you realized seeing the pseudocode, the K-Means <strong>calculate distances every time</strong>. And I think that it’s the main point of the performance in the code. Because of that concern, <strong>we construct our distance function</strong> implementing all the good practices we learned, like parallelization with macros <code>@simd</code>, indexations instructions with macro <code>@inbounds</code> and some heeds about reducing allocations.</p>
+<p>All those points deserve another post just for them and I will let to <a href="https://github.com/eliascarv/">Elias</a> create that post because he made most of the research and prototype that function. Thus, when he finished that, I will update that paragraph with the link to his post.</p>
+<p>For now, we have this beautiful and performatic implementation of the <strong>euclidian distance</strong>:</p>
+<pre class="julia"><code>function euclidean(a::AbstractVector{T}, 
+                   b::AbstractVector{T}) where {T&lt;:AbstractFloat}              
+    @assert length(a) == length(b)
+
+    # euclidean(a, b) = √∑(aᵢ- bᵢ)²
+    s = zero(T)
+    @simd for i in eachindex(a)
+        @inbounds s += (a[i] - b[i])^2
+    end
+    return √s
+end</code></pre>
+<blockquote>
+<p><strong>QuickTip:</strong> Use <code>eachindex(x)</code> instead of <code>1:length(x)</code> in for-loops. It’s more performatic. I encourage you to check using the macros of the <a href="https://github.com/JuliaCI/BenchmarkTools.jl"><code>BenchmarkTools</code></a> package. ☺️</p>
+</blockquote>
+</div>
+<div id="initialization-random-and-k-means" class="section level2">
+<h2>5 - Initialization (Random and K-Means++)</h2>
+<p>The first step is the initialization and we got two implementations. The easiest method is <code>:random</code> and the hardest is <code>:kmpp</code>.</p>
+<div id="random-initialization" class="section level3">
+<h3>5.1 - Random Initialization</h3>
+<p>The <code>:random</code> initialization is very simple, it was proposed by Andrew NG in his Machine Learning Course, and basically <strong>select randomly K points of the dataset as the initial centroids</strong>. Thus, we code this way:</p>
+<pre class="julia"><code># variable `data` received from function `_kmeans(...)`
+nl = size(data, 1)
+
+# random select the idx of K centroids
+indexes = rand(1:nl, K)
+# select the values of those idx as centroids
+centroids = Vector{T}[data[i, :] for i in indexes]</code></pre>
+</div>
+<div id="k-means-initialization" class="section level3">
+<h3>5.2 - K-Means++ Initialization</h3>
+<p>The <code>:kmpp</code> algorithm is a smart centroid initialization method that works with those steps:
+1. Select randomly one point in the dataset as the first centroid.
+2. Compute the distance (euclidian or other) of all point of that dataset from the selected point.
+3. Select as the new centroid the point with the maximum distance of the first centroid.
+4. Repeat the steps until find all the <code>K</code> centroids required.</p>
+<blockquote>
+<p>If you want to delve into the math that underlies <code>:kmpp</code>, I suggest you to read the first paper of the method, <a href="http://ilpubs.stanford.edu:8090/778/1/2006-13.pdf">here</a>. 🤓</p>
+</blockquote>
+<p>At first view, looks simple, a for loop for each observation to every centroid (resulting in two for-loops) is enough, but it also has <strong>one important detail</strong> that very few tutorials present.</p>
+<p>When calculating the distances of all points after the second centroid, <strong>it’s necessary, for each point, assign the nearest centroid for calculating the distances for the next centroid</strong>. This ensures that we are getting the correct maximum distance when considering all centroids already labeled.</p>
+<p>Image to represent that important detail of the method.
+<img src="imgs/detailofkmeanspp.png" /></p>
+<p>Because of that, we need to use another for-loop, that we encapsulated using an array comprehension, which results in that final code of <code>:kmpp</code>:</p>
+<pre class="julia"><code># K: Number of clusters desired
+# data: Dataset inputed in function
+# nl: Number of lines in `data`
+...
+centroids = Vector{Vector{T}}(undef, K)         # create the vector of vector with size `K` 
+centroids[1] = data[rand(1:nl), :]              # select randomly the first centroid
+
+# distance vector for each observation
+dists = Vector{T}(undef, nl)
+
+# get each new centroid by the furthest observation (maximum distance)
+for k in 2:K
+
+    # for each observation get the nearest centroid by the minimum distance
+    for (i, row) in enumerate(eachrow(data))
+        dist_c = [euclidean(row, c) for c in @view centroids[1:(k-1)]]
+        @inbounds dists[i] = minimum(dist_c)
+    end
+
+    # new centroid by the furthest observation
+    @inbounds centroids[k] = data[argmax(dists), :]
+end
+
+return centroids       </code></pre>
+<p>This implementation use the macro <code>@inbounds</code> to discard the check inbounds in arrays that Julia does automatically. This optimize the code but is risky and should only be used when you are pretty sure that it’ll work correctly. I really suggest you read <a href="https://docs.julialang.org/en/v1/devdocs/boundscheck/">this section</a> of the docs for more details about it.</p>
+<blockquote>
+<p><strong>QuickTip</strong>: Since when we slice arrays (<code>A[1:10]</code>), we create a copy of the array, performing new allocations, we use the <code>@view</code> macro to reduce the number of allocations of our algorithm.</p>
+<p>Also <code>@view</code> it’s not recommended for small arrays, but it’s for big arrays. Thus, I suggest you to make some tests whenever your could using the <code>BenchmarkTools</code> package.</p>
+<p>A reading suggestion about <a href="https://bkamins.github.io/julialang/2021/09/17/views.html">view</a></p>
+</blockquote>
+</div>
+<div id="function-_initialize_centroids" class="section level3">
+<h3>5.3 - Function <code>_initialize_centroids()</code></h3>
+<p>To keep things organized, we have the argument <code>init</code>, which receives a <code>Symbol</code> type, that accept <code>:random</code> or <code>:kmpp</code>. Then, we finalize that initialization section with the following final function:</p>
+<pre class="julia"><code>function _initialize_centroids(data::AbstractMatrix{T}, 
+                               K::Int, 
+                               init::Symbol) where {T&lt;:AbstractFloat}
+    nl = size(data, 1)
+
+    if init == :random
+        indexes = rand(1:nl, K)
+        centroids = Vector{T}[data[i, :] for i in indexes]
+    elseif init == :kmpp
+        centroids = Vector{Vector{T}}(undef, K)
+        centroids[1] = data[rand(1:nl), :]
+
+        # distance vector for each observation
+        dists = Vector{T}(undef, nl)
+
+        # get each new centroid by the furthest observation (maximum distance)
+        for k in 2:K
+
+            # for each observation get the nearest centroid by the minimum distance
+            for (i, row) in enumerate(eachrow(data))
+                dist_c = [euclidean(row, c) for c in @view centroids[1:(k-1)]]
+                @inbounds dists[i] = minimum(dist_c)
+            end
+
+            # new centroid by the furthest observation
+            @inbounds centroids[k] = data[argmax(dists), :]
+        end
+    else
+        throw(ArgumentError(&quot;The symbol :$init is not a valid argument. Use :random or :kmpp.&quot;))
+    end
+
+    return centroids
+end
+</code></pre>
+</div>
+</div>
+<div id="the-_kmeans-function" class="section level2">
+<h2>6 - The <code>_kmeans()</code> function</h2>
+<p>Continuing the steps of the pseudocode, I’m think that a good generalization of those is that we iterate through 2 macro steps: (i) <strong>assign points to a cluster</strong> and (ii) <strong>recalculate centroids</strong> using <code>mean()</code>.</p>
+<p>Also, during every iteration we calculate the <strong>Total Variance</strong> as a measure of model quality and also check the <strong>Stop Rule</strong> by comparing the difference in recalculated centroids.</p>
+<p>In general, we should have those steps in the <code>_kmeans()</code> function:</p>
+<pre class="julia"><code>function _kmeans(data, K, maxiter, init)
+    # number of observations/lines of the dataset
+    nl = size(data, 1)
+    
+    # initialize centroids (that it&#39;s already constructed)
+    centroids = _initialize_centroids(data, K, init)
+
+    # estimate first clusters with centroids
+    #...
+
+    # evaluate total variance
+    #...
+
+    # start iterations (for-loop)
+        # update centroids using mean()
+        # ...
+        # reestimate clusters...
+        # ...
+        # check stop rule
+        # ...
+
+    return centroids, cluster, withinss, iter
+end</code></pre>
+<p>Note that it is necessary to do a first estimation before going to update the centroids in the for-loop iterations. Because of this, our first <code>struct</code> was that terrible idea using <code>mutable struct</code>. 😆</p>
+<div id="estimate-clusters" class="section level3">
+<h3>6.1 - Estimate clusters</h3>
+<p>To make the estimation of the clusters with the centroids initialized, we use a vector with size <code>n</code>, calculate for every point the distance to all centroids and select the centroid with minimum distance. Therefore, we need to initialize a vector and create a double for loop, that first pass through all observations <code>n</code> and then calculate the distances to all centroids.</p>
+<pre class="julia"><code>  # first clusters estimate
+  cluster = Vector{Int}(undef, nl)
+  for (i, obs) in enumerate(eachrow(data))
+      dist = [euclidean(obs, c) for c in centroids]
+      @inbounds cluster[i] = argmin(dist)
+  end</code></pre>
+<p>We choose use an <em>Array Comprehension</em> as the second for-loop and also use <code>enumerate()</code> to assign the label to the <code>cluster</code> array using the index <code>i</code>.</p>
+<blockquote>
+<p><strong>QuickTip:</strong> If you know the size and the type of the vector, pre-allocate the vector before using it, like the cluster vector <code>cluster = Vector{Int}(undef, nl)</code>. It’s a very excelent practice.</p>
+<p>Also, It’s faster pre-allocate a vector and update each of their values using <code>vector[i] = ...</code>, instead of create an empty vector and push values inside it, like <code>a = Int[]; push!(a, ...)</code>.</p>
+</blockquote>
+</div>
+<div id="total-variance-within-cluster-withinss" class="section level3">
+<h3>6.2 - Total Variance Within Cluster (<code>withinss</code>)</h3>
+<p>Since we got an equivalence in the <code>withinss</code> with the Sum of Squared Error (SSE) measurement, the model evaluation function calculate the Sum of Squared Error (SSE) for each cluster. That “<em>for each</em>” in the sentence it’s a filter that we need to do before make the calculus, using <code>data[cluster .== k, :]</code>.</p>
+<p>So, we created a function called <code>totalwithinss()</code> that evaluate for each cluster the SSE, using a for-loop, and sum them all. Resulting in our Total Variance Within Cluster desired.</p>
+<pre class="julia"><code>function totalwithinss(data::AbstractMatrix{T}, K::Int, cluster::AbstractVector{Int}) where {T&lt;:AbstractFloat}
+    # evaluate total-variance-within-clusters
+    error = zero(T)
+    @simd for k in 1:K
+        error += squared_error(data[cluster .== k, :])
+    end
+    return error
+end</code></pre>
+<p>Now, in the <code>squared_error()</code> function, we use the <strong>multiple dispatch</strong> paradigm of the language to being able to properly calculate the Total Variance, considering two distinct cases:
+* Have multiple points assigned to the cluster, resulting in a Matrix.
+* Have only one point assigned to the cluster, resulting in a Vector.</p>
+<p>Thus, instead make a if-else inside the function, we create two functions to cover both cases. One which receive an <code>AbstractMatrix</code> and other which receive an <code>AbstractVector</code>.</p>
+<pre class="julia"><code>function squared_error(col::AbstractVector{T}) where {T&lt;:AbstractFloat}
+    m = mean(col)
+    error = zero(T)
+    @simd for i in eachindex(col)
+        @inbounds error += (col[i] - m)^2
+    end
+    return error
+end
+
+function squared_error(data::AbstractMatrix{T}) where {T&lt;:AbstractFloat}
+    ncol = size(data, 2)    
+    error = zero(T)
+    @simd for i in 1:ncol
+        error += squared_error(view(data, :, i))
+    end
+    return error
+end</code></pre>
+<p>Another detail of this function architecture, is that when we input a matrix, the function always ended-up going to the Vector version. This ensures that we capture all the possibilities and make it easier for the compiler find the best optimized version of the function during compilation.</p>
+<blockquote>
+<p><strong>Note:</strong> Since the centroids are the mean of the assigned observations, we could use the operation <code>mean()</code> in the function without worries.</p>
+<p><strong>QuickNote:</strong> As you realized, we are using again optimization macros in the functions, like <code>@simd</code> and <code>@inbounds</code>, to obtain the best of the performance in Julia.</p>
+</blockquote>
+</div>
+<div id="running-iterations-inside-for-loop" class="section level3">
+<h3>6.3 - Running iterations (Inside for-loop)</h3>
+<p>During the iterations, it will be necessary to compare the new results of the <code>centroids</code>, <code>cluster</code>, <code>norms</code> and <code>withinss</code> variables with the previous values. Therefore, it is necessary create a copy of these measures outside the for-loop so that their values are updated and compared.</p>
+<p>So filling the <code>_kmeans()</code> function with what has already been explained, we have the following function:</p>
+<pre class="julia"><code>function _kmeans(data::AbstractMatrix{T}, K::Int, maxiter::Int, init::Symbol) where {T&lt;:AbstractFloat}
+
+    nl = size(data, 1)
+
+    # generate random centroids
+    centroids = _initialize_centroids(data, K, init)
+
+    # first clusters estimate
+    cluster = Vector{Int}(undef, nl)
+    for (i, obs) in enumerate(eachrow(data))
+        dist = [euclidean(obs, c) for c in centroids]
+        @inbounds cluster[i] = argmin(dist)
+    end
+
+    # first evaluation of total-variance-within-cluster
+    withinss = totalwithinss(data, K, cluster)
+
+    # variables to update during the iterations
+    new_centroids = copy(centroids)
+    new_cluster = copy(cluster)
+    iter = 1
+    norms = norm.(centroids)
+
+    # start kmeans iterations until maxiter or convergence
+    for _ in 2:maxiter
+        # update centroids using mean()
+        # ...
+        # reestimate clusters...
+        # ...
+        # check stop rule
+        # ...
+    end
+
+    return centroids, cluster, withinss, iter
+end</code></pre>
+<p>To make the <strong>update of the new centroids</strong> using the mean, we use a for-loop through all K centroids, which calculate the mean for every columns/variable of the observations in each cluster. Thus, we filter the data using <code>data[new_cluster .= k,:]</code>, but we incorporate the <code>view()</code> function to avoid unnecessary allocations, resulting in <code>view(data, new_cluster .== k, :)</code>. Then we use the argument <code>dims=1</code> to calculate the mean of each column and encapsulate all inside <code>vec()</code> to standardize the output.</p>
+<pre class="julia"><code># update new_centroids using the mean
+@simd for k in 1:K             # mean.(eachcol(data[new_cluster .== k, :]))
+    @inbounds new_centroids[k] = vec(mean(view(data, new_cluster .== k, :), dims = 1))
+end</code></pre>
+<p>This for-loop is a good example of using the explained tips. Have the optimizations macros <code>@simd</code> and <code>@inbounds</code>, use of <code>view()</code> and update the pre-allocated vector.</p>
+<p>To <strong>reestimate clusters</strong> using the new centroids, we use the same code showed before, outside the for-loop.</p>
+<pre class="julia"><code># estimate cluster to all observations
+for (i, obs) in enumerate(eachrow(data))
+    dist = [euclidean(obs, c) for c in new_centroids]
+    @inbounds new_cluster[i] = argmin(dist)
+end</code></pre>
+<p>Then, we update the new <code>withniss</code>, the number of iterations <code>iter</code> by running <code>iter += 1</code>, and calculate the <code>norm()</code> of each new centroid to inspect if the iteration made some significant change in the centroid (That is our <strong>Stop Rule</strong>).</p>
+<pre class="julia"><code># update iter, withinss-variance and calculate centroid norms
+new_withinss = totalwithinss(data, K, new_cluster)
+new_norms = norm.(new_centroids)
+iter += 1
+
+# convergence rule
+norm(norms - new_norms) ≈ 0 &amp;&amp; break</code></pre>
+<p>See the convergence rule, there we calculate the <code>norm()</code> of the difference between the earlier and newer <code>norms</code> of the centroids. This way, it’s possible to check if the centroids got a significant change after the iteration. Also, the tolerance utilized for the check is <code>1e-8</code>, which is the default of the aproximation operator <code>≈</code>.</p>
+<p>If the <strong>convergence rule is true</strong>, the for-loop stops in the <code>break</code> statement, and the final results it’s the values of the earlier iteration (because the last iteration didn’t have a significant change). If the <strong>convergence rule is false</strong>, then we update the <code>norm</code> to compare in the next iteration and make the check to update the values of the model, inside the if-else statement below.</p>
+<pre class="julia"><code># update centroid norms
+norms .= new_norms
+
+# update centroids, cluster and whithinss
+if new_withinss &lt; withinss
+    centroids .= new_centroids
+    cluster .= new_cluster
+    withinss = new_withinss
+end</code></pre>
+<blockquote>
+<p><strong>Note:</strong> Take a look at the broadcast operator (<code>.</code>) used to update model variables. When update a vector the broadcast it’s used, but when we updated a single value, a simples <code>=</code> is enough.</p>
+</blockquote>
+<p>Thus, bringing together all the points raised, we have the following final function of <code>_kmeans()</code>:</p>
+<pre class="julia"><code>function _kmeans(data::AbstractMatrix{T}, K::Int, maxiter::Int, init::Symbol) where {T&lt;:AbstractFloat}
+
+    nl = size(data, 1)
+
+    # generate random centroids
+    centroids = _initialize_centroids(data, K, init)
+
+    # first clusters estimate
+    cluster = Vector{Int}(undef, nl)
+    for (i, obs) in enumerate(eachrow(data))
+        dist = [euclidean(obs, c) for c in centroids]
+        @inbounds cluster[i] = argmin(dist)
+    end
+
+    # first evaluation of total-variance-within-cluster
+    withinss = totalwithinss(data, K, cluster)
+
+    # variables to update during the iterations
+    new_centroids = copy(centroids)
+    new_cluster = copy(cluster)
+    iter = 1
+    norms = norm.(centroids)
+
+    # start kmeans iterations until maxiter or convergence
+    for _ in 2:maxiter
+
+        # update new_centroids using the mean
+        @simd for k in 1:K             # mean.(eachcol(data[new_cluster .== k, :]))
+            @inbounds new_centroids[k] = vec(mean(view(data, new_cluster .== k, :), dims = 1))
+        end
+
+        # estimate cluster to all observations
+        for (i, obs) in enumerate(eachrow(data))
+            dist = [euclidean(obs, c) for c in new_centroids]
+            @inbounds new_cluster[i] = argmin(dist)
+        end
+
+        # update iter, withinss-variance and calculate centroid norms
+        new_withinss = totalwithinss(data, K, new_cluster)
+        new_norms = norm.(new_centroids)
+        iter += 1
+
+        # convergence rule
+        norm(norms - new_norms) ≈ 0 &amp;&amp; break
+
+        # update centroid norms
+        norms .= new_norms
+
+        # update centroids, cluster and whithinss
+        if new_withinss &lt; withinss
+            centroids .= new_centroids
+            cluster .= new_cluster
+            withinss = new_withinss
+        end
+
+    end
+
+    return centroids, cluster, withinss, iter
+end</code></pre>
+</div>
+</div>
+<div id="tables.jl-integration" class="section level2">
+<h2>7 - Tables.jl integration</h2>
+<p>Until now, the <code>ClusterAnalysis.jl</code> implementation it’s based on the 3 main big functions that we constructed together here:</p>
+<ul>
+<li><code>kmeans()</code></li>
+<li><code>_kmeans()</code></li>
+<li><code>_initialize_centroids()</code></li>
+</ul>
+<p>and the distance and variance functions:</p>
+<ul>
+<li><code>euclidian()</code></li>
+<li><code>totalwithniss()</code></li>
+<li><code>squared_error()</code></li>
+</ul>
+<p>Before finishing this post, I want to quickly explain an integration we made of the package to the <a href="https://github.com/JuliaData/Tables.jl"><code>Tables.jl</code></a> interface, which allows the package to receive all the inputs contained in that interface.</p>
+<p><a href="https://github.com/JuliaData/Tables.jl/blob/main/INTEGRATIONS.md">Here</a> is the list of all inputs that <code>Tables.jl</code> interface allow.</p>
+<p>To make this integration we use again the <strong>multiple dispatch</strong> by creating new kmeans functions above:</p>
+<ul>
+<li><strong>First:</strong> Make a <code>if-else</code> to check if the input is a input allowed in <code>Tables.jl</code> and select the data in the input as matrix.</li>
+<li><strong>Second:</strong> Receive any type of input (which is not a subtype of an <code>AbstractFloat</code>) and make the conversion to a matrix of <code>Float64</code>.</li>
+<li><strong>Third:</strong> When receive an input, which is a subtype of <code>AbstractFloat</code>, run the algorithm we constructed.</li>
+</ul>
+<pre class="julia"><code>function kmeans(table, K::Int; kwargs...)
+    Tables.istable(table) ? (data = Tables.matrix(table)) : throw(ArgumentError(&quot;The table argument passed does not implement the Tables.jl interface.&quot;))
+    return kmeans(data, K; kwargs...)
+end
+
+kmeans(data::AbstractMatrix{T}, K::Int; kwargs...) where {T} = kmeans(convert(Matrix{Float64}, data), K; kwargs...)
+
+function kmeans(data::AbstractMatrix{T}, K::Int;
+                nstart::Int = 1,
+                maxiter::Int = 10,
+                init::Symbol = :kmpp) where {T&lt;:AbstractFloat}
+
+    # generate variables to update with the best result
+    nl = size(data, 1)
+
+    ...
+    ...
+end</code></pre>
+<p>We also make use of the kwargs… in the argument function to make the code more concise and less repetitive.</p>
+<p>Well, now I think you are able to navigate through the <a href="https://github.com/AugustoCL/ClusterAnalysis.jl/blob/main/src/kmeans.jl">source-code of K-Means</a> and understand how every line of the code interact with each other. Going veeery beyong a simple <code>model.fit()</code> 😆</p>
+<p>I hope you enjoy this journey and if you have any suggestion, question or even catch some mistake, typo and etc, feel free to contact me in whatever media you want. <a href="https://augustocl.github.io/AugustoLeal/contact/">Here</a> is my contact page.</p>
+<p>That’s all folks. 😄</p>
+</div>
+
+  </div>
+
+  
+<div>
+  <ul class="tags">
+  <li>
+    <a href="https://augustocl.github.io/AugustoLeal/tags/ml/" class="tag-link">ML</a>
+  </li>
+  
+  <li>
+    <a href="https://augustocl.github.io/AugustoLeal/tags/cluster/" class="tag-link">cluster</a>
+  </li>
+  
+  <li>
+    <a href="https://augustocl.github.io/AugustoLeal/tags/kmeans/" class="tag-link">kmeans</a>
+  </li>
+  
+  <li>
+    <a href="https://augustocl.github.io/AugustoLeal/tags/dbcan/" class="tag-link">DBCAN</a>
+  </li>
+  
+  <li>
+    <a href="https://augustocl.github.io/AugustoLeal/tags/algorithms/" class="tag-link">algorithms</a>
+  </li>
+  
+  <li>
+    <a href="https://augustocl.github.io/AugustoLeal/tags/scratch/" class="tag-link">scratch</a>
+  </li>
+  </ul>
+</div>
+
+
+
+  <div class="share-buttons">
+  <a class="twitter-share-button"
+     href="#"
+     title="Share on Twitter"
+     data-url="https://augustocl.github.io/AugustoLeal/post/2021-10-29-diving-into-k-means-code-julia-2-3/"
+     data-text="K-Means&#43;&#43; code from scratch [Julia] - 2/3"><i class="fab fa-twitter"></i></a>
+
+  <a class="linkedin-share-button"
+     href="#"
+     title="Share on LinkedIn"
+     data-url="https://augustocl.github.io/AugustoLeal/post/2021-10-29-diving-into-k-means-code-julia-2-3/"
+     data-text="K-Means&#43;&#43; code from scratch [Julia] - 2/3"><i class="fab fa-linkedin-in"></i></a>
+
+  <a class="facebook-share-button"
+     href="#"
+     title="Share on Facebook"
+     data-url="https://augustocl.github.io/AugustoLeal/post/2021-10-29-diving-into-k-means-code-julia-2-3/"
+     data-text="K-Means&#43;&#43; code from scratch [Julia] - 2/3"><i class="fab fa-facebook"></i></a>
+
+  <a class="telegram-share-button"
+     href="#"
+     title="Share on Telegram"
+     data-url="https://augustocl.github.io/AugustoLeal/post/2021-10-29-diving-into-k-means-code-julia-2-3/"
+     data-text="K-Means&#43;&#43; code from scratch [Julia] - 2/3"><i class="fab fa-telegram"></i></a>
+
+  <a class="pinterest-share-button"
+     href="#"
+     title="Share on Pinterest"
+     data-url="https://augustocl.github.io/AugustoLeal/post/2021-10-29-diving-into-k-means-code-julia-2-3/"
+     data-text="K-Means&#43;&#43; code from scratch [Julia] - 2/3"><i class="fab fa-pinterest"></i></a>
+</div>
+
+
+  
+</div>
+  </main>
+
+  <footer>
+  <div>
+    <p>
+      &copy; Augusto Leal 2021
+
+      &middot; <a href="https://creativecommons.org/licenses/by-sa/4.0" target="_blank">CC BY-SA 4.0</a>
+
+      &middot; Build with <a href="https://gohugo.io/" target="_blank">Hugo</a> & <a href="https://themes.gohugo.io/soho/" target="_blank">Soho</a> theme
+    </p>
+  </div>
+</footer>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/js/all.min.js"
+          integrity="sha256-MAgcygDRahs+F/Nk5Vz387whB4kSK9NXlDN3w58LLq0="
+          crossorigin="anonymous"></script>
+
+
+  <script src="/AugustoLeal/js/jquery.min.js"></script>
+  <script src="/AugustoLeal/js/soho.js"></script>
+
+  
+
+  
+</body>
+</html>

@@ -1,12 +1,21 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Posts on Augusto Leal</title>
+    <title>Posts on AUGUSTO LEAL</title>
     <link>https://augustocl.github.io/AugustoLeal/post/</link>
-    <description>Recent content in Posts on Augusto Leal</description>
+    <description>Recent content in Posts on AUGUSTO LEAL</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Tue, 12 Oct 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://augustocl.github.io/AugustoLeal/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 29 Oct 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://augustocl.github.io/AugustoLeal/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>K-Means&#43;&#43; code from scratch [Julia] - 2/3</title>
+      <link>https://augustocl.github.io/AugustoLeal/post/2021-10-29-diving-into-k-means-code-julia-2-3/</link>
+      <pubDate>Fri, 29 Oct 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://augustocl.github.io/AugustoLeal/post/2021-10-29-diving-into-k-means-code-julia-2-3/</guid>
+      <description>This post continuous the previous post about ClusterAnalysis.jl package by detailing all code created for the K-Means++ implementation.</description>
+    </item>
+    
     <item>
       <title>K-Means and DBSCAN from scratch [Julia] - 1/3</title>
       <link>https://augustocl.github.io/AugustoLeal/post/2021-10-12-kmeans-dbscan-from-scratch/</link>

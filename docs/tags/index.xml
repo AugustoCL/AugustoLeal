@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Tags on Augusto Leal</title>
+    <title>Tags on AUGUSTO LEAL</title>
     <link>https://augustocl.github.io/AugustoLeal/tags/</link>
-    <description>Recent content in Tags on Augusto Leal</description>
+    <description>Recent content in Tags on AUGUSTO LEAL</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Tue, 12 Oct 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://augustocl.github.io/AugustoLeal/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 29 Oct 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://augustocl.github.io/AugustoLeal/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>algorithms</title>
       <link>https://augustocl.github.io/AugustoLeal/tags/algorithms/</link>
-      <pubDate>Tue, 12 Oct 2021 00:00:00 +0000</pubDate>
+      <pubDate>Fri, 29 Oct 2021 00:00:00 +0000</pubDate>
       
       <guid>https://augustocl.github.io/AugustoLeal/tags/algorithms/</guid>
       <description></description>
@@ -19,7 +19,7 @@
     <item>
       <title>cluster</title>
       <link>https://augustocl.github.io/AugustoLeal/tags/cluster/</link>
-      <pubDate>Tue, 12 Oct 2021 00:00:00 +0000</pubDate>
+      <pubDate>Fri, 29 Oct 2021 00:00:00 +0000</pubDate>
       
       <guid>https://augustocl.github.io/AugustoLeal/tags/cluster/</guid>
       <description></description>
@@ -28,7 +28,7 @@
     <item>
       <title>DBCAN</title>
       <link>https://augustocl.github.io/AugustoLeal/tags/dbcan/</link>
-      <pubDate>Tue, 12 Oct 2021 00:00:00 +0000</pubDate>
+      <pubDate>Fri, 29 Oct 2021 00:00:00 +0000</pubDate>
       
       <guid>https://augustocl.github.io/AugustoLeal/tags/dbcan/</guid>
       <description></description>
@@ -37,7 +37,7 @@
     <item>
       <title>kmeans</title>
       <link>https://augustocl.github.io/AugustoLeal/tags/kmeans/</link>
-      <pubDate>Tue, 12 Oct 2021 00:00:00 +0000</pubDate>
+      <pubDate>Fri, 29 Oct 2021 00:00:00 +0000</pubDate>
       
       <guid>https://augustocl.github.io/AugustoLeal/tags/kmeans/</guid>
       <description></description>
@@ -46,7 +46,7 @@
     <item>
       <title>ML</title>
       <link>https://augustocl.github.io/AugustoLeal/tags/ml/</link>
-      <pubDate>Tue, 12 Oct 2021 00:00:00 +0000</pubDate>
+      <pubDate>Fri, 29 Oct 2021 00:00:00 +0000</pubDate>
       
       <guid>https://augustocl.github.io/AugustoLeal/tags/ml/</guid>
       <description></description>
@@ -55,7 +55,7 @@
     <item>
       <title>scratch</title>
       <link>https://augustocl.github.io/AugustoLeal/tags/scratch/</link>
-      <pubDate>Tue, 12 Oct 2021 00:00:00 +0000</pubDate>
+      <pubDate>Fri, 29 Oct 2021 00:00:00 +0000</pubDate>
       
       <guid>https://augustocl.github.io/AugustoLeal/tags/scratch/</guid>
       <description></description>

@@ -1,0 +1,568 @@
+---
+title: K-Means++ code from scratch [Julia] - 2/3
+author: AugustoCL
+date: '2021-10-29'
+categories: ["Julia"]
+tags: ["ML", "cluster", "kmeans", "DBCAN", "algorithms", "scratch"]
+description: 'A deep diving into the source code of K-Means/Kmeans++ implementation in the ClusterAnalysis.jl package.'
+css: "style.css"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(eval = FALSE)
+
+# julia engine
+options(encoding = "UTF-8")
+library(JuliaCall)
+julia <- julia_setup()
+```
+
+
+This post continuous the previous post about [ClusterAnalysis.jl](https://github.com/AugustoCL/ClusterAnalysis.jl) package by detailing all code created for the K-Means++ implementation. It will dive into the pseudocode presented in 'Algorithms Section' in the documentation and will presenting how each step was implemented in the source code.
+
+> I recommend that you read the [Algorithms Section](https://augustocl.github.io/ClusterAnalysis.jl/stable/algorithms/kmeans/) of the K-Means, that explains the algorithm through various gifs and graphics, before diving into the details of the source code in this post.  
+  
+My **goal** here is that at the end of this post, you will be **in touch with with some good practices in package development Julia**.  
+
+I want to go beyond creating a tutorial that only teaches how to create packages/code, as there are already several posts of these, by going further and demonstrate a bit of a Julia package developer's **line of thinking** when creating an algorithm from scratch for a package.  
+
+Because of this, I will assume that the reader has a good understanding of some Julia concepts such like `types`, `multiple dispatch`, `broadcast operator`, `immutable/mutable structs` and `positional/keywords arguments`.  
+  
+ 
+## 1 - The K-Means Struct  
+The goal is to create a `kmeans()` function that receive, at minimum, these 2 arguments:
+
+- A **tabular data** (row `n` x column `m`), where `m > 1`  
+- The desired number of clusters **`K`**  
+
+Which results in the following output:
+
+* The number of clusters **`K`**  
+* All **centroids** values inside a Vector, resulting in a Vector of Vector (named `centroids`)
+* The **label for each observation**, resulting in a a Vector of size`n` (named `cluster`)  
+* The **quality measure** of the model, that mensure the Total Variance Within Cluster (named `withinss`)  
+* The **Number of iterations** until algorithm converge (named `iter`)  
+  
+So I will start talking about the output first. Initially, we create a `Mutable Struct` with the clusters prediction that would be updated at each iteration of the algorithm, but soon we realized that this was inefficient. Then after a few refactorings, [Elias](https://github.com/eliascarv/) and I concluded that the best structure would be to have a `immutable struct` that would receive only the optimal values after finish all iterations.  
+
+In this **initial version**, we add the algorithm initialization inside the `struct` initialization. This make the process more complex because in the next iterations we need to update this values that were initialized and also we lost performance by utilizing a `mutable struct` instead of an `imutable struct`, as [Performance Tips](https://docs.julialang.org/en/v1/manual/performance-tips/) section in Julia Documentation suggests.
+
+> I suggest you read the [Performance Tips](https://docs.julialang.org/en/v1/manual/performance-tips) Section of Julia documentation. It contains a lot practices that was implemented in this package.
+
+See how it was: 
+```{julia, eval=FALSE}
+# Now I see how terrible it was haha
+mutable struct Kmeans{T<:AbstractFloat}
+	df::Matrix{T}
+	K::Int
+	centroids::Vector{Vector{T}}
+	cluster::Vector{T}
+	variance::T
+
+	# initialization function
+	function Kmeans(df::Matrix{T}, K::Int) where {T<:AbstractFloat}
+	  # generate random centroids
+		# ...
+
+		# estimate clusters
+		# ...
+			
+		# evaluate total variance
+		# ...
+		return new{T}(df, K, centroids, cluster, variance)
+	end
+end
+```
+And see how it becomes:
+```{julia, eval=FALSE}
+struct KmeansResult{T<:AbstractFloat}
+    K::Int
+    centroids::Vector{Vector{T}}
+    cluster::Vector{Int}
+    withinss::T
+    iter::Int
+end
+```
+
+Now It's much more simple to anyone understand and also more performatic.
+
+It's like they say: *"Less is more"*. :laughing:
+
+> **Quick tip:** The use of an AbstractType in the Struct, like the `T<:AbstractFloat`, it's recommended for a package because allow the Julia Compiler adapt the code to different versions of Floats that computers could have (Float32, Float64, etc). 
+>
+> So, you will see for all functions in the package, that we use `AbstractMatrix` for Matrix, `AbstractVector` for Vectors and so on....
+  
+## 2 - The `nstart` argument
+Our K-Means implementation repeats the algorithms `nstart` times and selects the best result from them.  
+
+The idea is that as the initialization of the algorithm is completely random, when we run it several times, we try to avoid local minimums, thus getting a little closer to the global minimum.  
+
+So we encapsulate the algorithm inside the `_kmeans()` function and run the following for-loop in to the `kmeans()` function:  
+```{julia, eval=FALSE}  
+function kmeans(data::AbstractMatrix{T}, K::Int;
+                nstart::Int = 1,
+                maxiter::Int = 10,
+                init::Symbol = :kmpp) where {T<:AbstractFloat}
+
+	# create the variables outside for-loop to be updated
+	centroids = ...
+	cluster = ...
+	withinss = ...
+	iter = ...
+
+	# run multiple kmeans to get the best result
+	for _ in 1:nstart
+
+		# execute the algorithm searching for a global minimum
+		new_centroids, new_cluster, new_withinss, new_iter = _kmeans(data, K, maxiter, init)
+
+		if new_error < withinss
+			# update the final values and error
+			# ...
+		end
+	end
+
+	return KmeansResult(K, centroids, cluster, withinss, iter)
+end
+```
+
+In the end, we pass all the parameters of the optimal result inside the struct `KmeansResult` constructed before. 
+
+Now, lets go dive into the algorithm, where all the magic happens, by constructing the function `_kmeans()`. 
+  
+## 3 - The K-Means pseudocode  
+Moving on in  the algorithm, I rescued the pseudocode steps presented in the package documentation:
+
+1. Initialize k centroids by K-Means++ algorithm or by random initialization.  
+2. Calculate the distance of every point to every centroid.  
+3. Assign every point to a cluster, by choosing the centroid with the minimum distance to the point.  
+4. Calculate the Total Variance Within Cluster by the Sum of Squared Error (SSE) of this iteration.  
+5. Recalculate the centroids using the mean of the assigned points.  
+6. Repeat the steps 3 to 5, `maxiter` times or  until reaching convergence with minimum total variance at step 4.  
+
+Here it's a gif that represent these iterations of the algorithm, available at the [K-Means wikipedia page](https://en.wikipedia.org/wiki/K-means_clustering).
+![](https://augustocl.github.io/ClusterAnalysis.jl/stable/algorithms/Kmeans_convergence.gif)
+
+
+## 4 - Distance function
+As you realized seeing the pseudocode, the K-Means **calculate distances every time**.  And I think that it's the main point of the performance in the code. Because of that concern, **we construct our distance function** implementing all the good practices we learned, like parallelization with macros `@simd`, indexations instructions with macro `@inbounds` and some heeds about reducing allocations. 
+
+All those points deserve another post just for them and I will let to [Elias](https://github.com/eliascarv/) create that post because he made most of the research and prototype that function. Thus, when he finished that, I will update that paragraph with the link to his post. 
+
+For now, we have this beautiful and performatic implementation of the **euclidian distance**:
+```{julia, eval=FALSE}
+function euclidean(a::AbstractVector{T}, 
+                   b::AbstractVector{T}) where {T<:AbstractFloat}              
+    @assert length(a) == length(b)
+
+    # euclidean(a, b) = √∑(aᵢ- bᵢ)²
+    s = zero(T)
+    @simd for i in eachindex(a)
+        @inbounds s += (a[i] - b[i])^2
+    end
+    return √s
+end
+```
+> **QuickTip:** Use `eachindex(x)` instead of `1:length(x)` in for-loops. It's more performatic. I encourage you to check using the macros of the [`BenchmarkTools`](https://github.com/JuliaCI/BenchmarkTools.jl) package. :relaxed:
+
+## 5 - Initialization (Random and K-Means++)  
+The first step is the initialization and we got two implementations. The easiest method is `:random` and the hardest is `:kmpp`.
+
+### 5.1 - Random Initialization
+
+The `:random` initialization is very simple, it was proposed by Andrew NG in his Machine Learning Course, and basically **select randomly K points of the dataset as the initial centroids**. Thus, we code this way:
+```{julia, eval=FALSE}
+# variable `data` received from function `_kmeans(...)`
+nl = size(data, 1)
+
+# random select the idx of K centroids
+indexes = rand(1:nl, K)
+# select the values of those idx as centroids
+centroids = Vector{T}[data[i, :] for i in indexes]
+```
+
+### 5.2 - K-Means++ Initialization
+
+The `:kmpp` algorithm is a smart centroid initialization method that works with those steps:
+1. Select randomly one point in the dataset as the first centroid.
+2. Compute the distance (euclidian or other) of all point of that dataset from the selected point.
+3. Select as the new centroid the point with the maximum distance of the first centroid.
+4. Repeat the steps until find all the `K` centroids required.
+
+> If you want to delve into the math that underlies `:kmpp`, I suggest you to read the first paper of the method, [here](http://ilpubs.stanford.edu:8090/778/1/2006-13.pdf). :nerd_face:
+ 
+At first view, looks simple, a for loop for each observation to every centroid (resulting in two for-loops) is enough, but it also has **one important detail** that very few tutorials present.
+
+When calculating the distances of all points after the second centroid, **it's necessary, for each point, assign the nearest centroid for calculating the distances for the next centroid**. This ensures that we are getting the correct maximum distance when considering all centroids already labeled.
+
+Image to represent that important detail of the method.
+![](imgs/detailofkmeanspp.png)
+
+Because of that, we need to use another for-loop, that we encapsulated using an array comprehension, which results in that final code of `:kmpp`:
+```{julia, eval=FALSE}
+# K: Number of clusters desired
+# data: Dataset inputed in function
+# nl: Number of lines in `data`
+...
+centroids = Vector{Vector{T}}(undef, K)			# create the vector of vector with size `K` 
+centroids[1] = data[rand(1:nl), :]				# select randomly the first centroid
+
+# distance vector for each observation
+dists = Vector{T}(undef, nl)
+
+# get each new centroid by the furthest observation (maximum distance)
+for k in 2:K
+
+    # for each observation get the nearest centroid by the minimum distance
+    for (i, row) in enumerate(eachrow(data))
+        dist_c = [euclidean(row, c) for c in @view centroids[1:(k-1)]]
+        @inbounds dists[i] = minimum(dist_c)
+    end
+
+    # new centroid by the furthest observation
+    @inbounds centroids[k] = data[argmax(dists), :]
+end
+
+return centroids       
+```
+This implementation use the macro `@inbounds` to discard the check inbounds in arrays that Julia does automatically. This optimize the code but is risky and should only be used when you are pretty sure that it'll work correctly. I really suggest you read [this section](https://docs.julialang.org/en/v1/devdocs/boundscheck/) of the docs for more details about it.
+
+>**QuickTip**: Since when we slice arrays (`A[1:10]`), we create a copy of the array, performing new allocations, we use the `@view` macro to reduce the number of allocations of our algorithm. 
+>
+> Also `@view` it's not recommended for small arrays, but it's for big arrays. Thus, I suggest you to make some tests whenever your could using the `BenchmarkTools` package. 
+>
+> A reading suggestion about [view](https://bkamins.github.io/julialang/2021/09/17/views.html)
+ 
+### 5.3 - Function `_initialize_centroids()`
+To keep things organized, we have the argument `init`, which receives a `Symbol` type, that accept `:random` or `:kmpp`. Then, we finalize that initialization section with the following final function:
+```{julia, eval=FALSE}
+function _initialize_centroids(data::AbstractMatrix{T}, 
+                               K::Int, 
+                               init::Symbol) where {T<:AbstractFloat}
+    nl = size(data, 1)
+
+    if init == :random
+        indexes = rand(1:nl, K)
+        centroids = Vector{T}[data[i, :] for i in indexes]
+    elseif init == :kmpp
+        centroids = Vector{Vector{T}}(undef, K)
+        centroids[1] = data[rand(1:nl), :]
+
+        # distance vector for each observation
+        dists = Vector{T}(undef, nl)
+
+        # get each new centroid by the furthest observation (maximum distance)
+        for k in 2:K
+
+            # for each observation get the nearest centroid by the minimum distance
+            for (i, row) in enumerate(eachrow(data))
+                dist_c = [euclidean(row, c) for c in @view centroids[1:(k-1)]]
+                @inbounds dists[i] = minimum(dist_c)
+            end
+
+            # new centroid by the furthest observation
+            @inbounds centroids[k] = data[argmax(dists), :]
+        end
+    else
+        throw(ArgumentError("The symbol :$init is not a valid argument. Use :random or :kmpp."))
+    end
+
+    return centroids
+end
+
+```
+
+## 6 - The `_kmeans()` function
+
+Continuing the steps of the pseudocode,  I'm think that a good generalization of those is that we iterate through 2 macro steps: (i) **assign points to a cluster** and (ii) **recalculate centroids** using `mean()`. 
+
+Also, during every iteration we calculate the **Total Variance** as a measure of model quality and also check the **Stop Rule** by comparing the difference in recalculated centroids. 
+
+In general, we should have those steps in the `_kmeans()` function:
+```{julia, eval=FALSE}
+function _kmeans(data, K, maxiter, init)
+	# number of observations/lines of the dataset
+	nl = size(data, 1)
+	
+	# initialize centroids (that it's already constructed)
+	centroids = _initialize_centroids(data, K, init)
+
+	# estimate first clusters with centroids
+	#...
+
+	# evaluate total variance
+	#...
+
+	# start iterations (for-loop)
+		# update centroids using mean()
+		# ...
+		# reestimate clusters...
+		# ...
+		# check stop rule
+		# ...
+
+	return centroids, cluster, withinss, iter
+end
+```
+
+Note that it is necessary to do a first estimation before going to update the centroids in the for-loop iterations. Because of this, our first `struct` was that terrible idea using `mutable struct`. :laughing:
+
+### 6.1 - Estimate clusters
+To make the estimation of the clusters with the centroids initialized, we use a vector with size `n`, calculate for every point the distance to all centroids and select the centroid with minimum distance. Therefore, we need to initialize a vector and create a double for loop, that first pass through all observations `n` and then calculate the distances to all centroids. 
+```{julia, eval=FALSE}
+  # first clusters estimate
+  cluster = Vector{Int}(undef, nl)
+  for (i, obs) in enumerate(eachrow(data))
+      dist = [euclidean(obs, c) for c in centroids]
+      @inbounds cluster[i] = argmin(dist)
+  end
+```
+We choose use an *Array Comprehension* as the second for-loop and also use `enumerate()` to assign the label to the `cluster` array using the index `i`. 
+
+>**QuickTip:**  If you know the size and the type of the vector, pre-allocate the vector before using it, like the cluster vector `cluster = Vector{Int}(undef, nl)`. It's a very excelent practice. 
+>
+> Also, It's faster pre-allocate a vector and update each of their values using `vector[i] = ...`, instead of create an empty vector and push values inside it, like `a = Int[]; push!(a, ...)`. 
+
+### 6.2 - Total Variance Within Cluster (`withinss`)
+Since we got an equivalence in the `withinss` with the Sum of Squared Error (SSE) measurement, the model evaluation function calculate the Sum of Squared Error (SSE) for each cluster.  That "*for each*" in the sentence it's a filter that we need to do before make the calculus, using `data[cluster .== k, :]`. 
+
+So, we created a function called `totalwithinss()` that evaluate for each cluster the SSE, using a for-loop, and sum them all. Resulting in our Total Variance Within Cluster desired.
+```julia
+function totalwithinss(data::AbstractMatrix{T}, K::Int, cluster::AbstractVector{Int}) where {T<:AbstractFloat}
+    # evaluate total-variance-within-clusters
+    error = zero(T)
+    @simd for k in 1:K
+        error += squared_error(data[cluster .== k, :])
+    end
+    return error
+end
+```
+
+Now, in the `squared_error()` function, we use the **multiple dispatch** paradigm of the language to being able to properly calculate the Total Variance, considering two distinct cases:
+* Have multiple points assigned to the cluster, resulting in a Matrix.
+* Have only one point assigned to the cluster, resulting in a Vector. 
+
+Thus, instead make a if-else inside the function, we create two functions to cover both cases. One which receive an `AbstractMatrix` and other  which receive an `AbstractVector`.
+
+```{julia, eval=FALSE}
+function squared_error(col::AbstractVector{T}) where {T<:AbstractFloat}
+    m = mean(col)
+    error = zero(T)
+    @simd for i in eachindex(col)
+        @inbounds error += (col[i] - m)^2
+    end
+    return error
+end
+
+function squared_error(data::AbstractMatrix{T}) where {T<:AbstractFloat}
+    ncol = size(data, 2)    
+    error = zero(T)
+    @simd for i in 1:ncol
+        error += squared_error(view(data, :, i))
+    end
+    return error
+end
+```
+Another detail of this function architecture, is that when we input a matrix, the function always ended-up going to the Vector version. This ensures that we capture all the possibilities and make it easier for the compiler find the best optimized version of the function during compilation.  
+
+> **Note:** Since the centroids are the mean of the assigned observations, we could use the operation `mean()` in the function without worries.  
+> 
+> **QuickNote:** As you realized, we are using again optimization macros in the functions, like `@simd` and `@inbounds`, to obtain the best of the performance in Julia. 
+
+### 6.3 - Running iterations (Inside for-loop)
+During the iterations, it will be necessary to compare the new results of the `centroids`, `cluster`, `norms` and `withinss` variables with the previous values. Therefore, it is necessary create a copy of these measures outside the for-loop so that their values are updated and compared.
+
+So filling the `_kmeans()` function with what has already been explained, we have the following function:
+```{julia, eval=FALSE}
+function _kmeans(data::AbstractMatrix{T}, K::Int, maxiter::Int, init::Symbol) where {T<:AbstractFloat}
+
+    nl = size(data, 1)
+
+    # generate random centroids
+    centroids = _initialize_centroids(data, K, init)
+
+    # first clusters estimate
+    cluster = Vector{Int}(undef, nl)
+    for (i, obs) in enumerate(eachrow(data))
+        dist = [euclidean(obs, c) for c in centroids]
+        @inbounds cluster[i] = argmin(dist)
+    end
+
+    # first evaluation of total-variance-within-cluster
+    withinss = totalwithinss(data, K, cluster)
+
+    # variables to update during the iterations
+    new_centroids = copy(centroids)
+    new_cluster = copy(cluster)
+    iter = 1
+    norms = norm.(centroids)
+
+	# start kmeans iterations until maxiter or convergence
+	for _ in 2:maxiter
+		# update centroids using mean()
+		# ...
+		# reestimate clusters...
+		# ...
+		# check stop rule
+		# ...
+    end
+
+    return centroids, cluster, withinss, iter
+end
+```
+To make the **update of the new centroids** using the mean, we use a for-loop through all K centroids, which calculate the mean for every columns/variable of the observations in each cluster. Thus, we filter the data using `data[new_cluster .= k,:]`, but we incorporate the `view()` function to avoid unnecessary allocations, resulting in `view(data, new_cluster .== k, :)`. Then we use the argument `dims=1` to calculate the mean of each column and encapsulate all inside `vec()` to standardize the output. 
+```{julia, eval=FALSE}
+# update new_centroids using the mean
+@simd for k in 1:K             # mean.(eachcol(data[new_cluster .== k, :]))
+    @inbounds new_centroids[k] = vec(mean(view(data, new_cluster .== k, :), dims = 1))
+end
+```
+This for-loop is a good example of using the explained tips. Have the optimizations macros `@simd` and `@inbounds`, use of `view()` and update the pre-allocated vector.
+
+To **reestimate clusters** using the new centroids, we use the same code showed before, outside the for-loop. 
+```{julia, eval=FALSE}
+# estimate cluster to all observations
+for (i, obs) in enumerate(eachrow(data))
+    dist = [euclidean(obs, c) for c in new_centroids]
+    @inbounds new_cluster[i] = argmin(dist)
+end
+```
+Then, we update the new `withniss`, the number of iterations `iter` by running `iter += 1`, and calculate the `norm()` of each new centroid to inspect if the iteration made some significant change in the centroid (That is our **Stop Rule**).
+```{julia, eval=FALSE}
+# update iter, withinss-variance and calculate centroid norms
+new_withinss = totalwithinss(data, K, new_cluster)
+new_norms = norm.(new_centroids)
+iter += 1
+
+# convergence rule
+norm(norms - new_norms) ≈ 0 && break
+```
+See the convergence rule, there we calculate the `norm()` of the difference between the earlier and newer `norms` of the centroids. This way, it's possible to check if the centroids got a significant change after the iteration. Also, the tolerance utilized for the check is `1e-8`, which is the default of the aproximation operator `≈`.  
+
+If the **convergence rule is true**, the for-loop stops in the `break` statement, and the final results it's the values of the earlier iteration (because the last iteration didn't have a significant change). If the **convergence rule is false**, then we update the `norm` to compare in the next iteration and make the check to update the values of the model, inside the if-else statement below.
+```{julia, eval=FALSE}
+# update centroid norms
+norms .= new_norms
+
+# update centroids, cluster and whithinss
+if new_withinss < withinss
+    centroids .= new_centroids
+    cluster .= new_cluster
+    withinss = new_withinss
+end
+```
+> **Note:** Take a look at the broadcast operator (`.`) used to update model variables. When update a vector the broadcast it's used, but when we updated a single value, a simples `=` is enough.
+
+Thus, bringing together all the points raised, we have the following final function of `_kmeans()`:
+```{julia, eval=FALSE}
+function _kmeans(data::AbstractMatrix{T}, K::Int, maxiter::Int, init::Symbol) where {T<:AbstractFloat}
+
+    nl = size(data, 1)
+
+    # generate random centroids
+    centroids = _initialize_centroids(data, K, init)
+
+    # first clusters estimate
+    cluster = Vector{Int}(undef, nl)
+    for (i, obs) in enumerate(eachrow(data))
+        dist = [euclidean(obs, c) for c in centroids]
+        @inbounds cluster[i] = argmin(dist)
+    end
+
+    # first evaluation of total-variance-within-cluster
+    withinss = totalwithinss(data, K, cluster)
+
+    # variables to update during the iterations
+    new_centroids = copy(centroids)
+    new_cluster = copy(cluster)
+    iter = 1
+    norms = norm.(centroids)
+
+    # start kmeans iterations until maxiter or convergence
+    for _ in 2:maxiter
+
+        # update new_centroids using the mean
+        @simd for k in 1:K             # mean.(eachcol(data[new_cluster .== k, :]))
+            @inbounds new_centroids[k] = vec(mean(view(data, new_cluster .== k, :), dims = 1))
+        end
+
+        # estimate cluster to all observations
+        for (i, obs) in enumerate(eachrow(data))
+            dist = [euclidean(obs, c) for c in new_centroids]
+            @inbounds new_cluster[i] = argmin(dist)
+        end
+
+        # update iter, withinss-variance and calculate centroid norms
+        new_withinss = totalwithinss(data, K, new_cluster)
+        new_norms = norm.(new_centroids)
+        iter += 1
+
+        # convergence rule
+        norm(norms - new_norms) ≈ 0 && break
+
+        # update centroid norms
+        norms .= new_norms
+
+        # update centroids, cluster and whithinss
+        if new_withinss < withinss
+            centroids .= new_centroids
+            cluster .= new_cluster
+            withinss = new_withinss
+        end
+
+    end
+
+    return centroids, cluster, withinss, iter
+end
+```
+
+## 7 - Tables.jl integration
+Until now, the `ClusterAnalysis.jl` implementation it's based on the 3 main big functions that we constructed together here:
+
+* `kmeans()`
+* `_kmeans()`
+* `_initialize_centroids()`
+
+and the distance and variance functions:
+
+* `euclidian()`
+* `totalwithniss()`
+* `squared_error()`
+
+Before finishing this post, I want to quickly explain an integration we made of the package to the [`Tables.jl`](https://github.com/JuliaData/Tables.jl) interface, which allows the package to receive all the inputs contained in that interface. 
+
+[Here](https://github.com/JuliaData/Tables.jl/blob/main/INTEGRATIONS.md) is the list of all inputs that `Tables.jl` interface allow. 
+
+To make this integration we use again the **multiple dispatch** by creating new kmeans functions above:
+
+* **First:** Make a `if-else` to check if the input is a input allowed in `Tables.jl` and select the data in the input as matrix.
+* **Second:** Receive any type of input (which is not a subtype of an `AbstractFloat`) and make the conversion to a matrix of `Float64`.
+* **Third:** When receive an input, which is a subtype of `AbstractFloat`, run the algorithm we constructed.
+
+```{julia, eval=FALSE}
+function kmeans(table, K::Int; kwargs...)
+    Tables.istable(table) ? (data = Tables.matrix(table)) : throw(ArgumentError("The table argument passed does not implement the Tables.jl interface."))
+    return kmeans(data, K; kwargs...)
+end
+
+kmeans(data::AbstractMatrix{T}, K::Int; kwargs...) where {T} = kmeans(convert(Matrix{Float64}, data), K; kwargs...)
+
+function kmeans(data::AbstractMatrix{T}, K::Int;
+                nstart::Int = 1,
+                maxiter::Int = 10,
+                init::Symbol = :kmpp) where {T<:AbstractFloat}
+
+    # generate variables to update with the best result
+    nl = size(data, 1)
+
+    ...
+    ...
+end
+```
+We also make use of the kwargs... in the argument function to make the code more concise and less repetitive.
+
+Well, now I think you are able to navigate through the [source-code of K-Means](https://github.com/AugustoCL/ClusterAnalysis.jl/blob/main/src/kmeans.jl) and understand how every line of the code interact with each other. Going veeery beyong a simple `model.fit()` :laughing:
+
+I hope you enjoy this journey and if you have any suggestion, question or even catch some mistake, typo and etc, feel free to contact me in whatever media you want. [Here](https://augustocl.github.io/AugustoLeal/contact/) is my contact page.
+
+That's all folks. :smile:

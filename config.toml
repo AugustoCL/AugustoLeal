@@ -1,7 +1,7 @@
 theme = "soho"
 baseurl = "https://augustocl.github.io/AugustoLeal/"
 languageCode = "en"
-title = "Augusto Leal"
+title = "AUGUSTO LEAL"
 DefaultContentLanguage = "en"
 enableInlineShortcodes = true
 summarylength = 10
@@ -15,7 +15,7 @@ ignoreErrors = ["error-remote-getjson"]
   description = ""
   # gravatar = "soho@example.com"
   images = ["images/profile1.png"]
-  #profilePicture = "images/profile1.png"
+  #profilePicture = "images/picture1.jpg"
   copyright = "Augusto Leal"
   license = "CC BY-SA 4.0"
   licenseURL = "https://creativecommons.org/licenses/by-sa/4.0"

@@ -32,8 +32,8 @@
  */
 
 html {
-  font-family: 'Open Sans', 'Roboto', Helvetica, Arial, sans-serif;
-  /*font-family: 'Georgia', 'Roboto', Helvetica, Arial, sans-serif;*/
+  /*font-family: 'Open Sans', 'Roboto', Helvetica, Arial, sans-serif;*/
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 }
 @media (min-width: 48em) {
@@ -43,7 +43,8 @@ html {
 }
 @media (min-width: 58em) {
   html {
-    font-size: 20px;
+    /*font-size: 20px;*/
+    font-size: 16px
   }
 }
 
@@ -76,6 +77,7 @@ html {
   }
 }
 
+
 /* Sidebar links */
 .sidebar a {
   color: #fff;
@@ -85,7 +87,7 @@ html {
 .sidebar-about h1 {
   color: #fff;
   margin-top: 0;
-  font-size: 2.25rem;
+  font-size: 1.8rem;
   font-weight: 400;
 }
 
@@ -136,13 +138,42 @@ footer {
 
 @media (min-width: 48em) {
   .content {
-    max-width: 40rem;
-    margin-left: 20rem;
+    max-width: 55%;
+    margin-left: 30%;
+    /*max-width: 60rem;
+    margin-left: 20rem;*/
     margin-right: 2rem;
     margin-bottom: -40px;
     min-height: 100%;
   }
 }
+
+/* ----------------------------------------- */
+p a {
+  /*color: #0c93e4;*/
+  color: rgb(65, 131, 196);
+  text-decoration: underline;
+  font-weight: normal;
+  /*font-style: italic;*/
+}
+
+/* visited link */
+p a:visited {
+  color: darkblue;
+}
+
+/* mouse over link */
+p a:hover {
+  color: hotpink;
+  text-decoration: none;
+}
+
+/* selected link */
+p a:active {
+  color: blue;
+}
+
+/* ----------------------------------------- */
 
 .img-circle {
   border-radius: 50%;
@@ -174,6 +205,7 @@ footer a,
 .content a,
 .related-posts li a:hover {
   color: #49757a;
+  
 }
 
 .read-more-link {
@@ -356,7 +388,7 @@ figcaption {
   display: block;
   font-size: 1.2rem;
   margin-bottom: .5rem;
-  font-weight: 400;
+  font-weight: 400; 
 }
 
 .truncate {
