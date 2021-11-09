@@ -1,9 +1,9 @@
 +++
-title = "Contato"
+title = "Contact"
 date = "2020-02-01"
 +++
 
-Entre em contato comigo via: 
+Please contact me via: 
 
 - [E-mail (leal.augusto@unifesp.br)](mailto:leal.augusto@unifesp.br) 
 - [Linkedin](https://www.linkedin.com/in/augustocleal/) 

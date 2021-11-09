@@ -11,13 +11,15 @@ css: "style.css"
   <link rel="stylesheet" href="style.css" type="text/css" />
 
 
-<p>This post continuous the previous post about <a href="https://github.com/AugustoCL/ClusterAnalysis.jl">ClusterAnalysis.jl</a> package by detailing all code created for the K-Means++ implementation. It will dive into the pseudocode presented in ‘Algorithms Section’ in the documentation and will presenting how each step was implemented in the source code.</p>
+<p>This post continuous the previous post about <a href="https://github.com/AugustoCL/ClusterAnalysis.jl">ClusterAnalysis.jl</a> package by detailing all code created for the K-Means++ implementation. It will dive into the pseudocode presented in ‘Algorithms Section’ in the documentation and will presenting how each step was implemented in the <a href="https://github.com/AugustoCL/ClusterAnalysis.jl/blob/main/src/kmeans.jl">source code</a>.</p>
+<p><img src="imgs/kmeans_manning.jpg" />
+<em>Representation of the K-Means algorithm by <a href="https://livebook.manning.com/book/machine-learning-for-mortals-mere-and-otherwise/chapter-16/5">livebook MLWR</a></em></p>
+<p>My <strong>goal</strong> is that at the end of this post, you will be <strong>in touch with with some good practices in package development Julia</strong>.</p>
+<p>I want to go beyond creating a tutorial that only teaches how to create packages/code, as there are already several posts of these, by going further and demonstrate a bit of a Julia package developer’s <strong>line of thinking</strong> when creating an algorithm from scratch for a package.</p>
 <blockquote>
+<p><strong>Notes:</strong> Since this post explain good practices in package development, I will assume that the reader has a good understanding of some Julia concepts such like <code>types</code>, <code>multiple dispatch</code>, <code>broadcast operator</code>, <code>immutable/mutable structs</code> and <code>positional/keywords arguments</code>.</p>
 <p>I recommend that you read the <a href="https://augustocl.github.io/ClusterAnalysis.jl/stable/algorithms/kmeans/">Algorithms Section</a> of the K-Means, that explains the algorithm through various gifs and graphics, before diving into the details of the source code in this post.</p>
 </blockquote>
-<p>My <strong>goal</strong> here is that at the end of this post, you will be <strong>in touch with with some good practices in package development Julia</strong>.</p>
-<p>I want to go beyond creating a tutorial that only teaches how to create packages/code, as there are already several posts of these, by going further and demonstrate a bit of a Julia package developer’s <strong>line of thinking</strong> when creating an algorithm from scratch for a package.</p>
-<p>Because of this, I will assume that the reader has a good understanding of some Julia concepts such like <code>types</code>, <code>multiple dispatch</code>, <code>broadcast operator</code>, <code>immutable/mutable structs</code> and <code>positional/keywords arguments</code>.</p>
 <div id="the-k-means-struct" class="section level2">
 <h2>1 - The K-Means Struct</h2>
 <p>The goal is to create a <code>kmeans()</code> function that receive, at minimum, these 2 arguments:</p>
@@ -89,11 +91,14 @@ end</code></pre>
                 maxiter::Int = 10,
                 init::Symbol = :kmpp) where {T&lt;:AbstractFloat}
 
+    # number of lines in the dataset
+    nl = size(data, 1)
+
     # create the variables outside for-loop to be updated
-    centroids = ...
-    cluster = ...
-    withinss = ...
-    iter = ...
+    centroids = Vector{Vector{T}}(undef, K)
+    cluster = Vector{Int}(undef, nl)
+    withinss = Inf
+    iter = 0
 
     # run multiple kmeans to get the best result
     for _ in 1:nstart
@@ -103,12 +108,18 @@ end</code></pre>
 
         if new_error &lt; withinss
             # update the final values and error
-            # ...
+            centroids .= new_centroids
+            cluster .= new_cluster
+            withinss = new_withinss
+            iter = new_iter
         end
     end
 
     return KmeansResult(K, centroids, cluster, withinss, iter)
 end</code></pre>
+<blockquote>
+<p><strong>Note:</strong> Take a look at the broadcast operator (<code>.</code>) used to update model variables. When update a vector the broadcast it’s used <code>.=</code>, but when we updated a single value, it’s used <code>=</code>.</p>
+</blockquote>
 <p>In the end, we pass all the parameters of the optimal result inside the struct <code>KmeansResult</code> constructed before.</p>
 <p>Now, lets go dive into the algorithm, where all the magic happens, by constructing the function <code>_kmeans()</code>.</p>
 </div>
@@ -208,7 +219,7 @@ return centroids       </code></pre>
 <blockquote>
 <p><strong>QuickTip</strong>: Since when we slice arrays (<code>A[1:10]</code>), we create a copy of the array, performing new allocations, we use the <code>@view</code> macro to reduce the number of allocations of our algorithm.</p>
 <p>Also <code>@view</code> it’s not recommended for small arrays, but it’s for big arrays. Thus, I suggest you to make some tests whenever your could using the <code>BenchmarkTools</code> package.</p>
-<p>A reading suggestion about <a href="https://bkamins.github.io/julialang/2021/09/17/views.html">view</a></p>
+<p>A reading suggestion about the use of <a href="https://bkamins.github.io/julialang/2021/09/17/views.html">view</a></p>
 </blockquote>
 </div>
 <div id="function-_initialize_centroids" class="section level3">
@@ -384,7 +395,7 @@ for (i, obs) in enumerate(eachrow(data))
     dist = [euclidean(obs, c) for c in new_centroids]
     @inbounds new_cluster[i] = argmin(dist)
 end</code></pre>
-<p>Then, we update the new <code>withniss</code>, the number of iterations <code>iter</code> by running <code>iter += 1</code>, and calculate the <code>norm()</code> of each new centroid to inspect if the iteration made some significant change in the centroid (That is our <strong>Stop Rule</strong>).</p>
+<p>Then, we update the new <code>withniss</code>, the number of iterations <code>iter</code> by running <code>iter += 1</code>, and calculate the <code>norm()</code> of each new centroid to inspect if the iteration made some significant change in the centroid (that is our <strong>Stop Rule</strong>).</p>
 <pre class="julia"><code># update iter, withinss-variance and calculate centroid norms
 new_withinss = totalwithinss(data, K, new_cluster)
 new_norms = norm.(new_centroids)
@@ -393,7 +404,7 @@ iter += 1
 # convergence rule
 norm(norms - new_norms) ≈ 0 &amp;&amp; break</code></pre>
 <p>See the convergence rule, there we calculate the <code>norm()</code> of the difference between the earlier and newer <code>norms</code> of the centroids. This way, it’s possible to check if the centroids got a significant change after the iteration. Also, the tolerance utilized for the check is <code>1e-8</code>, which is the default of the aproximation operator <code>≈</code>.</p>
-<p>If the <strong>convergence rule is true</strong>, the for-loop stops in the <code>break</code> statement, and the final results it’s the values of the earlier iteration (because the last iteration didn’t have a significant change). If the <strong>convergence rule is false</strong>, then we update the <code>norm</code> to compare in the next iteration and make the check to update the values of the model, inside the if-else statement below.</p>
+<p>If the <strong>convergence rule is true</strong>, the for-loop stops in the <code>break</code> statement, and the final results it’s the values of the earlier iteration, because the last iteration didn’t have a significant change. If the <strong>convergence rule is false</strong>, then we update the <code>norm</code> to compare in the next iteration and make the check to update the values of the model, inside the if-else statement below.</p>
 <pre class="julia"><code># update centroid norms
 norms .= new_norms
 
@@ -403,9 +414,6 @@ if new_withinss &lt; withinss
     cluster .= new_cluster
     withinss = new_withinss
 end</code></pre>
-<blockquote>
-<p><strong>Note:</strong> Take a look at the broadcast operator (<code>.</code>) used to update model variables. When update a vector the broadcast it’s used, but when we updated a single value, a simples <code>=</code> is enough.</p>
-</blockquote>
 <p>Thus, bringing together all the points raised, we have the following final function of <code>_kmeans()</code>:</p>
 <pre class="julia"><code>function _kmeans(data::AbstractMatrix{T}, K::Int, maxiter::Int, init::Symbol) where {T&lt;:AbstractFloat}
 
@@ -486,17 +494,20 @@ end</code></pre>
 <p><a href="https://github.com/JuliaData/Tables.jl/blob/main/INTEGRATIONS.md">Here</a> is the list of all inputs that <code>Tables.jl</code> interface allow.</p>
 <p>To make this integration we use again the <strong>multiple dispatch</strong> by creating new kmeans functions above:</p>
 <ul>
-<li><strong>First:</strong> Make a <code>if-else</code> to check if the input is a input allowed in <code>Tables.jl</code> and select the data in the input as matrix.</li>
-<li><strong>Second:</strong> Receive any type of input (which is not a subtype of an <code>AbstractFloat</code>) and make the conversion to a matrix of <code>Float64</code>.</li>
-<li><strong>Third:</strong> When receive an input, which is a subtype of <code>AbstractFloat</code>, run the algorithm we constructed.</li>
+<li><strong>First:</strong> Make a <code>if-else</code> to check if the input is allowed in <code>Tables.jl</code> interface. If true, select the data in the input as a matrix and pass to the second or the third function.</li>
+<li><strong>Second:</strong> Receive any type of input coming from the first function and, if its not a subtype of an <code>AbstractFloat</code>, convert to a matrix of <code>Float64</code>, passing to the third function.</li>
+<li><strong>Third:</strong> Receive an input, which is a subtype of <code>AbstractFloat</code>, and run the algorithm constructed.</li>
 </ul>
-<pre class="julia"><code>function kmeans(table, K::Int; kwargs...)
+<pre class="julia"><code># first function
+function kmeans(table, K::Int; kwargs...)
     Tables.istable(table) ? (data = Tables.matrix(table)) : throw(ArgumentError(&quot;The table argument passed does not implement the Tables.jl interface.&quot;))
     return kmeans(data, K; kwargs...)
 end
 
+# second function
 kmeans(data::AbstractMatrix{T}, K::Int; kwargs...) where {T} = kmeans(convert(Matrix{Float64}, data), K; kwargs...)
 
+# third function
 function kmeans(data::AbstractMatrix{T}, K::Int;
                 nstart::Int = 1,
                 maxiter::Int = 10,
@@ -509,8 +520,8 @@ function kmeans(data::AbstractMatrix{T}, K::Int;
     # ...
     # ...
 end</code></pre>
-<p>We also make use of the kwargs… in the argument function to make the code more concise and less repetitive.</p>
-<p>Well, now I think you are able to navigate through the <a href="https://github.com/AugustoCL/ClusterAnalysis.jl/blob/main/src/kmeans.jl">source-code of K-Means</a> and understand how every line of the code interact with each other. Going veeery beyong a simple <code>model.fit()</code> :laughing:</p>
+<p>We also make use of the <code>kwargs...</code> in the argument function to make the code more concise and less repetitive.</p>
+<p>Well, now I think you are able to navigate through the <a href="https://github.com/AugustoCL/ClusterAnalysis.jl/blob/main/src/kmeans.jl">source-code of K-Means</a> and understand how every line of the code interact with each other. Going veeery beyond a simple <code>model.fit()</code> :laughing:</p>
 <p>I hope you enjoy this journey and if you have any suggestion, question or even catch some mistake, typo and etc, feel free to contact me in whatever media you want. <a href="https://augustocl.github.io/AugustoLeal/contact/">Here</a> is my contact page.</p>
 <p>That’s all folks. :smile:</p>
 </div>

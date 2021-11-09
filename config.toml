@@ -59,7 +59,7 @@ themeColor = "#00004d"  # #000162 #1d2f6b
   url = "/post/"
 
   [[menu.main]]
-  name = "Categorias"
+  name = "Categories"
   weight = 200
   identifier = "categories"
   url = "/categories/"
@@ -71,13 +71,13 @@ themeColor = "#00004d"  # #000162 #1d2f6b
   url = "/tags/"
 
   [[menu.main]]
-  name = "Sobre"
+  name = "About"
   identifier = "about"
   weight = 10
   url = "/about/"
 
   [[menu.main]]
-  name = "Contato"
+  name = "Contact"
   identifier = "contact"
   weight = 20
   url = "/contact/"

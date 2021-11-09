@@ -18,15 +18,20 @@ julia <- julia_setup()
 ```
 
 
-This post continuous the previous post about [ClusterAnalysis.jl](https://github.com/AugustoCL/ClusterAnalysis.jl) package by detailing all code created for the K-Means++ implementation. It will dive into the pseudocode presented in 'Algorithms Section' in the documentation and will presenting how each step was implemented in the source code.
-
-> I recommend that you read the [Algorithms Section](https://augustocl.github.io/ClusterAnalysis.jl/stable/algorithms/kmeans/) of the K-Means, that explains the algorithm through various gifs and graphics, before diving into the details of the source code in this post.  
+This post continuous the previous post about [ClusterAnalysis.jl](https://github.com/AugustoCL/ClusterAnalysis.jl) package by detailing all code created for the K-Means++ implementation. It will dive into the pseudocode presented in 'Algorithms Section' in the documentation and will presenting how each step was implemented in the [source code](https://github.com/AugustoCL/ClusterAnalysis.jl/blob/main/src/kmeans.jl).
   
-My **goal** here is that at the end of this post, you will be **in touch with with some good practices in package development Julia**.  
+  
+![](imgs/kmeans_manning.jpg)
+*Representation of the K-Means algorithm by [livebook MLWR](https://livebook.manning.com/book/machine-learning-for-mortals-mere-and-otherwise/chapter-16/5)* 
+  
+My **goal** is that at the end of this post, you will be **in touch with with some good practices in package development Julia**.  
 
 I want to go beyond creating a tutorial that only teaches how to create packages/code, as there are already several posts of these, by going further and demonstrate a bit of a Julia package developer's **line of thinking** when creating an algorithm from scratch for a package.  
 
-Because of this, I will assume that the reader has a good understanding of some Julia concepts such like `types`, `multiple dispatch`, `broadcast operator`, `immutable/mutable structs` and `positional/keywords arguments`.  
+> **Notes:** Since this post explain good practices in package development, I will assume that the reader has a good understanding of some Julia concepts such like `types`, `multiple dispatch`, `broadcast operator`, `immutable/mutable structs` and `positional/keywords arguments`.  
+> 
+> I recommend that you read the [Algorithms Section](https://augustocl.github.io/ClusterAnalysis.jl/stable/algorithms/kmeans/) of the K-Means, that explains the algorithm through various gifs and graphics, before diving into the details of the source code in this post.  
+
   
  
 ## 1 - The K-Means Struct  
@@ -61,7 +66,7 @@ mutable struct Kmeans{T<:AbstractFloat}
 
 	# initialization function
 	function Kmeans(df::Matrix{T}, K::Int) where {T<:AbstractFloat}
-	  # generate random centroids
+	    # generate random centroids
 		# ...
 
 		# estimate clusters
@@ -104,11 +109,14 @@ function kmeans(data::AbstractMatrix{T}, K::Int;
                 maxiter::Int = 10,
                 init::Symbol = :kmpp) where {T<:AbstractFloat}
 
+    # number of lines in the dataset
+    nl = size(data, 1)
+
 	# create the variables outside for-loop to be updated
-	centroids = ...
-	cluster = ...
-	withinss = ...
-	iter = ...
+    centroids = Vector{Vector{T}}(undef, K)
+    cluster = Vector{Int}(undef, nl)
+    withinss = Inf
+    iter = 0
 
 	# run multiple kmeans to get the best result
 	for _ in 1:nstart
@@ -118,13 +126,17 @@ function kmeans(data::AbstractMatrix{T}, K::Int;
 
 		if new_error < withinss
 			# update the final values and error
-			# ...
+            centroids .= new_centroids
+            cluster .= new_cluster
+            withinss = new_withinss
+            iter = new_iter
 		end
 	end
 
 	return KmeansResult(K, centroids, cluster, withinss, iter)
 end
 ```
+> **Note:** Take a look at the broadcast operator (`.`) used to update model variables. When update a vector the broadcast it's used `.=`, but when we updated a single value, it's used `=`.
 
 In the end, we pass all the parameters of the optimal result inside the struct `KmeansResult` constructed before. 
 
@@ -142,8 +154,7 @@ Moving on in  the algorithm, I rescued the pseudocode steps presented in the pac
 
 Here it's a gif that represent these iterations of the algorithm, available at the [K-Means wikipedia page](https://en.wikipedia.org/wiki/K-means_clustering).
 ![](https://augustocl.github.io/ClusterAnalysis.jl/stable/algorithms/Kmeans_convergence.gif)
-
-
+  
 ## 4 - Distance function
 As you realized seeing the pseudocode, the K-Means **calculate distances every time**.  And I think that it's the main point of the performance in the code. Because of that concern, **we construct our distance function** implementing all the good practices we learned, like parallelization with macros `@simd`, indexations instructions with macro `@inbounds` and some heeds about reducing allocations. 
 
@@ -164,9 +175,9 @@ function euclidean(a::AbstractVector{T},
 end
 ```
 > **QuickTip:** Use `eachindex(x)` instead of `1:length(x)` in for-loops. It's more performatic. I encourage you to check using the macros of the [`BenchmarkTools`](https://github.com/JuliaCI/BenchmarkTools.jl) package. :relaxed:
-
+  
 ## 5 - Initialization (Random and K-Means++)  
-The first step is the initialization and we got two implementations. The easiest method is `:random` and the hardest is `:kmpp`.
+The first step is the initialization and we got two implementations. The easiest method is `:random` and the hardest is `:kmpp`.  
 
 ### 5.1 - Random Initialization
 
@@ -231,7 +242,7 @@ This implementation use the macro `@inbounds` to discard the check inbounds in a
 >
 > Also `@view` it's not recommended for small arrays, but it's for big arrays. Thus, I suggest you to make some tests whenever your could using the `BenchmarkTools` package. 
 >
-> A reading suggestion about [view](https://bkamins.github.io/julialang/2021/09/17/views.html)
+> A reading suggestion about the use of  [view](https://bkamins.github.io/julialang/2021/09/17/views.html)
  
 ### 5.3 - Function `_initialize_centroids()`
 To keep things organized, we have the argument `init`, which receives a `Symbol` type, that accept `:random` or `:kmpp`. Then, we finalize that initialization section with the following final function:
@@ -271,7 +282,7 @@ function _initialize_centroids(data::AbstractMatrix{T},
 end
 
 ```
-
+  
 ## 6 - The `_kmeans()` function
 
 Continuing the steps of the pseudocode,  I'm think that a good generalization of those is that we iterate through 2 macro steps: (i) **assign points to a cluster** and (ii) **recalculate centroids** using `mean()`. 
@@ -327,7 +338,7 @@ We choose use an *Array Comprehension* as the second for-loop and also use `enum
 Since we got an equivalence in the `withinss` with the Sum of Squared Error (SSE) measurement, the model evaluation function calculate the Sum of Squared Error (SSE) for each cluster.  That "*for each*" in the sentence it's a filter that we need to do before make the calculus, using `data[cluster .== k, :]`. 
 
 So, we created a function called `totalwithinss()` that evaluate for each cluster the SSE, using a for-loop, and sum them all. Resulting in our Total Variance Within Cluster desired.
-```julia
+```{julia, eval=FALSE}
 function totalwithinss(data::AbstractMatrix{T}, K::Int, cluster::AbstractVector{Int}) where {T<:AbstractFloat}
     # evaluate total-variance-within-clusters
     error = zero(T)
@@ -427,7 +438,7 @@ for (i, obs) in enumerate(eachrow(data))
     @inbounds new_cluster[i] = argmin(dist)
 end
 ```
-Then, we update the new `withniss`, the number of iterations `iter` by running `iter += 1`, and calculate the `norm()` of each new centroid to inspect if the iteration made some significant change in the centroid (That is our **Stop Rule**).
+Then, we update the new `withniss`, the number of iterations `iter` by running `iter += 1`, and calculate the `norm()` of each new centroid to inspect if the iteration made some significant change in the centroid (that is our **Stop Rule**).
 ```{julia, eval=FALSE}
 # update iter, withinss-variance and calculate centroid norms
 new_withinss = totalwithinss(data, K, new_cluster)
@@ -439,7 +450,7 @@ norm(norms - new_norms) ≈ 0 && break
 ```
 See the convergence rule, there we calculate the `norm()` of the difference between the earlier and newer `norms` of the centroids. This way, it's possible to check if the centroids got a significant change after the iteration. Also, the tolerance utilized for the check is `1e-8`, which is the default of the aproximation operator `≈`.  
 
-If the **convergence rule is true**, the for-loop stops in the `break` statement, and the final results it's the values of the earlier iteration (because the last iteration didn't have a significant change). If the **convergence rule is false**, then we update the `norm` to compare in the next iteration and make the check to update the values of the model, inside the if-else statement below.
+If the **convergence rule is true**, the for-loop stops in the `break` statement, and the final results it's the values of the earlier iteration, because the last iteration didn't have a significant change. If the **convergence rule is false**, then we update the `norm` to compare in the next iteration and make the check to update the values of the model, inside the if-else statement below.
 ```{julia, eval=FALSE}
 # update centroid norms
 norms .= new_norms
@@ -451,7 +462,6 @@ if new_withinss < withinss
     withinss = new_withinss
 end
 ```
-> **Note:** Take a look at the broadcast operator (`.`) used to update model variables. When update a vector the broadcast it's used, but when we updated a single value, a simples `=` is enough.
 
 Thus, bringing together all the points raised, we have the following final function of `_kmeans()`:
 ```{julia, eval=FALSE}
@@ -515,7 +525,7 @@ function _kmeans(data::AbstractMatrix{T}, K::Int, maxiter::Int, init::Symbol) wh
     return centroids, cluster, withinss, iter
 end
 ```
-
+  
 ## 7 - Tables.jl integration
 Until now, the `ClusterAnalysis.jl` implementation it's based on the 3 main big functions that we constructed together here:
 
@@ -535,18 +545,21 @@ Before finishing this post, I want to quickly explain an integration we made of 
 
 To make this integration we use again the **multiple dispatch** by creating new kmeans functions above:
 
-* **First:** Make a `if-else` to check if the input is a input allowed in `Tables.jl` and select the data in the input as matrix.
-* **Second:** Receive any type of input (which is not a subtype of an `AbstractFloat`) and make the conversion to a matrix of `Float64`.
-* **Third:** When receive an input, which is a subtype of `AbstractFloat`, run the algorithm we constructed.
+* **First:** Make a `if-else` to check if the input is allowed in `Tables.jl` interface. If true, select the data in the input as a matrix and pass to the second or the third function.
+* **Second:** Receive any type of input coming from the first function and, if its not a subtype of an `AbstractFloat`, convert to a matrix of `Float64`, passing to the third function.
+* **Third:** Receive an input, which is a subtype of `AbstractFloat`, and run the algorithm constructed.
 
 ```{julia, eval=FALSE}
+# first function
 function kmeans(table, K::Int; kwargs...)
     Tables.istable(table) ? (data = Tables.matrix(table)) : throw(ArgumentError("The table argument passed does not implement the Tables.jl interface."))
     return kmeans(data, K; kwargs...)
 end
 
+# second function
 kmeans(data::AbstractMatrix{T}, K::Int; kwargs...) where {T} = kmeans(convert(Matrix{Float64}, data), K; kwargs...)
 
+# third function
 function kmeans(data::AbstractMatrix{T}, K::Int;
                 nstart::Int = 1,
                 maxiter::Int = 10,
@@ -555,13 +568,14 @@ function kmeans(data::AbstractMatrix{T}, K::Int;
     # generate variables to update with the best result
     nl = size(data, 1)
 
-    ...
-    ...
+    # ...
+    # ...
+    # ...
 end
 ```
-We also make use of the kwargs... in the argument function to make the code more concise and less repetitive.
+We also make use of the `kwargs...` in the argument function to make the code more concise and less repetitive.
 
-Well, now I think you are able to navigate through the [source-code of K-Means](https://github.com/AugustoCL/ClusterAnalysis.jl/blob/main/src/kmeans.jl) and understand how every line of the code interact with each other. Going veeery beyong a simple `model.fit()` :laughing:
+Well, now I think you are able to navigate through the [source-code of K-Means](https://github.com/AugustoCL/ClusterAnalysis.jl/blob/main/src/kmeans.jl) and understand how every line of the code interact with each other. Going veeery beyond a simple `model.fit()` :laughing:
 
 I hope you enjoy this journey and if you have any suggestion, question or even catch some mistake, typo and etc, feel free to contact me in whatever media you want. [Here](https://augustocl.github.io/AugustoLeal/contact/) is my contact page.
 

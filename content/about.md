@@ -4,23 +4,24 @@ aliases:
 - about-hugo
 author: Hugo Authors
 date: "2019-02-28"
-description: Blog para compartilhar algumas ideias sobre assuntos do meu interesse
-title: Sobre mim
+description: Blog to share ideas and topics of mmy interests.
+title: About me
 ---
 
-Eu sou um Analista Atuarial na [Zurich Seguros S.A](https://www.zurich.com/), estudante de [Ciências Atuariais](https://www.beanactuary.org/) e um eterno curioso sobre todos tópicos relacionados a dados. Eu busco ser capaz de resolver muitos tipos de problemas usando diferentes métodos quantitativos disponíveis. Por isso eu uso e estudo diferentes assuntos e ferrametnas, sem nenhuma preferência por elas. 
+I'm an Actuarial Analyst in [Zurich Seguros S.A](https://www.zurich.com/), graduated in [Actuarial Science](https://www.beanactuary.org/) and an eternal curious about all topics related to data. I aim to be able to solve many types of problems using different quantitative methods available. That's why I use and study different subjects and tools, without any preference for them. 
 
-Aqui você vai encontrar posts sobre diferentes assuntos:
+Here you will find posts on different subjects:  
+
 * Data Science
 * Machine Learning
-* Otimização Matemática
-* Estatística
-* Ciências Atuariais
-* Finanças
+* Mathematical Optimization
+* Statistics
+* Actuarial Sciences
+* Finance
 * WebScraping
-* Visualização
-* ...
+* Data Viz
+* and so on...
 
-Recentemente, tenho solucionado meus problemas com diferentes linguagens. Esse blog, por exemplo, foi feito em **R** com `Blogdown`, mas muitos outros posts irei utilizar **Julia**, **Python** e qualquer outra linguagem que seja mais adequada para o problema ou que eu esteja interessado no momento :satisfied:
+Recently, I have been solving my problems with different languages. This blog, for example, was made in **R** with `Blogdown`, but many other posts I will use **Julia**, **Python** and any other language that is better suited to the problem or that I be interested at the moment :satisfied:
 
-Todos os códigos presentes nos posts você encontrará disponível também no meu [Github](https://github.com/AugustoCL). Se quiser entrar em contato comigo, vá até a [página de contato](../contact) e me mande uma mensagem.
+All the codes present in the posts you will find also available on [my Github](https://github.com/AugustoCL). If you want to get in touch with me, go to the [contact page](../contact) and send me a message. 
